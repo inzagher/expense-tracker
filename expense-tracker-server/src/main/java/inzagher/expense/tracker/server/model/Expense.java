@@ -14,11 +14,14 @@ public class Expense {
     @Id
     @GeneratedValue
     private UUID id;
+    @Column(name="date")
+    private LocalDate date;
+    @ManyToOne
+    @JoinColumn(name = "state_id")
+    private State state;
     @ManyToOne
     @JoinColumn(name = "person_id")
     private Person person;
-    @Column(name="date")
-    private LocalDate date;
     @Column(name="ammount")
     private Float ammount;
     @Column(name="description")
@@ -32,20 +35,28 @@ public class Expense {
         this.id = id;
     }
 
-    public Person getOwner() {
-        return person;
-    }
-
-    public void setOwner(Person owner) {
-        this.person = owner;
-    }
-
     public LocalDate getDate() {
         return date;
     }
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public Person getPerson() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
     }
 
     public Float getAmmount() {
@@ -56,11 +67,11 @@ public class Expense {
         this.ammount = ammount;
     }
 
-    public String getComment() {
+    public String getDescription() {
         return description;
     }
 
-    public void setComment(String comment) {
-        this.description = comment;
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
