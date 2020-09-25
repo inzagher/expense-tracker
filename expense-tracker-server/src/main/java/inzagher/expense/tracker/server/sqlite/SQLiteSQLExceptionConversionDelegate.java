@@ -1,4 +1,4 @@
-package inzagher.expense.tracker.sqlite;
+package inzagher.expense.tracker.server.sqlite;
 
 import java.sql.SQLException;
 import org.hibernate.JDBCException;

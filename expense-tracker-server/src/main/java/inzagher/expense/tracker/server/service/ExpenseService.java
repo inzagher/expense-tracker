@@ -1,7 +1,7 @@
-package inzagher.expense.tracker.service;
+package inzagher.expense.tracker.server.service;
 
-import inzagher.expense.tracker.model.Expense;
-import inzagher.expense.tracker.repository.ExpenseRepository;
+import inzagher.expense.tracker.server.model.Expense;
+import inzagher.expense.tracker.server.repository.ExpenseRepository;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;

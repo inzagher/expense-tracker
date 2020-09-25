@@ -1,4 +1,4 @@
-package inzagher.expense.tracker;
+package inzagher.expense.tracker.server;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

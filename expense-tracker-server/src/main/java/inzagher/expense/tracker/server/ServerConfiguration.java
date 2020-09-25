@@ -1,4 +1,4 @@
-package inzagher.expense.tracker;
+package inzagher.expense.tracker.server;
 
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package inzagher.expense.tracker.model;
+package inzagher.expense.tracker.server.model;
 
 import java.io.Serializable;
 import java.util.UUID;

@@ -1,6 +1,6 @@
-package inzagher.expense.tracker.repository;
+package inzagher.expense.tracker.server.repository;
 
-import inzagher.expense.tracker.model.Expense;
+import inzagher.expense.tracker.server.model.Expense;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

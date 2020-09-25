@@ -1,4 +1,4 @@
-package inzagher.expense.tracker.sqlite;
+package inzagher.expense.tracker.server.sqlite;
 
 import java.sql.Types;
 import org.hibernate.dialect.Dialect;
