@@ -1,6 +1,6 @@
 package inzagher.expense.tracker.server.dto;
 
-public class StateDTO {
+public class CategoryDTO {
     private String id;
     private String name;
     private ColorDTO color;

@@ -12,8 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "states")
-public class State implements Serializable {
+@Table(name = "categories")
+public class Category implements Serializable {
     @Id
     @GeneratedValue
     private UUID id;

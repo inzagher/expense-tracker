@@ -5,7 +5,7 @@ import java.time.LocalDate;
 public class ExpenseDTO {
     private String id;
     private String personId;
-    private String stateId;
+    private String categoryId;
     private LocalDate date;
     private Float ammount;
     private String description;
@@ -26,12 +26,12 @@ public class ExpenseDTO {
         this.personId = personId;
     }
 
-    public String getStateId() {
-        return stateId;
+    public String getCategoryId() {
+        return categoryId;
     }
 
-    public void setStateId(String stateId) {
-        this.stateId = stateId;
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
     }
 
     public LocalDate getDate() {

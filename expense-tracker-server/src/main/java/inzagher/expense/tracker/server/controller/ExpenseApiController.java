@@ -17,6 +17,6 @@ public class ExpenseApiController {
     
     @GetMapping("get")
     public ExpenseDTO get(String id) {
-        return expenseService.get(id).orElse(null);
+        return expenseService.getExpense(id).orElse(null);
     }
 }

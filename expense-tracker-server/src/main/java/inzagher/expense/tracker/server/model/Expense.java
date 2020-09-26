@@ -1,5 +1,6 @@
 package inzagher.expense.tracker.server.model;
 
+import inzagher.expense.tracker.server.dto.ExpenseDTO;
 import java.time.LocalDate;
 import java.util.UUID;
 import javax.persistence.Column;
@@ -17,8 +18,8 @@ public class Expense {
     @Column(name="date")
     private LocalDate date;
     @ManyToOne
-    @JoinColumn(name = "state_id")
-    private State state;
+    @JoinColumn(name = "category_id")
+    private Category category;
     @ManyToOne
     @JoinColumn(name = "person_id")
     private Person person;
@@ -43,12 +44,12 @@ public class Expense {
         this.date = date;
     }
 
-    public State getState() {
-        return state;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setState(State state) {
-        this.state = state;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public Person getPerson() {
@@ -73,5 +74,16 @@ public class Expense {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+    
+    public ExpenseDTO toDTO() {
+        ExpenseDTO dto = new ExpenseDTO();
+        dto.setId(id.toString());
+        dto.setDate(date);
+        dto.setAmmount(ammount);
+        dto.setPersonId(category.getId().toString());
+        dto.setCategoryId(person.getId().toString());
+        dto.setDescription(description);
+        return dto;
     }
 }
