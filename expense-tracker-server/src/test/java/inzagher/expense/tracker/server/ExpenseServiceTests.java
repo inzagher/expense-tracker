@@ -9,19 +9,14 @@ import inzagher.expense.tracker.server.repository.PersonRepository;
 import inzagher.expense.tracker.server.service.ExpenseService;
 import java.time.LocalDate;
 import java.util.UUID;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import org.springframework.test.context.junit4.SpringRunner;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import static org.junit.jupiter.api.Assertions.*;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = {ServerConfiguration.class})
-@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+@SpringBootTest(classes = {ServiceRunner.class})
 public class ExpenseServiceTests {
     @Autowired
     private ExpenseService expenseService;
@@ -33,8 +28,8 @@ public class ExpenseServiceTests {
     private UUID tomID;
     private UUID foodCategoryID;
     
-    @Before
-    public void beforeEach() {
+    @BeforeEach
+    public void beforeEachTest() {
         Category food = new Category();
         food.setName("FOOD");
         food.setColor(new Color((byte)0, (byte)0, (byte)0));
@@ -44,6 +39,14 @@ public class ExpenseServiceTests {
         Person tom = new Person();
         tom.setName("TOM");
         tomID = personRepository.saveAndFlush(tom).getId();
+    }
+    
+    @AfterEach
+    public void afterEachTest() {
+        categoryRepository.deleteAll();
+        personRepository.deleteAll();
+        tomID = null;
+        foodCategoryID = null;
     }
     
     @Test

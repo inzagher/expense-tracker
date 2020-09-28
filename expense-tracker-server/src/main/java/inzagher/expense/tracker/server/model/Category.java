@@ -1,5 +1,7 @@
 package inzagher.expense.tracker.server.model;
 
+import inzagher.expense.tracker.server.dto.CategoryDTO;
+import inzagher.expense.tracker.server.dto.ColorDTO;
 import java.io.Serializable;
 import java.util.UUID;
 import javax.persistence.AttributeOverride;
@@ -59,5 +61,14 @@ public class Category implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+    
+    public CategoryDTO toDTO() {
+        CategoryDTO dto = new CategoryDTO();
+        dto.setId(id.toString());
+        dto.setName(name);
+        dto.setColor(color.toDTO());
+        dto.setDescription(description);
+        return dto;
     }
 }

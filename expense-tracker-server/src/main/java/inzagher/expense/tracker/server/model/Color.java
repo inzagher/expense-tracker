@@ -1,5 +1,6 @@
 package inzagher.expense.tracker.server.model;
 
+import inzagher.expense.tracker.server.dto.ColorDTO;
 import javax.persistence.Embeddable;
 
 @Embeddable
@@ -39,5 +40,13 @@ public class Color {
 
     public void setBlue(byte blue) {
         this.blue = blue;
+    }
+    
+    public ColorDTO toDTO() {
+        ColorDTO dto = new ColorDTO();
+        dto.setRed(red);
+        dto.setGreen(green);
+        dto.setBlue(blue);
+        return dto;
     }
 }
