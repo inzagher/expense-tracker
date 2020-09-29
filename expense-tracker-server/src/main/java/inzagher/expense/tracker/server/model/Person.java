@@ -36,7 +36,7 @@ public class Person implements Serializable {
     
     public PersonDTO toDTO() {
         PersonDTO dto = new PersonDTO();
-        dto.setId(name);
+        dto.setId(id == null ? null : id.toString());
         dto.setName(name);
         return dto;
     }

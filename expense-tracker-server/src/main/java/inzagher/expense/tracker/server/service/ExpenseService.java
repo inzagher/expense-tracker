@@ -35,9 +35,23 @@ public class ExpenseService {
     }
     
     public String storeExpense(ExpenseDTO dto) {
-        Person person = personRepository.getOne(UUID.fromString(dto.getPersonId()));
-        Category category = categoryRepository.getOne(UUID.fromString(dto.getCategoryId()));
-        Expense model = dto.getId() != null ? expenseRepository.getOne(UUID.fromString(dto.getId())) : new Expense();
+        Expense model;        
+        if (dto.getId() != null) {
+            UUID expenseID = UUID.fromString(dto.getId());
+            Optional<Expense> loadedExpense = expenseRepository.findById(expenseID);
+            model = loadedExpense.orElseThrow(() -> new RuntimeException("EXPENSE NOT FOUND"));
+        } else {
+            model = new Expense();
+        }
+        
+        UUID categoryID = UUID.fromString(dto.getCategoryId());
+        Optional<Category> loadedCategory = categoryRepository.findById(categoryID);
+        Category category = loadedCategory.orElseThrow(() -> new RuntimeException("CATEGORY NOT FOUND"));
+        
+        UUID personID = UUID.fromString(dto.getPersonId());
+        Optional<Person> loadedPerson = personRepository.findById(personID);
+        Person person = loadedPerson.orElseThrow(() -> new RuntimeException("PERSON NOT FOUND"));
+        
         model.setDate(dto.getDate());
         model.setAmmount(dto.getAmmount());
         model.setDescription(dto.getDescription());

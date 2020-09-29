@@ -1,26 +1,32 @@
 package inzagher.expense.tracker.server.model;
 
 import inzagher.expense.tracker.server.dto.ExpenseDTO;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.UUID;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
-public class Expense {
+public class Expense implements Serializable {
     @Id
     @GeneratedValue
     private UUID id;
     @Column(name="date")
     private LocalDate date;
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     @JoinColumn(name = "category_id")
     private Category category;
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     @JoinColumn(name = "person_id")
     private Person person;
     @Column(name="ammount")
@@ -78,11 +84,11 @@ public class Expense {
     
     public ExpenseDTO toDTO() {
         ExpenseDTO dto = new ExpenseDTO();
-        dto.setId(id.toString());
+        dto.setId(id == null ? null : id.toString());
         dto.setDate(date);
         dto.setAmmount(ammount);
-        dto.setPersonId(category.getId().toString());
-        dto.setCategoryId(person.getId().toString());
+        dto.setPersonId(person == null ? null: person.getId().toString());
+        dto.setCategoryId(category == null ? null : category.getId().toString());
         dto.setDescription(description);
         return dto;
     }
