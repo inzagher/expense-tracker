@@ -4,7 +4,6 @@ import inzagher.expense.tracker.server.dto.ExpenseDTO;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.UUID;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,8 +28,8 @@ public class Expense implements Serializable {
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     @JoinColumn(name = "person_id")
     private Person person;
-    @Column(name="ammount")
-    private Float ammount;
+    @Column(name="amount")
+    private Float amount;
     @Column(name="description")
     private String description;
 
@@ -66,12 +65,12 @@ public class Expense implements Serializable {
         this.person = person;
     }
 
-    public Float getAmmount() {
-        return ammount;
+    public Float getAmount() {
+        return amount;
     }
 
-    public void setAmmount(Float ammount) {
-        this.ammount = ammount;
+    public void setAmount(Float amount) {
+        this.amount = amount;
     }
 
     public String getDescription() {
@@ -86,7 +85,7 @@ public class Expense implements Serializable {
         ExpenseDTO dto = new ExpenseDTO();
         dto.setId(id == null ? null : id.toString());
         dto.setDate(date);
-        dto.setAmmount(ammount);
+        dto.setAmount(amount);
         dto.setPersonId(person == null ? null: person.getId().toString());
         dto.setCategoryId(category == null ? null : category.getId().toString());
         dto.setDescription(description);

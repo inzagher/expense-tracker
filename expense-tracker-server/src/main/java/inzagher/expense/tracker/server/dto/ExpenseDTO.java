@@ -7,7 +7,7 @@ public class ExpenseDTO {
     private String personId;
     private String categoryId;
     private LocalDate date;
-    private Float ammount;
+    private Float amount;
     private String description;
 
     public String getId() {
@@ -42,12 +42,12 @@ public class ExpenseDTO {
         this.date = date;
     }
 
-    public Float getAmmount() {
-        return ammount;
+    public Float getAmount() {
+        return amount;
     }
 
-    public void setAmmount(Float ammount) {
-        this.ammount = ammount;
+    public void setAmount(Float amount) {
+        this.amount = amount;
     }
 
     public String getDescription() {

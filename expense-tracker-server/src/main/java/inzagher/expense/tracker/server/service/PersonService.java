@@ -5,7 +5,9 @@ import inzagher.expense.tracker.server.model.Person;
 import inzagher.expense.tracker.server.repository.PersonRepository;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.stereotype.Service;
 
+@Service
 public class PersonService {
     private final PersonRepository personRepository;
 
@@ -19,9 +21,14 @@ public class PersonService {
     }
     
     public String storePerson(PersonDTO dto) {
-        Person model = dto.getId() != null
-                ? personRepository.getOne(UUID.fromString(dto.getId()))
-                : new Person();
+        Person model;
+        if(dto.getId() != null) {
+            UUID id = UUID.fromString(dto.getId());
+            Optional<Person> loadedPerson = personRepository.findById(id);
+            model = loadedPerson.orElseThrow(() -> new RuntimeException("PERSON NOT FOUND"));
+        } else {
+            model = new Person();
+        }
         model.setName(dto.getName());
         return personRepository.saveAndFlush(model).getId().toString();
     }

@@ -11,14 +11,15 @@ import inzagher.expense.tracker.server.repository.PersonRepository;
 import inzagher.expense.tracker.server.service.ExpenseService;
 import java.time.LocalDate;
 import java.util.Optional;
+import javax.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import static org.junit.jupiter.api.Assertions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+@Transactional
 @SpringBootTest(classes = {ServiceRunner.class})
 public class ExpenseServiceTests {
     @Autowired
@@ -70,7 +71,16 @@ public class ExpenseServiceTests {
     }
     
     @Test
-    public void expenseStoreTest() {
+    public void expenseLoadingTest() {
+        String id = purchase.getId().toString();
+        Optional<ExpenseDTO> loaded = expenseService.getExpense(id);
+        assertTrue(loaded.isPresent());
+        assertEquals(loaded.get().getId(), id);
+        assertEquals(loaded.get().getAmount(), Float.valueOf(12.1F));
+    }
+    
+    @Test
+    public void expenseCreationTest() {
         ExpenseDTO expense = createTestExpense(tom, food, 500.0F).toDTO();
         assertNotNull(expenseService.storeExpense(expense));
         assertEquals(expenseRepository.count(), 2L);
@@ -79,24 +89,15 @@ public class ExpenseServiceTests {
     }
     
     @Test
-    public void expenseEditTest() {
+    public void expenseEditingTest() {
         ExpenseDTO expense = purchase.toDTO();
-        expense.setAmmount(900F);
+        expense.setAmount(900F);
         expense.setCategoryId(phone.getId().toString());
-        String storedRecordId = expenseService.storeExpense(expense);
-        assertEquals(storedRecordId, purchase.getId().toString());
+        String storedRecordID = expenseService.storeExpense(expense);
+        assertEquals(storedRecordID, purchase.getId().toString());
         assertEquals(expenseRepository.count(), 1L);
         assertEquals(categoryRepository.count(), 2L);
         assertEquals(personRepository.count(), 1L);
-    }
-    
-    @Test
-    public void expenseLoadingTest() {
-        String id = purchase.getId().toString();
-        Optional<ExpenseDTO> loaded = expenseService.getExpense(id);
-        Assertions.assertTrue(loaded.isPresent());
-        Assertions.assertEquals(loaded.get().getId(), id);
-        Assertions.assertEquals(loaded.get().getAmmount(), Float.valueOf(12.1F));
     }
     
     @Test
@@ -108,10 +109,10 @@ public class ExpenseServiceTests {
         assertEquals(personRepository.count(), 1L);
     }
     
-    private Expense createTestExpense(Person person, Category category, Float ammount) {
+    private Expense createTestExpense(Person person, Category category, Float amount) {
         Expense expense = new Expense();
         expense.setDate(LocalDate.now());
-        expense.setAmmount(ammount);
+        expense.setAmount(amount);
         expense.setPerson(person);
         expense.setCategory(category);
         expense.setDescription("EXPENSE TESTING");

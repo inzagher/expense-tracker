@@ -6,7 +6,9 @@ import inzagher.expense.tracker.server.model.Color;
 import inzagher.expense.tracker.server.repository.CategoryRepository;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.stereotype.Service;
 
+@Service
 public class CategoryService {
     private final CategoryRepository categoryRepository;
 
@@ -20,12 +22,17 @@ public class CategoryService {
     }
     
     public String storeCategory(CategoryDTO dto) {
+        Category model;
         byte red = dto.getColor().getRed();
         byte green = dto.getColor().getGreen();
         byte blue = dto.getColor().getBlue();
-        Category model = dto.getId() != null
-                ? categoryRepository.getOne(UUID.fromString(dto.getId()))
-                : new Category();
+        if (dto.getId() != null) {
+            UUID id = UUID.fromString(dto.getId());
+            Optional<Category> loadedCategory = categoryRepository.findById(id);
+            model = loadedCategory.orElseThrow(() -> new RuntimeException("CATEGORY NOT FOUND"));
+        } else {
+            model = new Category();
+        }
         model.setName(dto.getName());
         model.setDescription(dto.getDescription());
         model.setColor(new Color(red, green, blue));
