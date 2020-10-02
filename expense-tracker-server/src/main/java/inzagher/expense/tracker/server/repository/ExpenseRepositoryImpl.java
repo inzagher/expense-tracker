@@ -44,14 +44,14 @@ public class ExpenseRepositoryImpl implements ExpenseRepositoryExtension {
             Root<Expense> root,
             ExpenseFilter filter
     ) {
-        if (filter.getCategoryIdentifiers()!= null) {
+        if (filter.getCategoryIdentifiers() != null && filter.getCategoryIdentifiers().size() > 0) {
             In<UUID> in = cb.in(root.get("category").get("id"));
             filter.getCategoryIdentifiers().forEach((id) -> { in.value(id); });
             predicates.add(in);
         }
-        if (filter.getPersonIdentifiers()!= null) {
+        if (filter.getPersonIdentifiers() != null && filter.getPersonIdentifiers().size() > 0) {
             In<UUID> in = cb.in(root.get("person").get("id"));
-            filter.getCategoryIdentifiers().forEach((id) -> { in.value(id); });
+            filter.getPersonIdentifiers().forEach((id) -> { in.value(id); });
             predicates.add(in);
         }
         if (filter.getDateExact() != null) {

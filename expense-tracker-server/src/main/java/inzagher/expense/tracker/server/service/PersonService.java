@@ -1,17 +1,25 @@
 package inzagher.expense.tracker.server.service;
 
 import inzagher.expense.tracker.server.dto.PersonDTO;
+import inzagher.expense.tracker.server.model.Expense;
+import inzagher.expense.tracker.server.model.ExpenseFilter;
 import inzagher.expense.tracker.server.model.Person;
+import inzagher.expense.tracker.server.repository.ExpenseRepository;
 import inzagher.expense.tracker.server.repository.PersonRepository;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PersonService {
+    private final ExpenseRepository expenseRepository;
     private final PersonRepository personRepository;
 
-    public PersonService(PersonRepository personRepository) {
+    public PersonService(ExpenseRepository expenseRepository,
+            PersonRepository personRepository
+    ) {
+        this.expenseRepository = expenseRepository;
         this.personRepository = personRepository;
     }
     
@@ -35,6 +43,17 @@ public class PersonService {
     
     public void deletePerson(String id) {
         UUID uuid = UUID.fromString(id);
+        resetDependentExpenses(uuid);
         personRepository.deleteById(uuid);
+        personRepository.flush();
+    }
+    
+    private void resetDependentExpenses(UUID personID) {
+        ExpenseFilter filter = new ExpenseFilter();
+        filter.getPersonIdentifiers().add(personID);
+        List<Expense> list = expenseRepository.find(filter);
+        list.forEach(e -> e.setPerson(null));
+        expenseRepository.saveAll(list);
+        expenseRepository.flush();
     }
 }

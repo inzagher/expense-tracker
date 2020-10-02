@@ -1,9 +1,15 @@
 package inzagher.expense.tracker.server;
 
 import inzagher.expense.tracker.server.dto.PersonDTO;
+import inzagher.expense.tracker.server.model.Category;
+import inzagher.expense.tracker.server.model.Color;
+import inzagher.expense.tracker.server.model.Expense;
 import inzagher.expense.tracker.server.model.Person;
+import inzagher.expense.tracker.server.repository.CategoryRepository;
+import inzagher.expense.tracker.server.repository.ExpenseRepository;
 import inzagher.expense.tracker.server.repository.PersonRepository;
 import inzagher.expense.tracker.server.service.PersonService;
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
 import javax.transaction.Transactional;
@@ -20,10 +26,16 @@ public class PersonServiceTests {
     @Autowired
     private PersonService personService;
     @Autowired
+    private ExpenseRepository expenseRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
     private PersonRepository personRepository;
     
     private Person bob;
     private Person stan;
+    private Category clothes;
+    private Expense purchase;
     
     @BeforeEach
     public void beforeEachTest() {
@@ -35,13 +47,31 @@ public class PersonServiceTests {
         stan.setName("STAN");
         stan = personRepository.saveAndFlush(stan);
         assertEquals(personRepository.count(), 2L);
+        
+        clothes = new Category();
+        clothes.setName("CLOTHES");
+        clothes.setColor(new Color((byte)0, (byte)0, (byte)0));
+        clothes.setDescription("CLOTHES PURCHASE");
+        clothes = categoryRepository.saveAndFlush(clothes);
+        
+        purchase = new Expense();
+        purchase.setDate(LocalDate.now());
+        purchase.setAmount(10.1F);
+        purchase.setPerson(stan);
+        purchase.setCategory(clothes);
+        purchase.setDescription("EXPENSE TESTING");
+        purchase = expenseRepository.saveAndFlush(purchase);
     }
     
     @AfterEach
     public void afterEachTest() {
+        expenseRepository.deleteAllInBatch();
+        categoryRepository.deleteAllInBatch();
         personRepository.deleteAllInBatch();
         bob = null;
         stan = null;
+        clothes = null;
+        purchase = null;
     }
     
     @Test
@@ -78,5 +108,14 @@ public class PersonServiceTests {
         String id = bob.getId().toString();
         personService.deletePerson(id);
         assertEquals(personRepository.count(), 1L);
+    }
+    
+    @Test
+    public void dependentPersonDeletionTest() {
+        String id = stan.getId().toString();
+        personService.deletePerson(id);
+        assertEquals(personRepository.count(), 1L);
+        assertEquals(expenseRepository.count(), 1L);
+        assertNull(expenseRepository.getOne(purchase.getId()).getPerson());
     }
 }
