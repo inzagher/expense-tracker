@@ -45,7 +45,6 @@ public class PersonService {
         UUID uuid = UUID.fromString(id);
         resetDependentExpenses(uuid);
         personRepository.deleteById(uuid);
-        personRepository.flush();
     }
     
     private void resetDependentExpenses(UUID personID) {

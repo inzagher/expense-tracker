@@ -3,16 +3,24 @@ package inzagher.expense.tracker.server.service;
 import inzagher.expense.tracker.server.dto.CategoryDTO;
 import inzagher.expense.tracker.server.model.Category;
 import inzagher.expense.tracker.server.model.Color;
+import inzagher.expense.tracker.server.model.Expense;
+import inzagher.expense.tracker.server.model.ExpenseFilter;
 import inzagher.expense.tracker.server.repository.CategoryRepository;
+import inzagher.expense.tracker.server.repository.ExpenseRepository;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CategoryService {
+    private final ExpenseRepository expenseRepository;
     private final CategoryRepository categoryRepository;
 
-    public CategoryService(CategoryRepository categoryRepository) {
+    public CategoryService(ExpenseRepository expenseRepository,
+            CategoryRepository categoryRepository
+    ) {
+        this.expenseRepository = expenseRepository;
         this.categoryRepository = categoryRepository;
     }
     
@@ -41,6 +49,16 @@ public class CategoryService {
     
     public void deleteCategory(String id) {
         UUID uuid = UUID.fromString(id);
+        resetDependentExpenses(uuid);
         categoryRepository.deleteById(uuid);
+    }
+    
+    private void resetDependentExpenses(UUID categoryID) {
+        ExpenseFilter filter = new ExpenseFilter();
+        filter.getCategoryIdentifiers().add(categoryID);
+        List<Expense> list = expenseRepository.find(filter);
+        list.forEach(e -> e.setCategory(null));
+        expenseRepository.saveAll(list);
+        expenseRepository.flush();
     }
 }
