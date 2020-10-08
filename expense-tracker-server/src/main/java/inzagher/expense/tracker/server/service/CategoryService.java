@@ -10,6 +10,7 @@ import inzagher.expense.tracker.server.repository.ExpenseRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,7 +25,13 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
     
-    public Optional<CategoryDTO> getCategory(String id) {
+    public List<CategoryDTO> getAllCategories() {
+        return categoryRepository.findAll().stream()
+                .map(Category::toDTO)
+                .collect(Collectors.toList());
+    }
+    
+    public Optional<CategoryDTO> getCategoryById(String id) {
         UUID uuid = UUID.fromString(id);
         return categoryRepository.findById(uuid).map(Category::toDTO);
     }

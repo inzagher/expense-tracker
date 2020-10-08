@@ -29,7 +29,7 @@ public class ExpenseService {
         this.personRepository = personRepository;
     }
     
-    public Optional<ExpenseDTO> getExpense(String id) {
+    public Optional<ExpenseDTO> getExpenseById(String id) {
         UUID uuid = UUID.fromString(id);
         return expenseRepository.findById(uuid).map(Expense::toDTO);
     }

@@ -74,14 +74,21 @@ public class CategorySeriviceTests {
         expenseRepository.deleteAllInBatch();
         categoryRepository.deleteAllInBatch();
         personRepository.deleteAllInBatch();
+        payment = null;
         phone = null;
         rent = null;
+        eric = null;
+    }
+    
+    @Test
+    public void categoryListTest() {
+        assertEquals(categoryService.getAllCategories().size(), 2);
     }
     
     @Test
     public void categoryLoadingTest() {
         String id = rent.getId().toString();
-        Optional<CategoryDTO> loaded = categoryService.getCategory(id);
+        Optional<CategoryDTO> loaded = categoryService.getCategoryById(id);
         assertTrue(loaded.isPresent());
         assertEquals(loaded.get().getId(), id);
         assertEquals(loaded.get().getName(), "RENT");

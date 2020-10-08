@@ -75,9 +75,14 @@ public class PersonServiceTests {
     }
     
     @Test
+    public void personListTest() {
+        assertEquals(personService.getAllPersons().size(), 2);
+    }
+    
+    @Test
     public void personLoadingTest() {
         String id = bob.getId().toString();
-        Optional<PersonDTO> loaded = personService.getPerson(id);
+        Optional<PersonDTO> loaded = personService.getPersonById(id);
         assertTrue(loaded.isPresent());
         assertEquals(loaded.get().getId(), id);
         assertEquals(loaded.get().getName(), "BOB");

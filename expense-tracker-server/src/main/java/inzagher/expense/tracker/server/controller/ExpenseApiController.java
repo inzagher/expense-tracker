@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("expenses")
+@RestController
 public class ExpenseApiController {
     private final ExpenseService expenseService;
     
@@ -19,17 +19,17 @@ public class ExpenseApiController {
         this.expenseService = expenseService;
     }
     
-    @GetMapping("/{id}")
+    @GetMapping(path = "/api/expenses/{id}", produces = "application/json")
     public ExpenseDTO read(@PathVariable String id) {
-        return expenseService.getExpense(id).orElse(null);
+        return expenseService.getExpenseById(id).orElse(null);
     }
 
-    @PostMapping("/")
+    @PostMapping(path = "/api/expenses", consumes = "application/json")
     public void save(@RequestBody ExpenseDTO expense) {
         expenseService.storeExpense(expense);
     }
     
-    @DeleteMapping("/{id}")
+    @DeleteMapping(path = "/api/expenses/{id}")
     public void delete(@PathVariable String id) {
         expenseService.deleteExpense(id);
     }

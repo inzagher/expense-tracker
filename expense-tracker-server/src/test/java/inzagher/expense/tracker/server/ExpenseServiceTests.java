@@ -73,7 +73,7 @@ public class ExpenseServiceTests {
     @Test
     public void expenseLoadingTest() {
         String id = purchase.getId().toString();
-        Optional<ExpenseDTO> loaded = expenseService.getExpense(id);
+        Optional<ExpenseDTO> loaded = expenseService.getExpenseById(id);
         assertTrue(loaded.isPresent());
         assertEquals(loaded.get().getId(), id);
         assertEquals(loaded.get().getAmount(), Float.valueOf(12.1F));

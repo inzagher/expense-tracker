@@ -9,6 +9,7 @@ import inzagher.expense.tracker.server.repository.PersonRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,7 +24,13 @@ public class PersonService {
         this.personRepository = personRepository;
     }
     
-    public Optional<PersonDTO> getPerson(String id) {
+    public List<PersonDTO> getAllPersons() {
+        return personRepository.findAll().stream()
+                .map(Person::toDTO)
+                .collect(Collectors.toList());
+    }
+    
+    public Optional<PersonDTO> getPersonById(String id) {
         UUID uuid = UUID.fromString(id);
         return personRepository.findById(uuid).map(Person::toDTO);
     }
