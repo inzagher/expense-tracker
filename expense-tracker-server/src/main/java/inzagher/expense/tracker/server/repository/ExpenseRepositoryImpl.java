@@ -2,6 +2,9 @@ package inzagher.expense.tracker.server.repository;
 
 import inzagher.expense.tracker.server.model.ExpenseFilter;
 import inzagher.expense.tracker.server.model.Expense;
+import inzagher.expense.tracker.server.model.MonthlyReportItem;
+import inzagher.expense.tracker.server.model.YearlyReportItem;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -36,6 +39,52 @@ public class ExpenseRepositoryImpl implements ExpenseRepositoryExtension {
         
         TypedQuery<Expense> query = entityManager.createQuery(cq);
         return query.getResultList();
+    }
+    
+    @Override
+    public List<MonthlyReportItem> createMonthlyReport(int year, int month) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<MonthlyReportItem> cq = cb.createQuery(MonthlyReportItem.class);
+        Root<Expense> root = cq.from(Expense.class);
+        
+        ExpenseFilter filter = new ExpenseFilter();
+        filter.setDateFrom(LocalDate.of(year, month, 1));
+        filter.setDateTo(filter.getDateFrom().plusMonths(1).minusDays(1));
+        
+        ArrayList<Predicate> predicates = new ArrayList<>();
+        buildPredicates(predicates, cb, root, filter);
+        cq.where(predicates.toArray(new Predicate[0]));
+        cq.groupBy(root.get("category").get("id"));
+        cq.multiselect(root.get("category"), cb.sum(root.get("amount")));
+        
+        TypedQuery<MonthlyReportItem> query = entityManager.createQuery(cq);
+        return query.getResultList();
+    }
+    
+    @Override
+    public List<YearlyReportItem> createYearlyReport(int year) {
+        List<YearlyReportItem> report = new ArrayList<>();
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        
+        for (int month = 1; month <= 12; ++month) {
+            CriteriaQuery<Float> cq = cb.createQuery(Float.class);
+            Root<Expense> root = cq.from(Expense.class);
+            
+            ExpenseFilter filter = new ExpenseFilter();
+            filter.setDateFrom(LocalDate.of(year, month, 1));
+            filter.setDateTo(filter.getDateFrom().plusMonths(1).minusDays(1));
+            
+            ArrayList<Predicate> predicates = new ArrayList<>();
+            buildPredicates(predicates, cb, root, filter);
+            cq.where(predicates.toArray(new Predicate[0]));
+            cq.select(cb.sum(root.get("amount")));
+            
+            TypedQuery<Float> query = entityManager.createQuery(cq);
+            Float result = query.getSingleResult();
+            report.add(new YearlyReportItem(month, result == null ? 0 : result));
+        }
+        
+        return report;
     }
     
     private void buildPredicates(
