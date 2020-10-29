@@ -12,13 +12,13 @@ public class StaticWebContentConfiguration implements WebMvcConfigurer {
     
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry
-            .addResourceHandler(
+        registry.addResourceHandler(
                     "/**/*.css", "/**/*.html",
                     "/**/*.js",  "/**/*.jsx",
                     "/**/*.png", "/**/*.ttf",
-                    "/**/*.woff", "/**/*.woff2")
-            .setCachePeriod(0)
-            .addResourceLocations(resourceLocations);
+                    "/**/*.woff", "/**/*.woff2",
+                    "/**/*.ico")
+                .setCachePeriod(0)
+                .addResourceLocations(resourceLocations);
     }
 }
