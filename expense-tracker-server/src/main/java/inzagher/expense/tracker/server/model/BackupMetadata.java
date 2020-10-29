@@ -1,5 +1,6 @@
 package inzagher.expense.tracker.server.model;
 
+import inzagher.expense.tracker.server.dto.BackupMetadataDTO;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -15,10 +16,12 @@ public class BackupMetadata implements Serializable {
     private UUID id;
     @Column(name="time")
     private LocalDateTime time;
-    @Column(name="hash")
-    private String hash;
-    @Column(name="forced")
-    private Boolean forced;
+    @Column(name="expenses")
+    private Integer expenses;
+    @Column(name="categories")
+    private Integer categories;
+    @Column(name="persons")
+    private Integer persons;
 
     public UUID getId() {
         return id;
@@ -36,19 +39,37 @@ public class BackupMetadata implements Serializable {
         this.time = time;
     }
 
-    public String getHash() {
-        return hash;
+    public Integer getExpenses() {
+        return expenses;
     }
 
-    public void setHash(String hash) {
-        this.hash = hash;
+    public void setExpenses(Integer expenses) {
+        this.expenses = expenses;
     }
 
-    public Boolean getForced() {
-        return forced;
+    public Integer getCategories() {
+        return categories;
     }
 
-    public void setForced(Boolean forced) {
-        this.forced = forced;
+    public void setCategories(Integer categories) {
+        this.categories = categories;
+    }
+
+    public Integer getPersons() {
+        return persons;
+    }
+
+    public void setPersons(Integer persons) {
+        this.persons = persons;
+    }
+    
+    public BackupMetadataDTO toDTO() {
+        BackupMetadataDTO dto = new BackupMetadataDTO();
+        dto.setId(id == null ? null : id.toString());
+        dto.setTime(time);
+        dto.setExpenses(expenses);
+        dto.setCategories(categories);
+        dto.setPersons(persons);
+        return dto;
     }
 }

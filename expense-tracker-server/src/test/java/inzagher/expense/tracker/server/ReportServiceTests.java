@@ -43,6 +43,5 @@ public class ReportServiceTests {
     @Test
     @Disabled
     public void yearlyReportTest() {
-        
     }
 }

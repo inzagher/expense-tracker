@@ -1,8 +1,10 @@
 package inzagher.expense.tracker.server.dto;
 
 import java.util.List;
+import javax.xml.bind.annotation.XmlRootElement;
 
-public class BackupDTO {
+@XmlRootElement
+public class BackupDataDTO {
     private List<PersonDTO> persons;
     private List<CategoryDTO> categories;
     private List<ExpenseDTO> expenses;
