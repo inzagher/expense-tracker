@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,6 +18,7 @@ public class PersonService {
     private final ExpenseRepository expenseRepository;
     private final PersonRepository personRepository;
 
+    @Autowired
     public PersonService(ExpenseRepository expenseRepository,
             PersonRepository personRepository
     ) {
