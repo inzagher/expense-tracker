@@ -31,7 +31,7 @@ public class CategoryApiController {
         return categoryService.getCategoryById(id).orElse(null);
     }
 
-    @PostMapping(path = "/api/categories/", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/api/categories", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void save(@RequestBody CategoryDTO category) {
         categoryService.storeCategory(category);
     }
