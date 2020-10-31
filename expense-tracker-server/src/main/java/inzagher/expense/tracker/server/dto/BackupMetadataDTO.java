@@ -2,6 +2,7 @@ package inzagher.expense.tracker.server.dto;
 
 import inzagher.expense.tracker.server.xml.LocalDateTimeXmlAdapter;
 import java.time.LocalDateTime;
+import java.util.UUID;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
@@ -10,18 +11,18 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @XmlType
 @XmlAccessorType(XmlAccessType.FIELD)
 public class BackupMetadataDTO {
-    private String id;
+    private UUID id;
     @XmlJavaTypeAdapter(LocalDateTimeXmlAdapter.class)
     private LocalDateTime time;
     private Integer expenses;
     private Integer categories;
     private Integer persons;
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

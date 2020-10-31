@@ -64,7 +64,7 @@ public class Category implements Serializable {
     
     public CategoryDTO toDTO() {
         CategoryDTO dto = new CategoryDTO();
-        dto.setId(id == null ? null : id.toString());
+        dto.setId(id);
         dto.setName(name);
         dto.setColor(color.toDTO());
         dto.setDescription(description);

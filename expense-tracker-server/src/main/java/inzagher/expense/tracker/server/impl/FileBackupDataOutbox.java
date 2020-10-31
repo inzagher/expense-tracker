@@ -1,19 +1,19 @@
 package inzagher.expense.tracker.server.impl;
 
+import inzagher.expense.tracker.server.core.BackupDataOutbox;
 import inzagher.expense.tracker.server.model.BackupMetadata;
-import org.springframework.stereotype.Component;
-import inzagher.expense.tracker.server.core.BackupDataStorage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.nio.file.Paths;
+import org.springframework.stereotype.Component;
 
 @Component
-public class FileBackupDataStorage implements BackupDataStorage {
+public class FileBackupDataOutbox implements BackupDataOutbox {
     private final String directory;
 
-    public FileBackupDataStorage(String directory) {
+    public FileBackupDataOutbox(String directory) {
         this.directory = directory;
     }
     

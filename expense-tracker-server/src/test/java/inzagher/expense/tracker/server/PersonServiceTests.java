@@ -14,9 +14,9 @@ import java.util.Optional;
 import java.util.UUID;
 import javax.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -81,10 +81,9 @@ public class PersonServiceTests {
     
     @Test
     public void personLoadingTest() {
-        String id = bob.getId().toString();
-        Optional<PersonDTO> loaded = personService.getPersonById(id);
+        Optional<PersonDTO> loaded = personService.getPersonById(bob.getId());
         assertTrue(loaded.isPresent());
-        assertEquals(loaded.get().getId(), id);
+        assertEquals(loaded.get().getId(), bob.getId());
         assertEquals(loaded.get().getName(), "BOB");
     }
     
@@ -92,33 +91,31 @@ public class PersonServiceTests {
     public void personCreationTest() {
         PersonDTO alice = new PersonDTO();
         alice.setName("ALICE");
-        String storedRecordID = personService.storePerson(alice);
+        UUID storedRecordID = personService.storePerson(alice);
         assertNotNull(storedRecordID);
         assertEquals(personRepository.count(), 3L);
-        assertEquals(personRepository.getOne(UUID.fromString(storedRecordID)).getName(), "ALICE");
+        assertEquals(personRepository.getOne(storedRecordID).getName(), "ALICE");
     }
     
     @Test
     public void personEditingTest() {
         PersonDTO person = stan.toDTO();
         person.setName("STANLEY");
-        String storedRecordID = personService.storePerson(person);
-        assertEquals(storedRecordID, stan.getId().toString());
+        UUID storedRecordID = personService.storePerson(person);
+        assertEquals(storedRecordID, stan.getId());
         assertEquals(personRepository.count(), 2L);
         assertEquals(personRepository.getOne(stan.getId()).getName(), "STANLEY");
     }
     
     @Test
     public void personDeletionTest() {
-        String id = bob.getId().toString();
-        personService.deletePerson(id);
+        personService.deletePerson(bob.getId());
         assertEquals(personRepository.count(), 1L);
     }
     
     @Test
     public void dependentPersonDeletionTest() {
-        String id = stan.getId().toString();
-        personService.deletePerson(id);
+        personService.deletePerson(stan.getId());
         assertEquals(personRepository.count(), 1L);
         assertEquals(expenseRepository.count(), 1L);
         assertNull(expenseRepository.getOne(purchase.getId()).getPerson());

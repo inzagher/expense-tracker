@@ -11,11 +11,12 @@ import inzagher.expense.tracker.server.repository.PersonRepository;
 import inzagher.expense.tracker.server.service.ExpenseService;
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.UUID;
 import javax.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -72,10 +73,9 @@ public class ExpenseServiceTests {
     
     @Test
     public void expenseLoadingTest() {
-        String id = purchase.getId().toString();
-        Optional<ExpenseDTO> loaded = expenseService.getExpenseById(id);
+        Optional<ExpenseDTO> loaded = expenseService.getExpenseById(purchase.getId());
         assertTrue(loaded.isPresent());
-        assertEquals(loaded.get().getId(), id);
+        assertEquals(loaded.get().getId(), purchase.getId());
         assertEquals(loaded.get().getAmount(), Float.valueOf(12.1F));
     }
     
@@ -92,9 +92,9 @@ public class ExpenseServiceTests {
     public void expenseEditingTest() {
         ExpenseDTO expense = purchase.toDTO();
         expense.setAmount(900F);
-        expense.setCategoryId(phone.getId().toString());
-        String storedRecordID = expenseService.storeExpense(expense);
-        assertEquals(storedRecordID, purchase.getId().toString());
+        expense.setCategoryId(phone.getId());
+        UUID storedRecordID = expenseService.storeExpense(expense);
+        assertEquals(storedRecordID, purchase.getId());
         assertEquals(expenseRepository.count(), 1L);
         assertEquals(categoryRepository.count(), 2L);
         assertEquals(personRepository.count(), 1L);
@@ -102,8 +102,7 @@ public class ExpenseServiceTests {
     
     @Test
     public void expenseDeletionTest() {
-        String id = purchase.getId().toString();
-        expenseService.deleteExpense(id);
+        expenseService.deleteExpense(purchase.getId());
         assertEquals(expenseRepository.count(), 0L);
         assertEquals(categoryRepository.count(), 2L);
         assertEquals(personRepository.count(), 1L);

@@ -1,7 +1,7 @@
 package inzagher.expense.tracker.server.repository;
 
-import inzagher.expense.tracker.server.model.ExpenseFilter;
 import inzagher.expense.tracker.server.model.Expense;
+import inzagher.expense.tracker.server.model.ExpenseFilter;
 import inzagher.expense.tracker.server.model.MonthlyReportItem;
 import inzagher.expense.tracker.server.model.YearlyReportItem;
 import java.util.List;

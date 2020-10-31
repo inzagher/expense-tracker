@@ -1,7 +1,7 @@
 package inzagher.expense.tracker.server;
 
-import inzagher.expense.tracker.server.core.BackupDataStorage;
-import inzagher.expense.tracker.server.impl.FileBackupDataStorage;
+import inzagher.expense.tracker.server.core.BackupDataOutbox;
+import inzagher.expense.tracker.server.impl.FileBackupDataOutbox;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -25,8 +25,8 @@ public class ServerConfiguration {
     }
     
     @Bean
-    public BackupDataStorage fileBackupDataStorage() {
+    public BackupDataOutbox fileBackupDataOutbox() {
         String directory = environment.getProperty("backup.directory");
-        return new FileBackupDataStorage(directory);
+        return new FileBackupDataOutbox(directory);
     }
 }

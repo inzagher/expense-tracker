@@ -15,9 +15,9 @@ import java.util.Optional;
 import java.util.UUID;
 import javax.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -87,10 +87,9 @@ public class CategorySeriviceTests {
     
     @Test
     public void categoryLoadingTest() {
-        String id = rent.getId().toString();
-        Optional<CategoryDTO> loaded = categoryService.getCategoryById(id);
+        Optional<CategoryDTO> loaded = categoryService.getCategoryById(rent.getId());
         assertTrue(loaded.isPresent());
-        assertEquals(loaded.get().getId(), id);
+        assertEquals(loaded.get().getId(), rent.getId());
         assertEquals(loaded.get().getName(), "RENT");
     }
     
@@ -100,33 +99,31 @@ public class CategorySeriviceTests {
         education.setName("EDUCATION");
         education.setDescription("YEARLY EDUCATION BILL");
         education.setColor(new ColorDTO((byte)30, (byte)30, (byte)30));
-        String storedRecordID = categoryService.storeCategory(education);
+        UUID storedRecordID = categoryService.storeCategory(education);
         assertNotNull(storedRecordID);
         assertEquals(categoryRepository.count(), 3L);
-        assertEquals(categoryRepository.getOne(UUID.fromString(storedRecordID)).getName(), "EDUCATION");
+        assertEquals(categoryRepository.getOne(storedRecordID).getName(), "EDUCATION");
     }
     
     @Test
     public void categoryEditingTest() {
         CategoryDTO category = phone.toDTO();
         category.setColor(new ColorDTO((byte)16, (byte)16, (byte)16));
-        String storedRecordID = categoryService.storeCategory(category);
-        assertEquals(storedRecordID, phone.getId().toString());
+        UUID storedRecordID = categoryService.storeCategory(category);
+        assertEquals(storedRecordID, phone.getId());
         assertEquals(categoryRepository.count(), 2L);
         assertEquals(categoryRepository.getOne(phone.getId()).getColor().getRed(), 16);
     }
     
     @Test
     public void categoryDeletionTest() {
-        String id = phone.getId().toString();
-        categoryService.deleteCategory(id);
+        categoryService.deleteCategory(phone.getId());
         assertEquals(personRepository.count(), 1L);
     }
     
     @Test
     public void dependentCategoryDeletionTest() {
-        String id = phone.getId().toString();
-        categoryService.deleteCategory(id);
+        categoryService.deleteCategory(phone.getId());
         assertEquals(personRepository.count(), 1L);
         assertEquals(expenseRepository.count(), 1L);
         assertNull(expenseRepository.getOne(payment.getId()).getCategory());

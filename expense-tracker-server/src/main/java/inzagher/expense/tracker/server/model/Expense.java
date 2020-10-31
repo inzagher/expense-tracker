@@ -1,10 +1,12 @@
 package inzagher.expense.tracker.server.model;
 
+import inzagher.expense.tracker.server.converter.LocalDateConverter;
 import inzagher.expense.tracker.server.dto.ExpenseDTO;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.UUID;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -19,6 +21,7 @@ public class Expense implements Serializable {
     @GeneratedValue
     private UUID id;
     @Column(name="date")
+    @Convert(converter = LocalDateConverter.class)
     private LocalDate date;
     @ManyToOne
     @OnDelete(action = OnDeleteAction.NO_ACTION)
@@ -83,11 +86,11 @@ public class Expense implements Serializable {
     
     public ExpenseDTO toDTO() {
         ExpenseDTO dto = new ExpenseDTO();
-        dto.setId(id == null ? null : id.toString());
+        dto.setId(id);
         dto.setDate(date);
         dto.setAmount(amount);
-        dto.setPersonId(person == null ? null: person.getId().toString());
-        dto.setCategoryId(category == null ? null : category.getId().toString());
+        dto.setPersonId(person == null ? null: person.getId());
+        dto.setCategoryId(category == null ? null : category.getId());
         dto.setDescription(description);
         return dto;
     }

@@ -2,6 +2,7 @@ package inzagher.expense.tracker.server.dto;
 
 import inzagher.expense.tracker.server.xml.LocalDateXmlAdapter;
 import java.time.LocalDate;
+import java.util.UUID;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
@@ -10,35 +11,35 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @XmlType
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ExpenseDTO {
-    private String id;
-    private String personId;
-    private String categoryId;
+    private UUID id;
+    private UUID personId;
+    private UUID categoryId;
     @XmlJavaTypeAdapter(LocalDateXmlAdapter.class)
     private LocalDate date;
     private Float amount;
     private String description;
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
-    public String getPersonId() {
+    public UUID getPersonId() {
         return personId;
     }
 
-    public void setPersonId(String personId) {
+    public void setPersonId(UUID personId) {
         this.personId = personId;
     }
 
-    public String getCategoryId() {
+    public UUID getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(String categoryId) {
+    public void setCategoryId(UUID categoryId) {
         this.categoryId = categoryId;
     }
 

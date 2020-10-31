@@ -1,31 +1,35 @@
 package inzagher.expense.tracker.server.service;
 
+import inzagher.expense.tracker.server.core.BackupDataOutbox;
 import inzagher.expense.tracker.server.dto.BackupDataDTO;
+import inzagher.expense.tracker.server.dto.BackupMetadataDTO;
 import inzagher.expense.tracker.server.dto.CategoryDTO;
 import inzagher.expense.tracker.server.dto.ExpenseDTO;
 import inzagher.expense.tracker.server.dto.PersonDTO;
+import inzagher.expense.tracker.server.model.BackupMetadata;
 import inzagher.expense.tracker.server.model.Category;
+import inzagher.expense.tracker.server.model.Color;
 import inzagher.expense.tracker.server.model.Expense;
 import inzagher.expense.tracker.server.model.Person;
+import inzagher.expense.tracker.server.repository.BackupMetadataRepository;
 import inzagher.expense.tracker.server.repository.CategoryRepository;
 import inzagher.expense.tracker.server.repository.ExpenseRepository;
 import inzagher.expense.tracker.server.repository.PersonRepository;
+import java.io.ByteArrayInputStream;
+import java.io.OutputStream;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import inzagher.expense.tracker.server.core.BackupDataStorage;
-import inzagher.expense.tracker.server.dto.BackupMetadataDTO;
-import inzagher.expense.tracker.server.model.BackupMetadata;
-import inzagher.expense.tracker.server.repository.BackupMetadataRepository;
-import java.io.OutputStream;
-import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.zip.ZipEntry;
 
 @Service
 public class BackupService {
@@ -34,7 +38,7 @@ public class BackupService {
     private final CategoryRepository categoryRepository;
     private final PersonRepository personRepository;
     private final BackupMetadataRepository backupMetadataRepository;
-    private final BackupDataStorage backupDataStorage;
+    private final BackupDataOutbox backupDataOutbox;
     
     @Autowired
     public BackupService(
@@ -42,13 +46,13 @@ public class BackupService {
             CategoryRepository categoryRepository,
             PersonRepository personRepository,
             BackupMetadataRepository backupMetadataRepository,
-            BackupDataStorage backupDataStorage
+            BackupDataOutbox backupDataOutbox
     ) {
         this.expenseRepository = expenseRepository;
         this.categoryRepository = categoryRepository;
         this.personRepository = personRepository;
         this.backupMetadataRepository = backupMetadataRepository;
-        this.backupDataStorage = backupDataStorage;
+        this.backupDataOutbox = backupDataOutbox;
         
         Class[] classes = new Class[]{ BackupDataDTO.class };
         try { jaxbContext = JAXBContext.newInstance(classes); }
@@ -68,11 +72,62 @@ public class BackupService {
     public BackupMetadataDTO backupDatabase() {
         BackupDataDTO data = createDatabaseBackup();
         BackupMetadata metadata = createBackupMetadata(data);
-        storeBackupData(metadata, data);
+        serializeBackupData(metadata, data);
+        metadata = backupMetadataRepository.saveAndFlush(metadata);
         return metadata.toDTO();
     }
     
     public void restoreDatabase(byte[] data) {
+        BackupDataDTO dto = deserializeBackupData(data);
+        truncateAllTables();
+        storeBackupDataInDatabase(dto);
+    }
+    
+    private Person createPerson(PersonDTO dto) {
+        Person person = new Person();
+        person.setId(dto.getId());
+        person.setName(dto.getName());
+        return person;
+    }
+    
+    private Category createCategory(CategoryDTO dto) {
+        byte red = dto.getColor().getRed();
+        byte green = dto.getColor().getGreen();
+        byte blue = dto.getColor().getBlue();
+        Category category = new Category();
+        category.setId(dto.getId());
+        category.setName(dto.getName());
+        category.setDescription(dto.getDescription());
+        category.setColor(new Color(red, green, blue));
+        return category;
+    }
+    
+    private Expense createExpense(ExpenseDTO dto, List<Person> persons, List<Category> categories) {
+        Optional<Person> person = persons.stream()
+                .filter(c -> c.getId().equals(dto.getPersonId()))
+                .findFirst();
+        
+        Optional<Category> category = categories.stream()
+                .filter(c -> c.getId().equals(dto.getCategoryId()))
+                .findFirst();
+        
+        Expense expense = new Expense();
+        expense.setId(dto.getId());
+        expense.setDate(dto.getDate());
+        expense.setAmount(dto.getAmount());
+        expense.setPerson(person.orElse(null));
+        expense.setCategory(category.orElse(null));
+        expense.setDescription(dto.getDescription());
+        return expense;
+    }
+    
+    private BackupMetadata createBackupMetadata(BackupDataDTO dto) {
+        BackupMetadata metadata = new BackupMetadata();
+        metadata.setTime(LocalDateTime.now());
+        metadata.setExpenses(dto.getExpenses().size());
+        metadata.setCategories(dto.getCategories().size());
+        metadata.setPersons(dto.getPersons().size());
+        return metadata;
     }
     
     private BackupDataDTO createDatabaseBackup() {
@@ -95,9 +150,8 @@ public class BackupService {
         return dto;
     }
     
-    private void storeBackupData(BackupMetadata metadata, BackupDataDTO dto) {
-        backupMetadataRepository.saveAndFlush(metadata);
-        try (OutputStream sos = backupDataStorage.createOutputStream(metadata)) {
+    private void serializeBackupData(BackupMetadata metadata, BackupDataDTO dto) {
+        try (OutputStream sos = backupDataOutbox.createOutputStream(metadata)) {
             try (ZipOutputStream zos = new ZipOutputStream(sos)) {
                 zos.putNextEntry(new ZipEntry("expenses.xml"));
                 Marshaller marshaller = jaxbContext.createMarshaller();
@@ -108,12 +162,46 @@ public class BackupService {
         }
     }
     
-    private BackupMetadata createBackupMetadata(BackupDataDTO dto) {
-        BackupMetadata metadata = new BackupMetadata();
-        metadata.setTime(LocalDateTime.now());
-        metadata.setExpenses(dto.getExpenses().size());
-        metadata.setCategories(dto.getCategories().size());
-        metadata.setPersons(dto.getPersons().size());
-        return metadata;
+    private BackupDataDTO deserializeBackupData(byte[] data) {
+        try (ByteArrayInputStream bis = new ByteArrayInputStream(data)) {
+            try (ZipInputStream zis = new ZipInputStream(bis)) {
+                ZipEntry zipEntry = zis.getNextEntry();
+                if (zipEntry != null && zipEntry.getName().equals("expenses.xml")) {
+                    Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+                    return (BackupDataDTO)unmarshaller.unmarshal(zis);
+                } else {
+                    throw new RuntimeException("Zip archive is not backup.");
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    private void storeBackupDataInDatabase(BackupDataDTO dto) {
+        final List<Person> persons = personRepository.saveAll(
+            dto.getPersons().stream()
+                .map(this::createPerson)
+                .collect(Collectors.toList())
+        );
+        final List<Category> categories = categoryRepository.saveAll(
+            dto.getCategories().stream()
+                .map(this::createCategory)
+                .collect(Collectors.toList())
+        );
+        expenseRepository.saveAll(
+            dto.getExpenses().stream()
+                .map(e -> createExpense(e, persons, categories))
+                .collect(Collectors.toList())
+        );
+        BackupMetadata metadata = createBackupMetadata(dto);
+        backupMetadataRepository.saveAndFlush(metadata);
+    }
+    
+    private void truncateAllTables() {
+        expenseRepository.deleteAllInBatch();
+        categoryRepository.deleteAllInBatch();
+        personRepository.deleteAllInBatch();
+        backupMetadataRepository.deleteAllInBatch();
     }
 }

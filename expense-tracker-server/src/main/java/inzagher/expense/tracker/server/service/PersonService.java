@@ -32,28 +32,25 @@ public class PersonService {
                 .collect(Collectors.toList());
     }
     
-    public Optional<PersonDTO> getPersonById(String id) {
-        UUID uuid = UUID.fromString(id);
-        return personRepository.findById(uuid).map(Person::toDTO);
+    public Optional<PersonDTO> getPersonById(UUID id) {
+        return personRepository.findById(id).map(Person::toDTO);
     }
     
-    public String storePerson(PersonDTO dto) {
+    public UUID storePerson(PersonDTO dto) {
         Person model;
-        if(dto.getId() != null) {
-            UUID id = UUID.fromString(dto.getId());
-            Optional<Person> loadedPerson = personRepository.findById(id);
+        if (dto.getId() != null) {
+            Optional<Person> loadedPerson = personRepository.findById(dto.getId());
             model = loadedPerson.orElseThrow(() -> new RuntimeException("PERSON NOT FOUND"));
         } else {
             model = new Person();
         }
         model.setName(dto.getName());
-        return personRepository.saveAndFlush(model).getId().toString();
+        return personRepository.saveAndFlush(model).getId();
     }
     
-    public void deletePerson(String id) {
-        UUID uuid = UUID.fromString(id);
-        resetDependentExpenses(uuid);
-        personRepository.deleteById(uuid);
+    public void deletePerson(UUID id) {
+        resetDependentExpenses(id);
+        personRepository.deleteById(id);
     }
     
     private void resetDependentExpenses(UUID personID) {

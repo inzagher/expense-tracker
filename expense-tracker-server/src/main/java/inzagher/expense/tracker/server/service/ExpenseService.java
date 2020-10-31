@@ -29,27 +29,23 @@ public class ExpenseService {
         this.personRepository = personRepository;
     }
     
-    public Optional<ExpenseDTO> getExpenseById(String id) {
-        UUID uuid = UUID.fromString(id);
-        return expenseRepository.findById(uuid).map(Expense::toDTO);
+    public Optional<ExpenseDTO> getExpenseById(UUID id) {
+        return expenseRepository.findById(id).map(Expense::toDTO);
     }
     
-    public String storeExpense(ExpenseDTO dto) {
+    public UUID storeExpense(ExpenseDTO dto) {
         Expense model;
         if (dto.getId() != null) {
-            UUID expenseID = UUID.fromString(dto.getId());
-            Optional<Expense> loadedExpense = expenseRepository.findById(expenseID);
+            Optional<Expense> loadedExpense = expenseRepository.findById(dto.getId());
             model = loadedExpense.orElseThrow(() -> new RuntimeException("EXPENSE NOT FOUND"));
         } else {
             model = new Expense();
         }
         
-        UUID categoryID = UUID.fromString(dto.getCategoryId());
-        Optional<Category> loadedCategory = categoryRepository.findById(categoryID);
+        Optional<Category> loadedCategory = categoryRepository.findById(dto.getCategoryId());
         Category category = loadedCategory.orElseThrow(() -> new RuntimeException("CATEGORY NOT FOUND"));
         
-        UUID personID = UUID.fromString(dto.getPersonId());
-        Optional<Person> loadedPerson = personRepository.findById(personID);
+        Optional<Person> loadedPerson = personRepository.findById(dto.getPersonId());
         Person person = loadedPerson.orElseThrow(() -> new RuntimeException("PERSON NOT FOUND"));
         
         model.setDate(dto.getDate());
@@ -57,11 +53,10 @@ public class ExpenseService {
         model.setDescription(dto.getDescription());
         model.setCategory(category);
         model.setPerson(person);
-        return expenseRepository.saveAndFlush(model).getId().toString();
+        return expenseRepository.saveAndFlush(model).getId();
     }
     
-    public void deleteExpense(String id) {
-        UUID uuid = UUID.fromString(id);
-        expenseRepository.deleteById(uuid);
+    public void deleteExpense(UUID id) {
+        expenseRepository.deleteById(id);
     }
 }

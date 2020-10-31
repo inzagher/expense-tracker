@@ -1,10 +1,12 @@
 package inzagher.expense.tracker.server.model;
 
+import inzagher.expense.tracker.server.converter.LocalDateTimeConverter;
 import inzagher.expense.tracker.server.dto.BackupMetadataDTO;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -15,6 +17,7 @@ public class BackupMetadata implements Serializable {
     @GeneratedValue
     private UUID id;
     @Column(name="time")
+    @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime time;
     @Column(name="expenses")
     private Integer expenses;
@@ -65,7 +68,7 @@ public class BackupMetadata implements Serializable {
     
     public BackupMetadataDTO toDTO() {
         BackupMetadataDTO dto = new BackupMetadataDTO();
-        dto.setId(id == null ? null : id.toString());
+        dto.setId(id);
         dto.setTime(time);
         dto.setExpenses(expenses);
         dto.setCategories(categories);

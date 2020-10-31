@@ -33,19 +33,17 @@ public class CategoryService {
                 .collect(Collectors.toList());
     }
     
-    public Optional<CategoryDTO> getCategoryById(String id) {
-        UUID uuid = UUID.fromString(id);
-        return categoryRepository.findById(uuid).map(Category::toDTO);
+    public Optional<CategoryDTO> getCategoryById(UUID id) {
+        return categoryRepository.findById(id).map(Category::toDTO);
     }
     
-    public String storeCategory(CategoryDTO dto) {
+    public UUID storeCategory(CategoryDTO dto) {
         Category model;
         byte red = dto.getColor().getRed();
         byte green = dto.getColor().getGreen();
         byte blue = dto.getColor().getBlue();
         if (dto.getId() != null) {
-            UUID id = UUID.fromString(dto.getId());
-            Optional<Category> loadedCategory = categoryRepository.findById(id);
+            Optional<Category> loadedCategory = categoryRepository.findById(dto.getId());
             model = loadedCategory.orElseThrow(() -> new RuntimeException("CATEGORY NOT FOUND"));
         } else {
             model = new Category();
@@ -53,13 +51,12 @@ public class CategoryService {
         model.setName(dto.getName());
         model.setDescription(dto.getDescription());
         model.setColor(new Color(red, green, blue));
-        return categoryRepository.saveAndFlush(model).getId().toString();
+        return categoryRepository.saveAndFlush(model).getId();
     }
     
-    public void deleteCategory(String id) {
-        UUID uuid = UUID.fromString(id);
-        resetDependentExpenses(uuid);
-        categoryRepository.deleteById(uuid);
+    public void deleteCategory(UUID id) {
+        resetDependentExpenses(id);
+        categoryRepository.deleteById(id);
     }
     
     private void resetDependentExpenses(UUID categoryID) {

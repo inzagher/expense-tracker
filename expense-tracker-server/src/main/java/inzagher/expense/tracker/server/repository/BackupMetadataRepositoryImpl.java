@@ -1,8 +1,6 @@
 package inzagher.expense.tracker.server.repository;
 
 import inzagher.expense.tracker.server.model.BackupMetadata;
-import inzagher.expense.tracker.server.model.Expense;
-import java.util.ArrayList;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
