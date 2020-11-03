@@ -59,25 +59,25 @@ public class BackupService {
         catch(JAXBException e) { throw new RuntimeException(e); }
     }
     
-    public List<BackupMetadataDTO> getAllBackups() {
+    public List<BackupMetadataDTO> getAllBackupInfos() {
         return backupMetadataRepository.findAll().stream()
                 .map(BackupMetadata::toDTO)
                 .collect(Collectors.toList());
     }
     
-    public Optional<BackupMetadataDTO> getLastBackup() {
+    public Optional<BackupMetadataDTO> getLastBackupInfo() {
         return backupMetadataRepository.last().map(BackupMetadata::toDTO);
     }
     
-    public BackupMetadataDTO backupDatabase() {
-        BackupDataDTO data = createDatabaseBackup();
+    public BackupMetadataDTO createDatabaseBackup() {
+        BackupDataDTO data = loadBackupDataFromDatabase();
         BackupMetadata metadata = createBackupMetadata(data);
         serializeBackupData(metadata, data);
         metadata = backupMetadataRepository.saveAndFlush(metadata);
         return metadata.toDTO();
     }
     
-    public void restoreDatabase(byte[] data) {
+    public void restoreDatabaseFromBackup(byte[] data) {
         BackupDataDTO dto = deserializeBackupData(data);
         truncateAllTables();
         storeBackupDataInDatabase(dto);
@@ -130,26 +130,6 @@ public class BackupService {
         return metadata;
     }
     
-    private BackupDataDTO createDatabaseBackup() {
-        BackupDataDTO dto = new BackupDataDTO();
-        List<CategoryDTO> categories = categoryRepository.findAll()
-                .stream()
-                .map(Category::toDTO)
-                .collect(Collectors.toList());
-        dto.setCategories(categories);
-        List<PersonDTO> persons = personRepository.findAll()
-                .stream()
-                .map(Person::toDTO)
-                .collect(Collectors.toList());
-        dto.setPersons(persons);
-        List<ExpenseDTO> expenses = expenseRepository.findAll()
-                .stream()
-                .map(Expense::toDTO)
-                .collect(Collectors.toList());
-        dto.setExpenses(expenses);
-        return dto;
-    }
-    
     private void serializeBackupData(BackupMetadata metadata, BackupDataDTO dto) {
         try (OutputStream sos = backupDataOutbox.createOutputStream(metadata)) {
             try (ZipOutputStream zos = new ZipOutputStream(sos)) {
@@ -176,6 +156,25 @@ public class BackupService {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+    private BackupDataDTO loadBackupDataFromDatabase() {
+        BackupDataDTO dto = new BackupDataDTO();
+        List<CategoryDTO> categories = categoryRepository.findAll()
+                .stream()
+                .map(Category::toDTO)
+                .collect(Collectors.toList());
+        dto.setCategories(categories);
+        List<PersonDTO> persons = personRepository.findAll()
+                .stream()
+                .map(Person::toDTO)
+                .collect(Collectors.toList());
+        dto.setPersons(persons);
+        List<ExpenseDTO> expenses = expenseRepository.findAll()
+                .stream()
+                .map(Expense::toDTO)
+                .collect(Collectors.toList());
+        dto.setExpenses(expenses);
+        return dto;
     }
     
     private void storeBackupDataInDatabase(BackupDataDTO dto) {

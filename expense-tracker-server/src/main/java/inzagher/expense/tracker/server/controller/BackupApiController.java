@@ -23,17 +23,17 @@ public class BackupApiController {
     
     @GetMapping(path = "/api/backups", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<BackupMetadataDTO> list() {
-        return backupService.getAllBackups();
+        return backupService.getAllBackupInfos();
     }
     
     @GetMapping(path = "/api/backup-database", produces = MediaType.APPLICATION_JSON_VALUE)
     public BackupMetadataDTO backupDatabase() {
-        return backupService.backupDatabase();
+        return backupService.createDatabaseBackup();
     }
     
     @PostMapping(path = "/api/restore-database", produces = MediaType.APPLICATION_JSON_VALUE)
     public void restoreDatabase(@RequestParam MultipartFile file) {
-        try { backupService.restoreDatabase(file.getBytes()); }
+        try { backupService.restoreDatabaseFromBackup(file.getBytes()); }
         catch (IOException e) { throw new RuntimeException(e); }
     }
 }

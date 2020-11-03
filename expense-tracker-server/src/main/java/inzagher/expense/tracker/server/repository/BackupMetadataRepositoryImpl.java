@@ -25,7 +25,6 @@ public class BackupMetadataRepositoryImpl implements BackupMetadataRepositoryExt
         cq.orderBy(cb.desc(root.get("time")));
         
         TypedQuery<BackupMetadata> query = entityManager.createQuery(cq).setMaxResults(1);
-        BackupMetadata metadata = query.getSingleResult();
-        return metadata == null ? Optional.empty() : Optional.of(metadata);
+        return query.getResultList().stream().findFirst();
     }
 }

@@ -7,6 +7,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,10 +21,18 @@ public class FileBackupDataOutbox implements BackupDataOutbox {
     
     @Override
     public OutputStream createOutputStream(BackupMetadata metadata) {
-        File file = Paths.get(directory, "backup.zip").toFile();
+        File file = Paths.get(directory, formatBackupFileName()).toFile();
+        
         if (file.exists()) { file.delete(); }
+        else { new File(directory).mkdirs(); }
         
         try { return new FileOutputStream(file); }
         catch (FileNotFoundException e) { throw new RuntimeException(e); }
+    }
+    
+    private String formatBackupFileName() {
+        String pattern = "yyyy_MM_dd_HH_mm_ss";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        return "backup_" + LocalDateTime.now().format(formatter) + ".zip";
     }
 }
