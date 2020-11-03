@@ -29,6 +29,8 @@ public class MonthlyReportItem {
     
     public MonthlyReportItemDTO toDTO() {
         MonthlyReportItemDTO dto = new MonthlyReportItemDTO();
+        dto.setCategory(category == null ? null : category.toDTO());
+        dto.setAmount(amount);
         return dto;
     }
 }

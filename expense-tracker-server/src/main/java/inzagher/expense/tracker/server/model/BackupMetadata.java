@@ -10,8 +10,10 @@ import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "backups")
 public class BackupMetadata implements Serializable {
     @Id
     @GeneratedValue

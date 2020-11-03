@@ -54,7 +54,7 @@ public class CategorySeriviceTests {
         
         rent = new Category();
         rent.setName("RENT");
-        rent.setDescription("RENT PHONE BILL");
+        rent.setDescription("MONTHLY RENT BILL");
         rent.setColor(new Color((byte)128, (byte)128, (byte)128));
         rent = categoryRepository.saveAndFlush(rent);
         assertEquals(categoryRepository.count(), 2L);
