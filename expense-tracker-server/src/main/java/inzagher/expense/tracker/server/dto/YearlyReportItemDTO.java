@@ -10,6 +10,11 @@ public class YearlyReportItemDTO {
     private int month;
     private Float amount;
 
+    public YearlyReportItemDTO(int month, Float amount) {
+        this.month = month;
+        this.amount = amount;
+    }
+
     public int getMonth() {
         return month;
     }

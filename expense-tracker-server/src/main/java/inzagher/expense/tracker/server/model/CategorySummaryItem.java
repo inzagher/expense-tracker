@@ -1,12 +1,12 @@
 package inzagher.expense.tracker.server.model;
 
-import inzagher.expense.tracker.server.dto.MonthlyReportItemDTO;
+import inzagher.expense.tracker.server.dto.CategoryReportItemDTO;
 
-public class MonthlyReportItem {
+public class CategorySummaryItem {
     private Category category;
     private Float amount;
 
-    public MonthlyReportItem(Category category, Double amount) {
+    public CategorySummaryItem(Category category, Double amount) {
         this.category = category;
         this.amount = amount.floatValue();
     }
@@ -27,8 +27,8 @@ public class MonthlyReportItem {
         this.amount = amount;
     }
     
-    public MonthlyReportItemDTO toDTO() {
-        MonthlyReportItemDTO dto = new MonthlyReportItemDTO();
+    public CategoryReportItemDTO toDTO() {
+        CategoryReportItemDTO dto = new CategoryReportItemDTO();
         dto.setCategory(category == null ? null : category.toDTO());
         dto.setAmount(amount);
         return dto;

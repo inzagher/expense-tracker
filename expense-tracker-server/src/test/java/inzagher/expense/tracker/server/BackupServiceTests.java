@@ -21,13 +21,13 @@ public class BackupServiceTests {
     
     @Test
     @Disabled
-    public void lastBackupTest() {
+    public void lastBackupInfoTest() {
         
     }
     
     @Test
     @Disabled
-    public void backupListTest() {
+    public void backupInfoListTest() {
     }
     
     @Test

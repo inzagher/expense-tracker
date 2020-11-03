@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlType
 @XmlAccessorType(XmlAccessType.FIELD)
-public class MonthlyReportItemDTO {
+public class CategoryReportItemDTO {
     private CategoryDTO category;
     private Float amount;
 

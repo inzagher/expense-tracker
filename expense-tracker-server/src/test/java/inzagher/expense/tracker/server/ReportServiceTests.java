@@ -1,6 +1,6 @@
 package inzagher.expense.tracker.server;
 
-import inzagher.expense.tracker.server.dto.MonthlyReportItemDTO;
+import inzagher.expense.tracker.server.dto.CategoryReportItemDTO;
 import inzagher.expense.tracker.server.dto.YearlyReportItemDTO;
 import inzagher.expense.tracker.server.model.Category;
 import inzagher.expense.tracker.server.model.Color;
@@ -16,7 +16,6 @@ import javax.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -87,24 +86,24 @@ public class ReportServiceTests {
     }
     
     @Test
-    public void monthlyReportTest() {
-        List<MonthlyReportItemDTO> jan = reportService.createMonthlyReport(2020, 1);
+    public void monthlyCategoryReportTest() {
+        List<CategoryReportItemDTO> jan = reportService.createMonthlyCategoryReport(2020, 1);
         assertEquals(3, jan.size());
-        assertMonthlyReportItem(500.0F, jan, rent);
-        assertMonthlyReportItem(380.0F, jan, phone);
-        assertMonthlyReportItem(243.32F, jan, food);
+        assertMonthlyCategoryReportItem(500.0F, jan, rent);
+        assertMonthlyCategoryReportItem(380.0F, jan, phone);
+        assertMonthlyCategoryReportItem(243.32F, jan, food);
         
-        List<MonthlyReportItemDTO> feb = reportService.createMonthlyReport(2020, 2);
+        List<CategoryReportItemDTO> feb = reportService.createMonthlyCategoryReport(2020, 2);
         assertEquals(3, feb.size());
-        assertMonthlyReportItem(600.0F, feb, rent);
-        assertMonthlyReportItem(360.0F, feb, phone);
-        assertMonthlyReportItem(337.71F, feb, food);
+        assertMonthlyCategoryReportItem(600.0F, feb, rent);
+        assertMonthlyCategoryReportItem(360.0F, feb, phone);
+        assertMonthlyCategoryReportItem(337.71F, feb, food);
         
-        //List<MonthlyReportItemDTO> mar = reportService.createMonthlyReport(2020, 3);
-        //assertEquals(3, mar.size());
-        //assertMonthlyReportAmount(0.0F, mar, rent);
-        //assertMonthlyReportAmount(0.0F, mar, phone);
-        //assertMonthlyReportAmount(0.0F, mar, food);
+        List<CategoryReportItemDTO> mar = reportService.createMonthlyCategoryReport(2020, 3);
+        assertEquals(3, mar.size());
+        assertMonthlyCategoryReportItem(0.0F, mar, rent);
+        assertMonthlyCategoryReportItem(0.0F, mar, phone);
+        assertMonthlyCategoryReportItem(0.0F, mar, food);
     }
     
     @Test
@@ -164,8 +163,8 @@ public class ReportServiceTests {
         return personRepository.saveAndFlush(person);
     }
     
-    private void assertMonthlyReportItem(Float expectedAmount,
-            List<MonthlyReportItemDTO> report,
+    private void assertMonthlyCategoryReportItem(Float expectedAmount,
+            List<CategoryReportItemDTO> report,
             Category category) {
         Float actualAmount = report.stream()
                 .filter(item -> item.getCategory().getId().equals(category.getId()))
