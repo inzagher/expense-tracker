@@ -8,10 +8,12 @@ import inzagher.expense.tracker.server.repository.ExpenseRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@Transactional
 public class ReportService {
     private final CategoryRepository categoryRepository;
     private final ExpenseRepository expenseRepository;
