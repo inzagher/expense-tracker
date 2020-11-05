@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -16,7 +17,8 @@ import javax.persistence.Table;
 @Table(name = "categories")
 public class Category implements Serializable {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(nullable = false, updatable = false, columnDefinition = "UUID")
     private UUID id;
     @Column(name="name")
     private String name;

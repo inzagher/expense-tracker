@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -18,7 +19,8 @@ import org.hibernate.annotations.OnDeleteAction;
 @Entity
 public class Expense implements Serializable {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(nullable = false, updatable = false, columnDefinition = "UUID")
     private UUID id;
     @Column(name="date")
     @Convert(converter = LocalDateConverter.class)
