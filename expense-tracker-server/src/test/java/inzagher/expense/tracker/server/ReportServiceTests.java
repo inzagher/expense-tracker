@@ -3,14 +3,8 @@ package inzagher.expense.tracker.server;
 import inzagher.expense.tracker.server.dto.CategoryReportItemDTO;
 import inzagher.expense.tracker.server.dto.YearlyReportItemDTO;
 import inzagher.expense.tracker.server.model.Category;
-import inzagher.expense.tracker.server.model.Color;
-import inzagher.expense.tracker.server.model.Expense;
 import inzagher.expense.tracker.server.model.Person;
-import inzagher.expense.tracker.server.repository.CategoryRepository;
-import inzagher.expense.tracker.server.repository.ExpenseRepository;
-import inzagher.expense.tracker.server.repository.PersonRepository;
 import inzagher.expense.tracker.server.service.ReportService;
-import java.time.LocalDate;
 import java.util.List;
 import javax.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
@@ -28,11 +22,7 @@ public class ReportServiceTests {
     @Autowired
     private ReportService reportService;
     @Autowired
-    private ExpenseRepository expenseRepository;
-    @Autowired
-    private CategoryRepository categoryRepository;
-    @Autowired
-    private PersonRepository personRepository;
+    private TestDataManager manager;
     
     private Category phone;
     private Category rent;
@@ -43,43 +33,41 @@ public class ReportServiceTests {
     
     @BeforeEach
     public void beforeEachTest() {
-        phone = storeCategory("PHONE", "MONTHLY PHONE BILL", (byte)0, (byte)0, (byte)0);
-        rent = storeCategory("RENT", "MONTHLY RENT BILL", (byte)128, (byte)128, (byte)128);
-        food = storeCategory("FOOD", "DAILY FOOD PURCHASE", (byte)255, (byte)255, (byte)255);
-        assertEquals(categoryRepository.count(), 3L);
+        phone = manager.storeCategory("PHONE", "MONTHLY PHONE BILL", (byte)0, (byte)0, (byte)0);
+        rent = manager.storeCategory("RENT", "MONTHLY RENT BILL", (byte)128, (byte)128, (byte)128);
+        food = manager.storeCategory("FOOD", "DAILY FOOD PURCHASE", (byte)255, (byte)255, (byte)255);
+        assertEquals(3L, manager.countCategories());
         
-        bob = storePerson("BOB");
-        alice = storePerson("ALICE");
-        assertEquals(personRepository.count(), 2L);
+        bob = manager.storePerson("BOB");
+        alice = manager.storePerson("ALICE");
+        assertEquals(2L, manager.countPersons());
         
-        // JANYARY
-        storeExpense(2020, 1, 1, alice, rent, 500.0F);
-        storeExpense(2020, 1, 1, alice, food, 15.30F);
-        storeExpense(2020, 1, 1, bob, food, 35.40F);
-        storeExpense(2020, 1, 2, alice, phone, 100.0F);
-        storeExpense(2020, 1, 2, alice, food, 61.33F);
-        storeExpense(2020, 1, 2, bob, phone, 280.0F);
-        storeExpense(2020, 1, 2, bob, food, 58.90F);
-        storeExpense(2020, 1, 2, alice, food, 15.45F);
-        storeExpense(2020, 1, 3, alice, food, 56.94F);
+        // JANUARY
+        manager.storeExpense(2020, 1, 1, alice, rent, 500.0F);
+        manager.storeExpense(2020, 1, 1, alice, food, 15.30F);
+        manager.storeExpense(2020, 1, 1, bob, food, 35.40F);
+        manager.storeExpense(2020, 1, 2, alice, phone, 100.0F);
+        manager.storeExpense(2020, 1, 2, alice, food, 61.33F);
+        manager.storeExpense(2020, 1, 2, bob, phone, 280.0F);
+        manager.storeExpense(2020, 1, 2, bob, food, 58.90F);
+        manager.storeExpense(2020, 1, 2, alice, food, 15.45F);
+        manager.storeExpense(2020, 1, 3, alice, food, 56.94F);
         
         //FEBRUARY
-        storeExpense(2020, 2, 1, alice, rent, 600.0F);
-        storeExpense(2020, 2, 1, alice, food, 45.24F);
-        storeExpense(2020, 2, 1, bob, food, 44.73F);
-        storeExpense(2020, 2, 2, alice, phone, 130.0F);
-        storeExpense(2020, 2, 2, alice, food, 62.47F);
-        storeExpense(2020, 2, 2, bob, phone, 230.0F);
-        storeExpense(2020, 2, 2, bob, food, 72.50F);
-        storeExpense(2020, 2, 2, alice, food, 34.77F);
-        storeExpense(2020, 2, 3, alice, food, 78.0F);
+        manager.storeExpense(2020, 2, 1, alice, rent, 600.0F);
+        manager.storeExpense(2020, 2, 1, alice, food, 45.24F);
+        manager.storeExpense(2020, 2, 1, bob, food, 44.73F);
+        manager.storeExpense(2020, 2, 2, alice, phone, 130.0F);
+        manager.storeExpense(2020, 2, 2, alice, food, 62.47F);
+        manager.storeExpense(2020, 2, 2, bob, phone, 230.0F);
+        manager.storeExpense(2020, 2, 2, bob, food, 72.50F);
+        manager.storeExpense(2020, 2, 2, alice, food, 34.77F);
+        manager.storeExpense(2020, 2, 3, alice, food, 78.0F);
     }
     
     @AfterEach
     public void afterEachTest() {
-        expenseRepository.deleteAllInBatch();
-        categoryRepository.deleteAllInBatch();
-        personRepository.deleteAllInBatch();
+        manager.truncateAllTables();
         phone = null;
         rent = null;
         food = null;
@@ -137,32 +125,6 @@ public class ReportServiceTests {
         assertYearlyReportItem(0.00F, r2021, 10);
         assertYearlyReportItem(0.00F, r2021, 11);
         assertYearlyReportItem(0.00F, r2021, 12);
-    }
-    
-    private Expense storeExpense(int year, int month, int day,
-            Person person, Category category, Float amount) {
-        Expense expense = new Expense();
-        expense.setDate(LocalDate.of(year, month, day));
-        expense.setAmount(amount);
-        expense.setPerson(person);
-        expense.setCategory(category);
-        expense.setDescription("REPORT TEST");
-        return expenseRepository.saveAndFlush(expense);
-    }
-    
-    private Category storeCategory(String name, String description,
-            byte r, byte g, byte b) {
-        Category category = new Category();
-        category.setName(name);
-        category.setDescription(description);
-        category.setColor(new Color(r, g, b));
-        return categoryRepository.saveAndFlush(category);
-    }
-    
-    private Person storePerson(String name) {
-        Person person = new Person();
-        person.setName(name);
-        return personRepository.saveAndFlush(person);
     }
     
     private void assertMonthlyCategoryReportItem(Float expectedAmount,

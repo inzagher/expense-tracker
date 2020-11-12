@@ -48,13 +48,14 @@ public class PersonServiceTests {
         stan = new Person();
         stan.setName("STAN");
         stan = personRepository.saveAndFlush(stan);
-        assertEquals(personRepository.count(), 2L);
+        assertEquals(2L, personRepository.count());
         
         clothes = new Category();
         clothes.setName("CLOTHES");
         clothes.setColor(new Color((byte)0, (byte)0, (byte)0));
         clothes.setDescription("CLOTHES PURCHASE");
         clothes = categoryRepository.saveAndFlush(clothes);
+        assertEquals(1L, categoryRepository.count());
         
         purchase = new Expense();
         purchase.setDate(LocalDate.now());
@@ -63,6 +64,7 @@ public class PersonServiceTests {
         purchase.setCategory(clothes);
         purchase.setDescription("EXPENSE TESTING");
         purchase = expenseRepository.saveAndFlush(purchase);
+        assertEquals(1L, expenseRepository.count());
     }
     
     @AfterEach
@@ -78,15 +80,15 @@ public class PersonServiceTests {
     
     @Test
     public void personListTest() {
-        assertEquals(personService.getAllPersons().size(), 2);
+        assertEquals(2, personService.getAllPersons().size());
     }
     
     @Test
     public void personLoadingTest() {
         Optional<PersonDTO> loaded = personService.getPersonById(bob.getId());
         assertTrue(loaded.isPresent());
-        assertEquals(loaded.get().getId(), bob.getId());
-        assertEquals(loaded.get().getName(), "BOB");
+        assertEquals(bob.getId(), loaded.get().getId());
+        assertEquals("BOB", loaded.get().getName());
     }
     
     @Test
@@ -95,8 +97,8 @@ public class PersonServiceTests {
         alice.setName("ALICE");
         UUID storedRecordID = personService.storePerson(alice);
         assertNotNull(storedRecordID);
-        assertEquals(personRepository.count(), 3L);
-        assertEquals(personRepository.getOne(storedRecordID).getName(), "ALICE");
+        assertEquals(3L, personRepository.count());
+        assertEquals("ALICE", personRepository.getOne(storedRecordID).getName());
     }
     
     @Test
@@ -104,22 +106,22 @@ public class PersonServiceTests {
         PersonDTO person = stan.toDTO();
         person.setName("STANLEY");
         UUID storedRecordID = personService.storePerson(person);
-        assertEquals(storedRecordID, stan.getId());
-        assertEquals(personRepository.count(), 2L);
-        assertEquals(personRepository.getOne(stan.getId()).getName(), "STANLEY");
+        assertEquals(stan.getId(), storedRecordID);
+        assertEquals(2L, personRepository.count());
+        assertEquals("STANLEY", personRepository.getOne(stan.getId()).getName());
     }
     
     @Test
     public void personDeletionTest() {
         personService.deletePerson(bob.getId());
-        assertEquals(personRepository.count(), 1L);
+        assertEquals(1L, personRepository.count());
     }
     
     @Test
     public void dependentPersonDeletionTest() {
         personService.deletePerson(stan.getId());
-        assertEquals(personRepository.count(), 1L);
-        assertEquals(expenseRepository.count(), 1L);
+        assertEquals(1L, personRepository.count());
+        assertEquals(1L, expenseRepository.count());
         assertNull(expenseRepository.getOne(purchase.getId()).getPerson());
     }
 }

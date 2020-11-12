@@ -77,17 +77,17 @@ public class ExpenseServiceTests {
     public void expenseLoadingTest() {
         Optional<ExpenseDTO> loaded = expenseService.getExpenseById(purchase.getId());
         assertTrue(loaded.isPresent());
-        assertEquals(loaded.get().getId(), purchase.getId());
-        assertEquals(loaded.get().getAmount(), Float.valueOf(12.1F));
+        assertEquals(purchase.getId(), loaded.get().getId());
+        assertEquals(12.1F, loaded.get().getAmount());
     }
     
     @Test
     public void expenseCreationTest() {
         ExpenseDTO expense = createTestExpense(tom, food, 500.0F).toDTO();
         assertNotNull(expenseService.storeExpense(expense));
-        assertEquals(expenseRepository.count(), 2L);
-        assertEquals(categoryRepository.count(), 2L);
-        assertEquals(personRepository.count(), 1L);
+        assertEquals(2L, expenseRepository.count());
+        assertEquals(2L, categoryRepository.count());
+        assertEquals(1L, personRepository.count());
     }
     
     @Test
@@ -96,18 +96,18 @@ public class ExpenseServiceTests {
         expense.setAmount(900F);
         expense.setCategoryId(phone.getId());
         UUID storedRecordID = expenseService.storeExpense(expense);
-        assertEquals(storedRecordID, purchase.getId());
-        assertEquals(expenseRepository.count(), 1L);
-        assertEquals(categoryRepository.count(), 2L);
-        assertEquals(personRepository.count(), 1L);
+        assertEquals(purchase.getId(), storedRecordID);
+        assertEquals(1L, expenseRepository.count());
+        assertEquals(2L, categoryRepository.count());
+        assertEquals(1L, personRepository.count());
     }
     
     @Test
     public void expenseDeletionTest() {
         expenseService.deleteExpense(purchase.getId());
-        assertEquals(expenseRepository.count(), 0L);
-        assertEquals(categoryRepository.count(), 2L);
-        assertEquals(personRepository.count(), 1L);
+        assertEquals(0L, expenseRepository.count());
+        assertEquals(2L, categoryRepository.count());
+        assertEquals(1L, personRepository.count());
     }
     
     private Expense createTestExpense(Person person, Category category, Float amount) {

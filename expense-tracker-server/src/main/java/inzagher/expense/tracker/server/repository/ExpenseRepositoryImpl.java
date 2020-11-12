@@ -1,8 +1,8 @@
 package inzagher.expense.tracker.server.repository;
 
+import inzagher.expense.tracker.server.model.CategorySummaryItem;
 import inzagher.expense.tracker.server.model.Expense;
 import inzagher.expense.tracker.server.model.ExpenseFilter;
-import inzagher.expense.tracker.server.model.CategorySummaryItem;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;

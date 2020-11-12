@@ -45,21 +45,21 @@ public class CategorySeriviceTests {
         eric = new Person();
         eric.setName("ERIC");
         eric = personRepository.saveAndFlush(eric);
-        assertEquals(personRepository.count(), 1L);
+        assertEquals(1L, personRepository.count());
         
         phone = new Category();
         phone.setName("PHONE");
         phone.setDescription("MONTHLY PHONE BILL");
         phone.setColor(new Color((byte)0, (byte)0, (byte)0));
         phone = categoryRepository.saveAndFlush(phone);
-        assertEquals(categoryRepository.count(), 1L);
+        assertEquals(1L, categoryRepository.count());
         
         rent = new Category();
         rent.setName("RENT");
         rent.setDescription("MONTHLY RENT BILL");
         rent.setColor(new Color((byte)128, (byte)128, (byte)128));
         rent = categoryRepository.saveAndFlush(rent);
-        assertEquals(categoryRepository.count(), 2L);
+        assertEquals(2L, categoryRepository.count());
         
         payment = new Expense();
         payment.setDate(LocalDate.now());
@@ -68,7 +68,7 @@ public class CategorySeriviceTests {
         payment.setCategory(phone);
         payment.setDescription("TEST BILL PAYMENT");
         payment = expenseRepository.saveAndFlush(payment);
-        assertEquals(expenseRepository.count(), 1L);
+        assertEquals(1L, expenseRepository.count());
     }
     
     @AfterEach
@@ -84,15 +84,15 @@ public class CategorySeriviceTests {
     
     @Test
     public void categoryListTest() {
-        assertEquals(categoryService.getAllCategories().size(), 2);
+        assertEquals(2, categoryService.getAllCategories().size());
     }
     
     @Test
     public void categoryLoadingTest() {
         Optional<CategoryDTO> loaded = categoryService.getCategoryById(rent.getId());
         assertTrue(loaded.isPresent());
-        assertEquals(loaded.get().getId(), rent.getId());
-        assertEquals(loaded.get().getName(), "RENT");
+        assertEquals(rent.getId(), loaded.get().getId());
+        assertEquals("RENT", loaded.get().getName());
     }
     
     @Test
@@ -103,8 +103,8 @@ public class CategorySeriviceTests {
         education.setColor(new ColorDTO((byte)30, (byte)30, (byte)30));
         UUID storedRecordID = categoryService.storeCategory(education);
         assertNotNull(storedRecordID);
-        assertEquals(categoryRepository.count(), 3L);
-        assertEquals(categoryRepository.getOne(storedRecordID).getName(), "EDUCATION");
+        assertEquals(3L, categoryRepository.count());
+        assertEquals("EDUCATION", categoryRepository.getOne(storedRecordID).getName());
     }
     
     @Test
@@ -112,22 +112,22 @@ public class CategorySeriviceTests {
         CategoryDTO category = phone.toDTO();
         category.setColor(new ColorDTO((byte)16, (byte)16, (byte)16));
         UUID storedRecordID = categoryService.storeCategory(category);
-        assertEquals(storedRecordID, phone.getId());
-        assertEquals(categoryRepository.count(), 2L);
-        assertEquals(categoryRepository.getOne(phone.getId()).getColor().getRed(), 16);
+        assertEquals(phone.getId(), storedRecordID);
+        assertEquals(2L, categoryRepository.count());
+        assertEquals(16, categoryRepository.getOne(phone.getId()).getColor().getRed());
     }
     
     @Test
     public void categoryDeletionTest() {
         categoryService.deleteCategory(phone.getId());
-        assertEquals(personRepository.count(), 1L);
+        assertEquals(1L, personRepository.count());
     }
     
     @Test
     public void dependentCategoryDeletionTest() {
         categoryService.deleteCategory(phone.getId());
-        assertEquals(personRepository.count(), 1L);
-        assertEquals(expenseRepository.count(), 1L);
+        assertEquals(1L, personRepository.count());
+        assertEquals(1L, expenseRepository.count());
         assertNull(expenseRepository.getOne(payment.getId()).getCategory());
     }
 }
