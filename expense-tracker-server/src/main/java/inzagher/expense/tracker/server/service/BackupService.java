@@ -20,6 +20,7 @@ import java.io.OutputStream;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -35,6 +36,10 @@ import org.springframework.stereotype.Service;
 @Service
 @Transactional
 public class BackupService {
+    private static final int STATE_IDLE = 0;
+    private static final int STATE_BUSY = 1;
+    private static final AtomicInteger serviceState = new AtomicInteger();
+    
     private final JAXBContext jaxbContext;
     private final ExpenseRepository expenseRepository;
     private final CategoryRepository categoryRepository;
@@ -72,17 +77,27 @@ public class BackupService {
     }
     
     public BackupMetadataDTO createDatabaseBackup() {
-        BackupDataDTO data = loadBackupDataFromDatabase();
-        BackupMetadata metadata = createBackupMetadata(data);
-        serializeBackupData(metadata, data);
-        metadata = backupMetadataRepository.saveAndFlush(metadata);
-        return metadata.toDTO();
+        if (serviceState.compareAndSet(STATE_IDLE, STATE_BUSY)) {
+            BackupDataDTO data = loadBackupDataFromDatabase();
+            BackupMetadata metadata = createBackupMetadata(data);
+            serializeBackupData(metadata, data);
+            metadata = backupMetadataRepository.saveAndFlush(metadata);
+            serviceState.set(STATE_IDLE);
+            return metadata.toDTO();
+        } else {
+            throw new RuntimeException("Backup service is busy");
+        }
     }
     
     public void restoreDatabaseFromBackup(byte[] data) {
-        BackupDataDTO dto = deserializeBackupData(data);
-        truncateAllTables();
-        storeBackupDataInDatabase(dto);
+        if (serviceState.compareAndSet(STATE_IDLE, STATE_BUSY)) {
+            BackupDataDTO dto = deserializeBackupData(data);
+            truncateAllTables();
+            storeBackupDataInDatabase(dto);
+            serviceState.set(STATE_IDLE);
+        } else {
+            throw new RuntimeException("Backup service is busy");
+        }
     }
     
     private Person createPerson(PersonDTO dto) {
