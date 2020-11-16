@@ -6,7 +6,6 @@ import inzagher.expense.tracker.server.model.Category;
 import inzagher.expense.tracker.server.model.Person;
 import inzagher.expense.tracker.server.service.ReportService;
 import java.util.List;
-import javax.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,10 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
-@Transactional
 @SpringBootTest(classes = {ServiceRunner.class})
 @TestPropertySource(locations="classpath:test.properties")
 public class ReportServiceTests {
+    private static final String TEST_DESCRIPTION = "REPORT TEST";
+    
     @Autowired
     private ReportService reportService;
     @Autowired
@@ -43,26 +43,26 @@ public class ReportServiceTests {
         assertEquals(2L, manager.countPersons());
         
         // JANUARY
-        manager.storeExpense(2020, 1, 1, alice, rent, 500.0F);
-        manager.storeExpense(2020, 1, 1, alice, food, 15.30F);
-        manager.storeExpense(2020, 1, 1, bob, food, 35.40F);
-        manager.storeExpense(2020, 1, 2, alice, phone, 100.0F);
-        manager.storeExpense(2020, 1, 2, alice, food, 61.33F);
-        manager.storeExpense(2020, 1, 2, bob, phone, 280.0F);
-        manager.storeExpense(2020, 1, 2, bob, food, 58.90F);
-        manager.storeExpense(2020, 1, 2, alice, food, 15.45F);
-        manager.storeExpense(2020, 1, 3, alice, food, 56.94F);
+        manager.storeExpense(2020, 1, 1, alice, rent, 500.0F, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 1, 1, alice, food, 15.30F, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 1, 1, bob, food, 35.40F, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 1, 2, alice, phone, 100.0F, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 1, 2, alice, food, 61.33F, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 1, 2, bob, phone, 280.0F, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 1, 2, bob, food, 58.90F, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 1, 2, alice, food, 15.45F, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 1, 3, alice, food, 56.94F, TEST_DESCRIPTION);
         
         //FEBRUARY
-        manager.storeExpense(2020, 2, 1, alice, rent, 600.0F);
-        manager.storeExpense(2020, 2, 1, alice, food, 45.24F);
-        manager.storeExpense(2020, 2, 1, bob, food, 44.73F);
-        manager.storeExpense(2020, 2, 2, alice, phone, 130.0F);
-        manager.storeExpense(2020, 2, 2, alice, food, 62.47F);
-        manager.storeExpense(2020, 2, 2, bob, phone, 230.0F);
-        manager.storeExpense(2020, 2, 2, bob, food, 72.50F);
-        manager.storeExpense(2020, 2, 2, alice, food, 34.77F);
-        manager.storeExpense(2020, 2, 3, alice, food, 78.0F);
+        manager.storeExpense(2020, 2, 1, alice, rent, 600.0F, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 2, 1, alice, food, 45.24F, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 2, 1, bob, food, 44.73F, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 2, 2, alice, phone, 130.0F, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 2, 2, alice, food, 62.47F, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 2, 2, bob, phone, 230.0F, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 2, 2, bob, food, 72.50F, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 2, 2, alice, food, 34.77F, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 2, 3, alice, food, 78.0F, TEST_DESCRIPTION);
     }
     
     @AfterEach

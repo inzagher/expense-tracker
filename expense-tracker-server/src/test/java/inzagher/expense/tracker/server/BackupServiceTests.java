@@ -4,23 +4,25 @@ import inzagher.expense.tracker.server.dto.BackupMetadataDTO;
 import inzagher.expense.tracker.server.model.Category;
 import inzagher.expense.tracker.server.model.Person;
 import inzagher.expense.tracker.server.service.BackupService;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import javax.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
-@Transactional
 @SpringBootTest(classes = {ServiceRunner.class})
 @TestPropertySource(locations="classpath:test.properties")
 public class BackupServiceTests {
+    private static final String TEST_DESCRIPTION = "BACKUP TEST";
+    
     @Autowired
     private BackupService backupService;
     @Autowired
@@ -32,16 +34,16 @@ public class BackupServiceTests {
         Person p2 = manager.storePerson("P2");
         Person p3 = manager.storePerson("P3");
         
-        Category c1 = manager.storeCategory("C1", "BACKUP TEST", (byte)0, (byte)0, (byte)0);
-        Category c2 = manager.storeCategory("C2", "BACKUP TEST", (byte)64, (byte)64, (byte)64);
-        Category c3 = manager.storeCategory("C3", "BACKUP TEST", (byte)128, (byte)128, (byte)128);
+        Category c1 = manager.storeCategory("C1", TEST_DESCRIPTION, (byte)0, (byte)0, (byte)0);
+        Category c2 = manager.storeCategory("C2", TEST_DESCRIPTION, (byte)64, (byte)64, (byte)64);
+        Category c3 = manager.storeCategory("C3", TEST_DESCRIPTION, (byte)128, (byte)128, (byte)128);
         
-        manager.storeExpense(2020, 1, 1, p1, c1, 0F);
-        manager.storeExpense(2020, 1, 2, p1, c2, 10F);
-        manager.storeExpense(2020, 2, 3, p1, c3, 20F);
-        manager.storeExpense(2020, 3, 4, p1, c1, 30F);
-        manager.storeExpense(2020, 4, 5, p2, c1, 40F);
-        manager.storeExpense(2020, 5, 6, p3, c1, 50F);
+        manager.storeExpense(2020, 1, 1, p1, c1, 0F, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 1, 2, p1, c2, 10F, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 2, 3, p1, c3, 20F, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 3, 4, p1, c1, 30F, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 4, 5, p2, c1, 40F, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 5, 6, p3, c1, 50F, TEST_DESCRIPTION);
         
         manager.storeBackupMetadata(LocalDateTime.now().minusDays(3), 0, 1, 1);
         manager.storeBackupMetadata(LocalDateTime.now().minusDays(2), 2, 1, 1);
@@ -79,7 +81,23 @@ public class BackupServiceTests {
     }
     
     @Test
-    @Disabled
     public void restoreDatabaseTest() {
+        byte[] zip = loadTestResource("backup_for_tests.zip");
+        backupService.restoreDatabaseFromBackup(zip);
+        assertEquals(3, manager.countExpenses());
+        assertEquals(2, manager.countCategories());
+        assertEquals(1, manager.countPersons());
+        assertEquals(1, manager.countBackups());
+    }
+    
+    private byte[] loadTestResource(String name) {
+        URL url = getClass().getClassLoader().getResource(name);
+        try (InputStream is = url.openStream()) {
+            byte[] result = new byte[is.available()];
+            is.read(result);
+            return result;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

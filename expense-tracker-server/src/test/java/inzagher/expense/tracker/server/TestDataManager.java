@@ -11,10 +11,14 @@ import inzagher.expense.tracker.server.repository.ExpenseRepository;
 import inzagher.expense.tracker.server.repository.PersonRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.UUID;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@Transactional
 public class TestDataManager {
     private final ExpenseRepository expenseRepository;
     private final CategoryRepository categoryRepository;
@@ -57,14 +61,26 @@ public class TestDataManager {
         backupMetadataRepository.deleteAllInBatch();
     }
     
-    public Expense storeExpense(int year, int month, int day,
-            Person person, Category category, Float amount) {
+    public Optional<Expense> getExpense(UUID id) {
+        return expenseRepository.findById(id);
+    }
+    
+    public Optional<Category> getCatetory(UUID id) {
+        return categoryRepository.findById(id);
+    }
+    
+    public Optional<Person> getPerson(UUID id) {
+        return personRepository.findById(id);
+    }
+    
+    public Expense storeExpense(int year, int month, int day, Person person,
+            Category category, Float amount, String description) {
         Expense expense = new Expense();
         expense.setDate(LocalDate.of(year, month, day));
         expense.setAmount(amount);
         expense.setPerson(person);
         expense.setCategory(category);
-        expense.setDescription("REPORT TEST");
+        expense.setDescription(description);
         return expenseRepository.saveAndFlush(expense);
     }
     

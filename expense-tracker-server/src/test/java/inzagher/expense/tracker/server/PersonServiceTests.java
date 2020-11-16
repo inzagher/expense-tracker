@@ -2,17 +2,11 @@ package inzagher.expense.tracker.server;
 
 import inzagher.expense.tracker.server.dto.PersonDTO;
 import inzagher.expense.tracker.server.model.Category;
-import inzagher.expense.tracker.server.model.Color;
 import inzagher.expense.tracker.server.model.Expense;
 import inzagher.expense.tracker.server.model.Person;
-import inzagher.expense.tracker.server.repository.CategoryRepository;
-import inzagher.expense.tracker.server.repository.ExpenseRepository;
-import inzagher.expense.tracker.server.repository.PersonRepository;
 import inzagher.expense.tracker.server.service.PersonService;
-import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
-import javax.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,18 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
-@Transactional
 @SpringBootTest(classes = {ServiceRunner.class})
 @TestPropertySource(locations="classpath:test.properties")
 public class PersonServiceTests {
     @Autowired
     private PersonService personService;
     @Autowired
-    private ExpenseRepository expenseRepository;
-    @Autowired
-    private CategoryRepository categoryRepository;
-    @Autowired
-    private PersonRepository personRepository;
+    private TestDataManager manager;
     
     private Person bob;
     private Person stan;
@@ -41,37 +30,18 @@ public class PersonServiceTests {
     
     @BeforeEach
     public void beforeEachTest() {
-        bob = new Person();
-        bob.setName("BOB");
-        bob = personRepository.saveAndFlush(bob);
-        
-        stan = new Person();
-        stan.setName("STAN");
-        stan = personRepository.saveAndFlush(stan);
-        assertEquals(2L, personRepository.count());
-        
-        clothes = new Category();
-        clothes.setName("CLOTHES");
-        clothes.setColor(new Color((byte)0, (byte)0, (byte)0));
-        clothes.setDescription("CLOTHES PURCHASE");
-        clothes = categoryRepository.saveAndFlush(clothes);
-        assertEquals(1L, categoryRepository.count());
-        
-        purchase = new Expense();
-        purchase.setDate(LocalDate.now());
-        purchase.setAmount(10.1F);
-        purchase.setPerson(stan);
-        purchase.setCategory(clothes);
-        purchase.setDescription("EXPENSE TESTING");
-        purchase = expenseRepository.saveAndFlush(purchase);
-        assertEquals(1L, expenseRepository.count());
+        bob = manager.storePerson("BOB");
+        stan = manager.storePerson("STAN");
+        clothes = manager.storeCategory("CLOTHES", "CLOTHES PURCHASE", (byte)0, (byte)0, (byte)0);
+        purchase = manager.storeExpense(2020, 10, 10, stan, clothes, 10.1F, "TEST CLOSE PURCHASE");
+        assertEquals(2L, manager.countPersons());
+        assertEquals(1L, manager.countCategories());
+        assertEquals(1L, manager.countExpenses());
     }
     
     @AfterEach
     public void afterEachTest() {
-        expenseRepository.deleteAllInBatch();
-        categoryRepository.deleteAllInBatch();
-        personRepository.deleteAllInBatch();
+        manager.truncateAllTables();
         bob = null;
         stan = null;
         clothes = null;
@@ -97,8 +67,8 @@ public class PersonServiceTests {
         alice.setName("ALICE");
         UUID storedRecordID = personService.storePerson(alice);
         assertNotNull(storedRecordID);
-        assertEquals(3L, personRepository.count());
-        assertEquals("ALICE", personRepository.getOne(storedRecordID).getName());
+        assertEquals(3L, manager.countPersons());
+        assertEquals("ALICE", manager.getPerson(storedRecordID).get().getName());
     }
     
     @Test
@@ -107,21 +77,21 @@ public class PersonServiceTests {
         person.setName("STANLEY");
         UUID storedRecordID = personService.storePerson(person);
         assertEquals(stan.getId(), storedRecordID);
-        assertEquals(2L, personRepository.count());
-        assertEquals("STANLEY", personRepository.getOne(stan.getId()).getName());
+        assertEquals(2L, manager.countPersons());
+        assertEquals("STANLEY", manager.getPerson(stan.getId()).get().getName());
     }
     
     @Test
     public void personDeletionTest() {
         personService.deletePerson(bob.getId());
-        assertEquals(1L, personRepository.count());
+        assertEquals(1L, manager.countPersons());
     }
     
     @Test
     public void dependentPersonDeletionTest() {
         personService.deletePerson(stan.getId());
-        assertEquals(1L, personRepository.count());
-        assertEquals(1L, expenseRepository.count());
-        assertNull(expenseRepository.getOne(purchase.getId()).getPerson());
+        assertEquals(1L, manager.countPersons());
+        assertEquals(1L, manager.countExpenses());
+        assertNull(manager.getExpense(purchase.getId()).get().getPerson());
     }
 }
