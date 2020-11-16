@@ -174,6 +174,7 @@ public class BackupService {
             throw new RuntimeException(e);
         }
     }
+    
     private BackupDataDTO loadBackupDataFromDatabase() {
         BackupDataDTO dto = new BackupDataDTO();
         List<CategoryDTO> categories = categoryRepository.findAll()

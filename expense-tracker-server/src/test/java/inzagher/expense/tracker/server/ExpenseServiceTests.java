@@ -8,7 +8,6 @@ import inzagher.expense.tracker.server.service.ExpenseService;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
-import javax.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
-@Transactional
 @SpringBootTest(classes = {ServiceRunner.class})
 @TestPropertySource(locations="classpath:test.properties")
 public class ExpenseServiceTests {

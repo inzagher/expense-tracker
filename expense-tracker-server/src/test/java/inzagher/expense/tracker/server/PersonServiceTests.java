@@ -33,7 +33,7 @@ public class PersonServiceTests {
         bob = manager.storePerson("BOB");
         stan = manager.storePerson("STAN");
         clothes = manager.storeCategory("CLOTHES", "CLOTHES PURCHASE", (byte)0, (byte)0, (byte)0);
-        purchase = manager.storeExpense(2020, 10, 10, stan, clothes, 10.1F, "TEST CLOSE PURCHASE");
+        purchase = manager.storeExpense(2020, 10, 10, stan, clothes, 10.1F, "TEST CLOTHES PURCHASE");
         assertEquals(2L, manager.countPersons());
         assertEquals(1L, manager.countCategories());
         assertEquals(1L, manager.countExpenses());
