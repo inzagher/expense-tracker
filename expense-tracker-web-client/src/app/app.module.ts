@@ -3,24 +3,28 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { SettingsComponent } from './view/pages/settings/settings.component';
-import { ExpenseEditorDialogComponent } from './view/dialogs/expense-editor-dialog/expense-editor-dialog.component';
-import { CategoryEditorDialogComponent } from './view/dialogs/category-editor-dialog/category-editor-dialog.component';
-import { PersonEditorDialogComponent } from './view/dialogs/person-editor-dialog/person-editor-dialog.component';
+import { BackupDataAccessService, HttpBackupDataAccessService } from './service/backup-data-access.service';
+import { CategoryDataAccessService, HttpCategoryDataAccessService } from './service/category-data-access.service';
+import { ExpenseDataAccessService, HttpExpenseDataAccessService } from './service/expense-data-access.service';
+import { HttpPersonDataAccessService, PersonDataAccessService } from './service/person-data-access.service';
+
+import { SettingsPageComponent } from './view/settings-page/settings-page.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    SettingsComponent,
-    ExpenseEditorDialogComponent,
-    CategoryEditorDialogComponent,
-    PersonEditorDialogComponent
+    SettingsPageComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [
+      { provide: BackupDataAccessService, useClass: HttpBackupDataAccessService },
+      { provide: PersonDataAccessService, useClass: HttpPersonDataAccessService },
+      { provide: CategoryDataAccessService, useClass: HttpCategoryDataAccessService },
+      { provide: ExpenseDataAccessService, useClass: HttpExpenseDataAccessService }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
