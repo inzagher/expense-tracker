@@ -5,16 +5,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class HomeController implements ErrorController {
-    private static final String PATH = "/error";
-
-    @RequestMapping(value = PATH)
-    public String error() {
-        return "forward:/index.html";
-    }
-
-    @Override
-    public String getErrorPath() {
-        return PATH;
+public class HomeController {
+    @RequestMapping("/**/{path:[^\\.]+}")
+    public String get() {
+        return "forward:/";
     }
 }
