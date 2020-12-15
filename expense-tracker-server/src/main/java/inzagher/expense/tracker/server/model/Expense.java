@@ -3,6 +3,7 @@ package inzagher.expense.tracker.server.model;
 import inzagher.expense.tracker.server.converter.LocalDateConverter;
 import inzagher.expense.tracker.server.dto.ExpenseDTO;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 import javax.persistence.Column;
@@ -34,7 +35,7 @@ public class Expense implements Serializable {
     @JoinColumn(name = "person_id")
     private Person person;
     @Column(name="amount")
-    private Float amount;
+    private BigDecimal amount;
     @Column(name="description")
     private String description;
 
@@ -70,11 +71,11 @@ public class Expense implements Serializable {
         this.person = person;
     }
 
-    public Float getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Float amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

@@ -5,6 +5,7 @@ import inzagher.expense.tracker.server.dto.YearlyReportItemDTO;
 import inzagher.expense.tracker.server.model.CategorySummaryItem;
 import inzagher.expense.tracker.server.repository.CategoryRepository;
 import inzagher.expense.tracker.server.repository.ExpenseRepository;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,7 +28,7 @@ public class ReportService {
     
     public List<CategoryReportItemDTO> createMonthlyCategoryReport(int year, int month) {
         List<CategorySummaryItem> result = categoryRepository.findAll().stream()
-                .map(c -> new CategorySummaryItem(c, Double.valueOf(0)))
+                .map(c -> new CategorySummaryItem(c, BigDecimal.ZERO))
                 .collect(Collectors.toList());
         expenseRepository.getCategorySummary(year, month).forEach((repoItem) -> {
             result.stream()
@@ -42,8 +43,8 @@ public class ReportService {
     public List<YearlyReportItemDTO> createYearlyReport(int year) {
         List<YearlyReportItemDTO> report = new ArrayList<>();
         for (int month = 1; month <= 12; ++month) {
-            Float amount = expenseRepository.getTotalMonthAmount(year, month);
-            report.add(new YearlyReportItemDTO(month, amount == null ? 0 : amount));
+            BigDecimal amount = expenseRepository.getTotalMonthAmount(year, month);
+            report.add(new YearlyReportItemDTO(month, amount == null ? BigDecimal.ZERO : amount));
         }
         return report;
     }

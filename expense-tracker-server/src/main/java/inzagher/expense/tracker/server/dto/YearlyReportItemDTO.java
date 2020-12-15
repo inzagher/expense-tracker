@@ -1,5 +1,6 @@
 package inzagher.expense.tracker.server.dto;
 
+import java.math.BigDecimal;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
@@ -8,9 +9,9 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class YearlyReportItemDTO {
     private int month;
-    private Float amount;
+    private BigDecimal amount;
 
-    public YearlyReportItemDTO(int month, Float amount) {
+    public YearlyReportItemDTO(int month, BigDecimal amount) {
         this.month = month;
         this.amount = amount;
     }
@@ -23,11 +24,11 @@ public class YearlyReportItemDTO {
         this.month = month;
     }
 
-    public Float getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Float amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 }

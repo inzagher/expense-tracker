@@ -9,6 +9,7 @@ import inzagher.expense.tracker.server.repository.BackupMetadataRepository;
 import inzagher.expense.tracker.server.repository.CategoryRepository;
 import inzagher.expense.tracker.server.repository.ExpenseRepository;
 import inzagher.expense.tracker.server.repository.PersonRepository;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -74,10 +75,10 @@ public class TestDataManager {
     }
     
     public Expense storeExpense(int year, int month, int day, Person person,
-            Category category, Float amount, String description) {
+            Category category, Double amount, String description) {
         Expense expense = new Expense();
         expense.setDate(LocalDate.of(year, month, day));
-        expense.setAmount(amount);
+        expense.setAmount(BigDecimal.valueOf(amount));
         expense.setPerson(person);
         expense.setCategory(category);
         expense.setDescription(description);

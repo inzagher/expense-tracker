@@ -1,6 +1,7 @@
 package inzagher.expense.tracker.server.dto;
 
 import inzagher.expense.tracker.server.xml.LocalDateXmlAdapter;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -16,7 +17,7 @@ public class ExpenseDTO {
     private UUID categoryId;
     @XmlJavaTypeAdapter(LocalDateXmlAdapter.class)
     private LocalDate date;
-    private Float amount;
+    private BigDecimal amount;
     private String description;
 
     public UUID getId() {
@@ -51,11 +52,11 @@ public class ExpenseDTO {
         this.date = date;
     }
 
-    public Float getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Float amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

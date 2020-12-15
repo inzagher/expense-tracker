@@ -1,14 +1,15 @@
 package inzagher.expense.tracker.server.model;
 
 import inzagher.expense.tracker.server.dto.CategoryReportItemDTO;
+import java.math.BigDecimal;
 
 public class CategorySummaryItem {
     private Category category;
-    private Float amount;
+    private BigDecimal amount;
 
-    public CategorySummaryItem(Category category, Double amount) {
+    public CategorySummaryItem(Category category, BigDecimal amount) {
         this.category = category;
-        this.amount = amount.floatValue();
+        this.amount = amount;
     }
 
     public Category getCategory() {
@@ -19,11 +20,11 @@ public class CategorySummaryItem {
         this.category = category;
     }
 
-    public Float getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Float amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
     

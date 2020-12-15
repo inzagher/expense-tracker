@@ -3,6 +3,7 @@ package inzagher.expense.tracker.server.repository;
 import inzagher.expense.tracker.server.model.CategorySummaryItem;
 import inzagher.expense.tracker.server.model.Expense;
 import inzagher.expense.tracker.server.model.ExpenseFilter;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,9 +62,9 @@ public class ExpenseRepositoryImpl implements ExpenseRepositoryExtension {
     }
     
     @Override
-    public Float getTotalMonthAmount(int year, int month) {
+    public BigDecimal getTotalMonthAmount(int year, int month) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Float> cq = cb.createQuery(Float.class);
+        CriteriaQuery<BigDecimal> cq = cb.createQuery(BigDecimal.class);
         Root<Expense> root = cq.from(Expense.class);
         
         ExpenseFilter filter = new ExpenseFilter();
@@ -75,7 +76,7 @@ public class ExpenseRepositoryImpl implements ExpenseRepositoryExtension {
         cq.where(predicates.toArray(new Predicate[0]));
         cq.select(cb.sum(root.get("amount")));
             
-        TypedQuery<Float> query = entityManager.createQuery(cq);
+        TypedQuery<BigDecimal> query = entityManager.createQuery(cq);
         return query.getSingleResult();
     }
     

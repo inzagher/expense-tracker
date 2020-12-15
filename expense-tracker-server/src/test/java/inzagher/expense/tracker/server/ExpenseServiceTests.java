@@ -5,13 +5,14 @@ import inzagher.expense.tracker.server.model.Category;
 import inzagher.expense.tracker.server.model.Expense;
 import inzagher.expense.tracker.server.model.Person;
 import inzagher.expense.tracker.server.service.ExpenseService;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
@@ -34,7 +35,7 @@ public class ExpenseServiceTests {
         tom = manager.storePerson("TOM");
         food = manager.storeCategory("FOOD", "FOOD PURCHASE", (byte)0, (byte)0, (byte)0);
         phone = manager.storeCategory("PHONE", "PHONE BILL", (byte)127, (byte)127, (byte)127);
-        purchase = manager.storeExpense(2020, 10, 10, tom, food, 12.1f, "FOOD PURCHASE");
+        purchase = manager.storeExpense(2020, 10, 10, tom, food, 12.10D, "FOOD PURCHASE");
         assertEquals(1L, manager.countPersons());
         assertEquals(2L, manager.countCategories());
         assertEquals(1L, manager.countExpenses());
@@ -54,7 +55,7 @@ public class ExpenseServiceTests {
         Optional<ExpenseDTO> loaded = expenseService.getExpenseById(purchase.getId());
         assertTrue(loaded.isPresent());
         assertEquals(purchase.getId(), loaded.get().getId());
-        assertEquals(12.1F, loaded.get().getAmount());
+        assertAmountEquals(BigDecimal.valueOf(12.10D), loaded.get().getAmount());
     }
     
     @Test
@@ -63,27 +64,27 @@ public class ExpenseServiceTests {
         expense.setDate(LocalDate.now());
         expense.setPersonId(tom.getId());
         expense.setCategoryId(food.getId());
-        expense.setAmount(51.20F);
+        expense.setAmount(BigDecimal.valueOf(51.20D));
         expense.setDescription("ANOTHER FOOD PURCHASE");
         UUID storedRecordID = expenseService.storeExpense(expense);
         assertNotNull(storedRecordID);
         assertEquals(2L, manager.countExpenses());
         assertEquals(2L, manager.countCategories());
         assertEquals(1L, manager.countPersons());
-        assertEquals(51.20F, manager.getExpense(storedRecordID).get().getAmount());
+        assertAmountEquals(BigDecimal.valueOf(51.20D), manager.getExpense(storedRecordID).get().getAmount());
     }
     
     @Test
     public void expenseEditingTest() {
         ExpenseDTO expense = purchase.toDTO();
-        expense.setAmount(90.0F);
+        expense.setAmount(BigDecimal.valueOf(90.00D));
         expense.setCategoryId(phone.getId());
         UUID storedRecordID = expenseService.storeExpense(expense);
         assertEquals(purchase.getId(), storedRecordID);
         assertEquals(1L, manager.countExpenses());
         assertEquals(2L, manager.countCategories());
         assertEquals(1L, manager.countPersons());
-        assertEquals(90.0F, manager.getExpense(storedRecordID).get().getAmount());
+        assertAmountEquals(BigDecimal.valueOf(90.00D), manager.getExpense(storedRecordID).get().getAmount());
     }
     
     @Test
@@ -92,5 +93,9 @@ public class ExpenseServiceTests {
         assertEquals(0L, manager.countExpenses());
         assertEquals(2L, manager.countCategories());
         assertEquals(1L, manager.countPersons());
+    }
+
+    private void assertAmountEquals(BigDecimal expected, BigDecimal actual) {
+        assertTrue(expected.compareTo(actual) == 0, "AMOUNT MISMATCH");
     }
 }

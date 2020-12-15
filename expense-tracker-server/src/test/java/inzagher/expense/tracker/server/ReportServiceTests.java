@@ -5,11 +5,12 @@ import inzagher.expense.tracker.server.dto.YearlyReportItemDTO;
 import inzagher.expense.tracker.server.model.Category;
 import inzagher.expense.tracker.server.model.Person;
 import inzagher.expense.tracker.server.service.ReportService;
+import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
@@ -43,26 +44,26 @@ public class ReportServiceTests {
         assertEquals(2L, manager.countPersons());
         
         // JANUARY
-        manager.storeExpense(2020, 1, 1, alice, rent, 500.0F, TEST_DESCRIPTION);
-        manager.storeExpense(2020, 1, 1, alice, food, 15.30F, TEST_DESCRIPTION);
-        manager.storeExpense(2020, 1, 1, bob, food, 35.40F, TEST_DESCRIPTION);
-        manager.storeExpense(2020, 1, 2, alice, phone, 100.0F, TEST_DESCRIPTION);
-        manager.storeExpense(2020, 1, 2, alice, food, 61.33F, TEST_DESCRIPTION);
-        manager.storeExpense(2020, 1, 2, bob, phone, 280.0F, TEST_DESCRIPTION);
-        manager.storeExpense(2020, 1, 2, bob, food, 58.90F, TEST_DESCRIPTION);
-        manager.storeExpense(2020, 1, 2, alice, food, 15.45F, TEST_DESCRIPTION);
-        manager.storeExpense(2020, 1, 3, alice, food, 56.94F, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 1, 1, alice, rent, 500.00D, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 1, 1, alice, food, 15.30D, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 1, 1, bob, food, 35.40D, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 1, 2, alice, phone, 100.00D, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 1, 2, alice, food, 61.33D, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 1, 2, bob, phone, 280.00D, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 1, 2, bob, food, 58.90D, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 1, 2, alice, food, 15.45D, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 1, 3, alice, food, 56.94D, TEST_DESCRIPTION);
         
         //FEBRUARY
-        manager.storeExpense(2020, 2, 1, alice, rent, 600.0F, TEST_DESCRIPTION);
-        manager.storeExpense(2020, 2, 1, alice, food, 45.24F, TEST_DESCRIPTION);
-        manager.storeExpense(2020, 2, 1, bob, food, 44.73F, TEST_DESCRIPTION);
-        manager.storeExpense(2020, 2, 2, alice, phone, 130.0F, TEST_DESCRIPTION);
-        manager.storeExpense(2020, 2, 2, alice, food, 62.47F, TEST_DESCRIPTION);
-        manager.storeExpense(2020, 2, 2, bob, phone, 230.0F, TEST_DESCRIPTION);
-        manager.storeExpense(2020, 2, 2, bob, food, 72.50F, TEST_DESCRIPTION);
-        manager.storeExpense(2020, 2, 2, alice, food, 34.77F, TEST_DESCRIPTION);
-        manager.storeExpense(2020, 2, 3, alice, food, 78.0F, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 2, 1, alice, rent, 600.00D, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 2, 1, alice, food, 45.24D, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 2, 1, bob, food, 44.73D, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 2, 2, alice, phone, 130.00D, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 2, 2, alice, food, 62.47D, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 2, 2, bob, phone, 230.00D, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 2, 2, bob, food, 72.50D, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 2, 2, alice, food, 34.77D, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 2, 3, alice, food, 78.00D, TEST_DESCRIPTION);
     }
     
     @AfterEach
@@ -79,67 +80,69 @@ public class ReportServiceTests {
     public void monthlyCategoryReportTest() {
         List<CategoryReportItemDTO> jan = reportService.createMonthlyCategoryReport(2020, 1);
         assertEquals(3, jan.size());
-        assertMonthlyCategoryReportItem(500.0F, jan, rent);
-        assertMonthlyCategoryReportItem(380.0F, jan, phone);
-        assertMonthlyCategoryReportItem(243.32F, jan, food);
+        assertMonthlyCategoryReportItem(500.00D, jan, rent);
+        assertMonthlyCategoryReportItem(380.00D, jan, phone);
+        assertMonthlyCategoryReportItem(243.32D, jan, food);
         
         List<CategoryReportItemDTO> feb = reportService.createMonthlyCategoryReport(2020, 2);
         assertEquals(3, feb.size());
-        assertMonthlyCategoryReportItem(600.0F, feb, rent);
-        assertMonthlyCategoryReportItem(360.0F, feb, phone);
-        assertMonthlyCategoryReportItem(337.71F, feb, food);
+        assertMonthlyCategoryReportItem(600.00D, feb, rent);
+        assertMonthlyCategoryReportItem(360.00D, feb, phone);
+        assertMonthlyCategoryReportItem(337.71D, feb, food);
         
         List<CategoryReportItemDTO> mar = reportService.createMonthlyCategoryReport(2020, 3);
         assertEquals(3, mar.size());
-        assertMonthlyCategoryReportItem(0.0F, mar, rent);
-        assertMonthlyCategoryReportItem(0.0F, mar, phone);
-        assertMonthlyCategoryReportItem(0.0F, mar, food);
+        assertMonthlyCategoryReportItem(0.00D, mar, rent);
+        assertMonthlyCategoryReportItem(0.00D, mar, phone);
+        assertMonthlyCategoryReportItem(0.00D, mar, food);
     }
     
     @Test
     public void yearlyReportTest() {
         List<YearlyReportItemDTO> r2020 = reportService.createYearlyReport(2020);
         assertEquals(12, r2020.size());
-        assertYearlyReportItem(1123.32F, r2020, 1);
-        assertYearlyReportItem(1297.71F, r2020, 2);
-        assertYearlyReportItem(0.00F, r2020, 4);
-        assertYearlyReportItem(0.00F, r2020, 5);
-        assertYearlyReportItem(0.00F, r2020, 6);
-        assertYearlyReportItem(0.00F, r2020, 7);
-        assertYearlyReportItem(0.00F, r2020, 8);
-        assertYearlyReportItem(0.00F, r2020, 9);
-        assertYearlyReportItem(0.00F, r2020, 10);
-        assertYearlyReportItem(0.00F, r2020, 11);
-        assertYearlyReportItem(0.00F, r2020, 12);
+        assertYearlyReportItem(1123.32D, r2020, 1);
+        assertYearlyReportItem(1297.71D, r2020, 2);
+        assertYearlyReportItem(0.00D, r2020, 4);
+        assertYearlyReportItem(0.00D, r2020, 5);
+        assertYearlyReportItem(0.00D, r2020, 6);
+        assertYearlyReportItem(0.00D, r2020, 7);
+        assertYearlyReportItem(0.00D, r2020, 8);
+        assertYearlyReportItem(0.00D, r2020, 9);
+        assertYearlyReportItem(0.00D, r2020, 10);
+        assertYearlyReportItem(0.00D, r2020, 11);
+        assertYearlyReportItem(0.00D, r2020, 12);
         
         List<YearlyReportItemDTO> r2021 = reportService.createYearlyReport(2021);
         assertEquals(12, r2021.size());
-        assertYearlyReportItem(0.00F, r2021, 1);
-        assertYearlyReportItem(0.00F, r2021, 2);
-        assertYearlyReportItem(0.00F, r2021, 4);
-        assertYearlyReportItem(0.00F, r2021, 5);
-        assertYearlyReportItem(0.00F, r2021, 6);
-        assertYearlyReportItem(0.00F, r2021, 7);
-        assertYearlyReportItem(0.00F, r2021, 8);
-        assertYearlyReportItem(0.00F, r2021, 9);
-        assertYearlyReportItem(0.00F, r2021, 10);
-        assertYearlyReportItem(0.00F, r2021, 11);
-        assertYearlyReportItem(0.00F, r2021, 12);
+        assertYearlyReportItem(0.00D, r2021, 1);
+        assertYearlyReportItem(0.00D, r2021, 2);
+        assertYearlyReportItem(0.00D, r2021, 4);
+        assertYearlyReportItem(0.00D, r2021, 5);
+        assertYearlyReportItem(0.00D, r2021, 6);
+        assertYearlyReportItem(0.00D, r2021, 7);
+        assertYearlyReportItem(0.00D, r2021, 8);
+        assertYearlyReportItem(0.00D, r2021, 9);
+        assertYearlyReportItem(0.00D, r2021, 10);
+        assertYearlyReportItem(0.00D, r2021, 11);
+        assertYearlyReportItem(0.00D, r2021, 12);
     }
     
-    private void assertMonthlyCategoryReportItem(Float expectedAmount,
+    private void assertMonthlyCategoryReportItem(Double expectedAmount,
             List<CategoryReportItemDTO> report,
             Category category) {
-        Float actualAmount = report.stream()
+        BigDecimal actualAmount = report.stream()
                 .filter(item -> item.getCategory().getId().equals(category.getId()))
                 .findFirst().orElseThrow(() -> new RuntimeException("CATEGORY NOT FOUND"))
                 .getAmount();
-        assertEquals(expectedAmount, actualAmount, "AMOUNT MISMATCH FOR CATEGORY: " + category.getName());
+        Boolean areEqual = BigDecimal.valueOf(expectedAmount).compareTo(actualAmount) == 0;
+        assertTrue(areEqual, "AMOUNT MISMATCH FOR CATEGORY: " + category.getName());
     }
     
-    private void assertYearlyReportItem(Float expectedAmount,
+    private void assertYearlyReportItem(Double expectedAmount,
             List<YearlyReportItemDTO> report, int month) {
-        Float actualAmount = report.get(month - 1).getAmount();
-        assertEquals(expectedAmount, actualAmount, "AMOUNT MISMATCH FOR MONTH: " + month);
+        BigDecimal actualAmount = report.get(month - 1).getAmount();
+        Boolean areEqual = BigDecimal.valueOf(expectedAmount).compareTo(actualAmount) == 0;
+        assertTrue(areEqual, "AMOUNT MISMATCH FOR MONTH: " + month);
     }
 }

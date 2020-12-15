@@ -11,9 +11,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
@@ -38,12 +38,12 @@ public class BackupServiceTests {
         Category c2 = manager.storeCategory("C2", TEST_DESCRIPTION, (byte)64, (byte)64, (byte)64);
         Category c3 = manager.storeCategory("C3", TEST_DESCRIPTION, (byte)128, (byte)128, (byte)128);
         
-        manager.storeExpense(2020, 1, 1, p1, c1, 0F, TEST_DESCRIPTION);
-        manager.storeExpense(2020, 1, 2, p1, c2, 10F, TEST_DESCRIPTION);
-        manager.storeExpense(2020, 2, 3, p1, c3, 20F, TEST_DESCRIPTION);
-        manager.storeExpense(2020, 3, 4, p1, c1, 30F, TEST_DESCRIPTION);
-        manager.storeExpense(2020, 4, 5, p2, c1, 40F, TEST_DESCRIPTION);
-        manager.storeExpense(2020, 5, 6, p3, c1, 50F, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 1, 1, p1, c1, 0D, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 1, 2, p1, c2, 10D, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 2, 3, p1, c3, 20D, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 3, 4, p1, c1, 30D, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 4, 5, p2, c1, 40D, TEST_DESCRIPTION);
+        manager.storeExpense(2020, 5, 6, p3, c1, 50D, TEST_DESCRIPTION);
         
         manager.storeBackupMetadata(LocalDateTime.now().minusDays(3), 0, 1, 1);
         manager.storeBackupMetadata(LocalDateTime.now().minusDays(2), 2, 1, 1);

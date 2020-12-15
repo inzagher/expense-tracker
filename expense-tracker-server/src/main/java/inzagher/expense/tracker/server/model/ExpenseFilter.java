@@ -1,5 +1,6 @@
 package inzagher.expense.tracker.server.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,9 +9,9 @@ import java.util.UUID;
 public class ExpenseFilter {
     private final List<UUID> categoryIdentifiers = new ArrayList<>();
     private final List<UUID> personIdentifiers = new ArrayList<>();
-    private Float amountExact;
-    private Float amountFrom;
-    private Float amountTo;
+    private BigDecimal amountExact;
+    private BigDecimal amountFrom;
+    private BigDecimal amountTo;
     private LocalDate dateExact;
     private LocalDate dateFrom;
     private LocalDate dateTo;
@@ -24,27 +25,27 @@ public class ExpenseFilter {
         return personIdentifiers;
     }
 
-    public Float getAmountExact() {
+    public BigDecimal getAmountExact() {
         return amountExact;
     }
 
-    public void setAmountExact(Float amountExact) {
+    public void setAmountExact(BigDecimal amountExact) {
         this.amountExact = amountExact;
     }
 
-    public Float getAmountFrom() {
+    public BigDecimal getAmountFrom() {
         return amountFrom;
     }
 
-    public void setAmountFrom(Float amountFrom) {
+    public void setAmountFrom(BigDecimal amountFrom) {
         this.amountFrom = amountFrom;
     }
 
-    public Float getAmountTo() {
+    public BigDecimal getAmountTo() {
         return amountTo;
     }
 
-    public void setAmountTo(Float amountTo) {
+    public void setAmountTo(BigDecimal amountTo) {
         this.amountTo = amountTo;
     }
 

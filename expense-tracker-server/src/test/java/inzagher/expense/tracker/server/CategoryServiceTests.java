@@ -9,16 +9,16 @@ import inzagher.expense.tracker.server.service.CategoryService;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
 @SpringBootTest(classes = {ServiceRunner.class})
 @TestPropertySource(locations="classpath:test.properties")
-public class CategorySeriviceTests {
+public class CategoryServiceTests {
     @Autowired
     private CategoryService categoryService;
     @Autowired
@@ -34,7 +34,7 @@ public class CategorySeriviceTests {
         eric = manager.storePerson("ERIC");
         phone = manager.storeCategory("PHONE", "MONTHLY PHONE BILL", (byte)0, (byte)0, (byte)0);
         rent = manager.storeCategory("RENT", "MONTHLY RENT BILL", (byte)128, (byte)128, (byte)128);
-        payment = manager.storeExpense(2020, 10, 10, eric, phone, 1000.5F, "TEST BILL PAYMENT");
+        payment = manager.storeExpense(2020, 10, 10, eric, phone, 1000.50D, "TEST BILL PAYMENT");
         assertEquals(1L, manager.countPersons());
         assertEquals(2L, manager.countCategories());
         assertEquals(1L, manager.countExpenses());
