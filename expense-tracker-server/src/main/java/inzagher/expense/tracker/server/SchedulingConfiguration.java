@@ -27,7 +27,7 @@ public class SchedulingConfiguration {
         LocalDateTime lastBackupTime = metadata.isPresent()
                 ? metadata.get().getTime()
                 : LocalDateTime.MIN;
-        if (lastBackupTime.plusHours(24 * 7).isAfter(LocalDateTime.now())) {
+        if (lastBackupTime.plusHours(24 * 7).isBefore(LocalDateTime.now())) {
             backupService.createDatabaseBackup();
         }
     }
