@@ -5,11 +5,11 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 public class Color {
-    private byte red;
-    private byte green;
-    private byte blue;
+    private Integer red;
+    private Integer green;
+    private Integer blue;
     
-    public Color(byte red, byte green, byte blue) {
+    public Color(Integer red, Integer green, Integer blue) {
         this.red = red;
         this.green = green;
         this.blue = blue;
@@ -18,27 +18,27 @@ public class Color {
     public Color() {
     }
 
-    public byte getRed() {
+    public Integer getRed() {
         return red;
     }
 
-    public void setRed(byte red) {
+    public void setRed(Integer red) {
         this.red = red;
     }
 
-    public byte getGreen() {
+    public Integer getGreen() {
         return green;
     }
 
-    public void setGreen(byte green) {
+    public void setGreen(Integer green) {
         this.green = green;
     }
 
-    public byte getBlue() {
+    public Integer getBlue() {
         return blue;
     }
 
-    public void setBlue(byte blue) {
+    public void setBlue(Integer blue) {
         this.blue = blue;
     }
     

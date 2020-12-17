@@ -108,9 +108,9 @@ public class BackupService {
     }
     
     private Category createCategory(CategoryDTO dto) {
-        byte red = dto.getColor().getRed();
-        byte green = dto.getColor().getGreen();
-        byte blue = dto.getColor().getBlue();
+        Integer red = dto.getColor().getRed();
+        Integer green = dto.getColor().getGreen();
+        Integer blue = dto.getColor().getBlue();
         Category category = new Category();
         category.setId(dto.getId());
         category.setName(dto.getName());

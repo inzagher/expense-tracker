@@ -35,8 +35,8 @@ public class ExpenseServiceTests {
     @BeforeEach
     public void beforeEachTest() {
         tom = manager.storePerson("TOM");
-        food = manager.storeCategory("FOOD", "FOOD PURCHASE", (byte)0, (byte)0, (byte)0);
-        phone = manager.storeCategory("PHONE", "PHONE BILL", (byte)127, (byte)127, (byte)127);
+        food = manager.storeCategory("FOOD", "FOOD PURCHASE", 0, 0, 0);
+        phone = manager.storeCategory("PHONE", "PHONE BILL", 127, 127, 127);
         purchase = manager.storeExpense(2020, 10, 10, tom, food, 12.10D, "FOOD PURCHASE");
         assertEquals(1L, manager.countPersons());
         assertEquals(2L, manager.countCategories());

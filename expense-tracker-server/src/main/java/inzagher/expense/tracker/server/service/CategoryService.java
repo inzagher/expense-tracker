@@ -41,9 +41,9 @@ public class CategoryService {
     
     public UUID storeCategory(CategoryDTO dto) {
         Category model;
-        byte red = dto.getColor().getRed();
-        byte green = dto.getColor().getGreen();
-        byte blue = dto.getColor().getBlue();
+        Integer red = dto.getColor().getRed();
+        Integer green = dto.getColor().getGreen();
+        Integer blue = dto.getColor().getBlue();
         if (dto.getId() != null) {
             Optional<Category> loadedCategory = categoryRepository.findById(dto.getId());
             model = loadedCategory.orElseThrow(() -> new RuntimeException("CATEGORY NOT FOUND"));

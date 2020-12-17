@@ -86,7 +86,7 @@ public class TestDataManager {
     }
     
     public Category storeCategory(String name, String description,
-            byte r, byte g, byte b) {
+            int r, int g, int b) {
         Category category = new Category();
         category.setName(name);
         category.setDescription(description);
