@@ -9,9 +9,7 @@ import java.io.OutputStream;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import org.springframework.stereotype.Component;
 
-@Component
 public class FileBackupDataOutbox implements BackupDataOutbox {
     private final String directory;
 

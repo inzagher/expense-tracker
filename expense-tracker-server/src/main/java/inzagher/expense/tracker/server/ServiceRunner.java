@@ -6,11 +6,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@EnableScheduling
 @SpringBootApplication
 public class ServiceRunner implements WebMvcConfigurer {
     @Value("${spring.resources.static-locations}")
@@ -23,7 +21,7 @@ public class ServiceRunner implements WebMvcConfigurer {
     }
 
     @Bean
-    public BackupDataOutbox fileBackupDataOutbox() {
+    public BackupDataOutbox backupDataOutbox() {
         return new FileBackupDataOutbox(backupDirectoryPath);
     }
 

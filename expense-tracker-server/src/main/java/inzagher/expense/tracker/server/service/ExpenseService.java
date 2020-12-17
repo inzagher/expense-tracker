@@ -9,9 +9,9 @@ import inzagher.expense.tracker.server.repository.ExpenseRepository;
 import inzagher.expense.tracker.server.repository.PersonRepository;
 import java.util.Optional;
 import java.util.UUID;
-import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional

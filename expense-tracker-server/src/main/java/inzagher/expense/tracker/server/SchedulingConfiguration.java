@@ -5,15 +5,19 @@ import inzagher.expense.tracker.server.service.BackupService;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Scheduler {
+@Profile("!test")
+@EnableScheduling
+public class SchedulingConfiguration {
     private final BackupService backupService;
     
     @Autowired
-    public Scheduler(BackupService backupService) {
+    public SchedulingConfiguration(BackupService backupService) {
         this.backupService = backupService;
     }
     
