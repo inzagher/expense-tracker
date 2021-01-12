@@ -12,6 +12,7 @@ public class CategoryDTO {
     private String name;
     private ColorDTO color;
     private String description;
+    private Boolean obsolete;
 
     public UUID getId() {
         return id;
@@ -43,5 +44,13 @@ public class CategoryDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Boolean getObsolete() {
+        return obsolete;
+    }
+
+    public void setObsolete(Boolean obsolete) {
+        this.obsolete = obsolete;
     }
 }

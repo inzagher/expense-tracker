@@ -34,8 +34,8 @@ public class CategoryServiceTests {
     @BeforeEach
     public void beforeEachTest() {
         eric = manager.storePerson("ERIC");
-        phone = manager.storeCategory("PHONE", "MONTHLY PHONE BILL", 0, 0, 0);
-        rent = manager.storeCategory("RENT", "MONTHLY RENT BILL", 128, 128, 128);
+        phone = manager.storeCategory("PHONE", "MONTHLY PHONE BILL", 0, 0, 0, false);
+        rent = manager.storeCategory("RENT", "MONTHLY RENT BILL", 128, 128, 128, false);
         payment = manager.storeExpense(2020, 10, 10, eric, phone, 1000.50D, "TEST BILL PAYMENT");
         assertEquals(1L, manager.countPersons());
         assertEquals(2L, manager.countCategories());
@@ -70,6 +70,7 @@ public class CategoryServiceTests {
         education.setName("EDUCATION");
         education.setDescription("YEARLY EDUCATION BILL");
         education.setColor(new ColorDTO(30, 30, 30));
+        education.setObsolete(false);
         UUID storedRecordID = categoryService.storeCategory(education);
         assertNotNull(storedRecordID);
         assertEquals(3L, manager.countCategories());

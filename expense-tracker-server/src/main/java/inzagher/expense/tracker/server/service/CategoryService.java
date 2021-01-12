@@ -53,6 +53,7 @@ public class CategoryService {
         model.setName(dto.getName());
         model.setDescription(dto.getDescription());
         model.setColor(new Color(red, green, blue));
+        model.setObsolete(dto.getObsolete());
         return categoryRepository.saveAndFlush(model).getId();
     }
     

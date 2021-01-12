@@ -36,9 +36,9 @@ public class BackupServiceTests {
         Person p2 = manager.storePerson("P2");
         Person p3 = manager.storePerson("P3");
         
-        Category c1 = manager.storeCategory("C1", TEST_DESCRIPTION, 0, 0, 0);
-        Category c2 = manager.storeCategory("C2", TEST_DESCRIPTION, 64, 64, 64);
-        Category c3 = manager.storeCategory("C3", TEST_DESCRIPTION, 128, 128, 128);
+        Category c1 = manager.storeCategory("C1", TEST_DESCRIPTION, 0, 0, 0, false);
+        Category c2 = manager.storeCategory("C2", TEST_DESCRIPTION, 64, 64, 64, false);
+        Category c3 = manager.storeCategory("C3", TEST_DESCRIPTION, 128, 128, 128, false);
         
         manager.storeExpense(2020, 1, 1, p1, c1, 0D, TEST_DESCRIPTION);
         manager.storeExpense(2020, 1, 2, p1, c2, 10D, TEST_DESCRIPTION);

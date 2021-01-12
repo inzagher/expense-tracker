@@ -34,7 +34,7 @@ public class PersonServiceTests {
     public void beforeEachTest() {
         bob = manager.storePerson("BOB");
         stan = manager.storePerson("STAN");
-        clothes = manager.storeCategory("CLOTHES", "CLOTHES PURCHASE", 0, 0, 0);
+        clothes = manager.storeCategory("CLOTHES", "CLOTHES PURCHASE", 0, 0, 0, false);
         purchase = manager.storeExpense(2020, 10, 10, stan, clothes, 10.10D, "TEST CLOTHES PURCHASE");
         assertEquals(2L, manager.countPersons());
         assertEquals(1L, manager.countCategories());

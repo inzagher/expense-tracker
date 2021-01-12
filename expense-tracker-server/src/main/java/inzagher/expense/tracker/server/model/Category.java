@@ -31,6 +31,8 @@ public class Category implements Serializable {
     private Color color;
     @Column(name="description")
     private String description;
+    @Column(name="obsolete")
+    private Boolean obsolete;
 
     public UUID getId() {
         return id;
@@ -63,6 +65,14 @@ public class Category implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public Boolean getObsolete() {
+        return obsolete;
+    }
+
+    public void setObsolete(Boolean obsolete) {
+        this.obsolete = obsolete;
+    }
     
     public CategoryDTO toDTO() {
         CategoryDTO dto = new CategoryDTO();
@@ -70,6 +80,7 @@ public class Category implements Serializable {
         dto.setName(name);
         dto.setColor(color.toDTO());
         dto.setDescription(description);
+        dto.setObsolete(obsolete);
         return dto;
     }
 }

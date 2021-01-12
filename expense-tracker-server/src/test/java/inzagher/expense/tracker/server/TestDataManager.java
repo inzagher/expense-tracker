@@ -86,11 +86,13 @@ public class TestDataManager {
     }
     
     public Category storeCategory(String name, String description,
-            int r, int g, int b) {
+            int r, int g, int b, Boolean obsolete
+    ) {
         Category category = new Category();
         category.setName(name);
         category.setDescription(description);
         category.setColor(new Color(r, g, b));
+        category.setObsolete(obsolete);
         return categoryRepository.saveAndFlush(category);
     }
     

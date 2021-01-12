@@ -36,9 +36,9 @@ public class ReportServiceTests {
     
     @BeforeEach
     public void beforeEachTest() {
-        phone = manager.storeCategory("PHONE", "MONTHLY PHONE BILL", 0, 0, 0);
-        rent = manager.storeCategory("RENT", "MONTHLY RENT BILL", 128, 128, 128);
-        food = manager.storeCategory("FOOD", "DAILY FOOD PURCHASE", 255, 255, 255);
+        phone = manager.storeCategory("PHONE", "MONTHLY PHONE BILL", 0, 0, 0, false);
+        rent = manager.storeCategory("RENT", "MONTHLY RENT BILL", 128, 128, 128, false);
+        food = manager.storeCategory("FOOD", "DAILY FOOD PURCHASE", 255, 255, 255, false);
         assertEquals(3L, manager.countCategories());
         
         bob = manager.storePerson("BOB");

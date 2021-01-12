@@ -116,6 +116,7 @@ public class BackupService {
         category.setName(dto.getName());
         category.setDescription(dto.getDescription());
         category.setColor(new Color(red, green, blue));
+        category.setObsolete(dto.getObsolete());
         return category;
     }
     
