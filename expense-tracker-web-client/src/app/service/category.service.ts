@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Category } from '../model/category';
+import { Color } from '../model/color';
 
-export abstract class CategoryDataAccessService {
+export abstract class CategoryService {
     abstract list(): Observable<Category[]>;
     abstract getById(id: string): Observable<Category>;
     abstract save(category: Category): Observable<void>;
@@ -10,20 +13,47 @@ export abstract class CategoryDataAccessService {
 }
 
 @Injectable({ providedIn: 'root' })
-export class HttpCategoryDataAccessService extends CategoryDataAccessService {
+export class HttpCategoryService extends CategoryService {
+    constructor(private http: HttpClient) {
+        super();
+    }
+
     list(): Observable<Category[]> {
-        return of([]);
+        return this.http.get('/api/categories').pipe(
+            map((list: any[]) => list.map(dto => this.toCategory(dto)))
+        );
     }
 
     getById(id: string): Observable<Category> {
-        throw new Error('Method not implemented.');
+        let parameters = new HttpParams().append('id', id);
+        return this.http.get('/api/categories', { params: parameters }).pipe(
+            map(dto => this.toCategory(dto))
+        );
     }
 
     save(category: Category): Observable<void> {
-        throw new Error('Method not implemented.');
+        let json = JSON.parse(JSON.stringify(category));
+        return this.http.post('/api/categories', json).pipe(
+            map(response => null)
+        );
     }
 
     delete(id: string): Observable<void> {
-        throw new Error('Method not implemented.');
+        let parameters = new HttpParams().append('id', id);
+        return this.http.delete('/api/categories', { params: parameters }).pipe(
+            map(response => null)
+        );
+    }
+
+    private toCategory(dto): Category {
+        let category = new Category();
+        category.id = dto.id;
+        category.name = dto.name;
+        category.color = new Color();
+        category.color.red = dto.color.red;
+        category.color.green = dto.color.green;
+        category.color.blue = dto.color.blue;
+        category.description = dto.description;
+        return category;
     }
 }

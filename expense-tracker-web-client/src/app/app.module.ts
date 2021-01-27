@@ -1,13 +1,14 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
+import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { BackupDataAccessService, HttpBackupDataAccessService } from './service/backup.service';
-import { CategoryDataAccessService, HttpCategoryDataAccessService } from './service/category.service';
-import { ExpenseDataAccessService, HttpExpenseDataAccessService } from './service/expense.service';
+import { HttpClientModule } from '@angular/common/http';
+
+import { BackupService, HttpBackupService } from './service/backup.service';
+import { CategoryService, HttpCategoryService } from './service/category.service';
+import { ExpenseService, HttpExpenseService } from './service/expense.service';
 import { HttpPersonDataAccessService, PersonDataAccessService } from './service/person.service';
 
+import { AppComponent } from './app.component';
 import { SettingsPageComponent } from './view/settings-page/settings-page.component';
 
 @NgModule({
@@ -17,13 +18,14 @@ import { SettingsPageComponent } from './view/settings-page/settings-page.compon
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule
   ],
   providers: [
-      { provide: BackupDataAccessService, useClass: HttpBackupDataAccessService },
-      { provide: PersonDataAccessService, useClass: HttpPersonDataAccessService },
-      { provide: CategoryDataAccessService, useClass: HttpCategoryDataAccessService },
-      { provide: ExpenseDataAccessService, useClass: HttpExpenseDataAccessService }
+        { provide: BackupService, useClass: HttpBackupService },
+        { provide: PersonDataAccessService, useClass: HttpPersonDataAccessService },
+        { provide: CategoryService, useClass: HttpCategoryService },
+        { provide: ExpenseService, useClass: HttpExpenseService }
   ],
   bootstrap: [AppComponent]
 })

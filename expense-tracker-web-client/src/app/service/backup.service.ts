@@ -1,19 +1,17 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-
 import { BackupMetadata } from '../model/backup-metadata';
 
-export abstract class BackupDataAccessService {
+export abstract class BackupService {
     abstract list(): Observable<BackupMetadata[]>;
     abstract backupDatabase(): Observable<BackupMetadata>;
-    abstract restoreDatabase(): Observable<void>;
+    abstract restoreDatabase(backup: Blob): Observable<void>;
 }
 
 @Injectable({ providedIn: 'root' })
-export class HttpBackupDataAccessService extends BackupDataAccessService {
+export class HttpBackupService extends BackupService {
     constructor(private http: HttpClient) {
         super();
     }
@@ -30,16 +28,21 @@ export class HttpBackupDataAccessService extends BackupDataAccessService {
         );
     }
 
-    restoreDatabase(): Observable<void> {
-        throw new Error('Method not implemented.');
+    restoreDatabase(backup: Blob): Observable<void> {
+        let formData = new FormData();
+        formData.append('data', backup);
+        return this.http.post('/api/restore-database', formData).pipe(
+            map(response => null)
+        );
     }
 
     private toBackupMetadata(dto: any): BackupMetadata {
         let metadata = new BackupMetadata();
+        metadata.id = dto.id;
+        metadata.time = new Date(Date.parse(dto.time));
         metadata.expenses = dto.expenses;
         metadata.categories = dto.categories;
         metadata.persons = dto.persons;
-        metadata.id = dto.id;
         return metadata;
     }
 }

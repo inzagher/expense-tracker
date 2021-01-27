@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { concat } from 'rxjs';
+import { merge } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 import { BackupMetadata } from 'src/app/model/backup-metadata';
 import { Category } from 'src/app/model/category';
 import { Person } from 'src/app/model/person';
 
-import { BackupDataAccessService } from 'src/app/service/backup.service';
-import { CategoryDataAccessService } from 'src/app/service/category.service';
+import { BackupService } from 'src/app/service/backup.service';
+import { CategoryService } from 'src/app/service/category.service';
 import { PersonDataAccessService } from 'src/app/service/person.service';
 
 @Component({
@@ -23,8 +23,8 @@ export class SettingsPageComponent implements OnInit {
     public error: string = null;
 
     constructor(
-        private backupService: BackupDataAccessService,
-        private categoryService: CategoryDataAccessService,
+        private backupService: BackupService,
+        private categoryService: CategoryService,
         private personService: PersonDataAccessService
     ) {  }
 
@@ -39,7 +39,7 @@ export class SettingsPageComponent implements OnInit {
         let backups$ = this.backupService.list().pipe(tap(list => this.backups = list));
         let categories$ = this.categoryService.list().pipe(tap(list => this.categories = list));
         let persons$ = this.personService.list().pipe(tap(list => this.persons = list));
-        concat(backups$, categories$, persons$).subscribe({
+        merge(backups$, categories$, persons$).subscribe({
             complete: () => { this.loading = false; this.error = null; },
             error: (e) => { console.log(e); }
         });

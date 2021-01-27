@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Expense } from '../model/expense';
 
-export abstract class ExpenseDataAccessService {
+export abstract class ExpenseService {
     abstract list(): Observable<Expense[]>;
     abstract getById(id: string): Observable<Expense>;
     abstract save(expense: Expense): Observable<void>;
@@ -10,17 +12,46 @@ export abstract class ExpenseDataAccessService {
 }
 
 @Injectable({ providedIn: 'root' })
-export class HttpExpenseDataAccessService extends ExpenseDataAccessService {
+export class HttpExpenseService extends ExpenseService {
+    constructor(private http: HttpClient) {
+        super();
+    }
+
     list(): Observable<Expense[]> {
-        return of([]);
+        return this.http.get('/api/expenses').pipe(
+            map((list: any[]) => list.map(dto => this.toExpense(dto)))
+        );
     }
+
     getById(id: string): Observable<Expense> {
-        throw new Error('Method not implemented.');
+        let parameters = new HttpParams().append('id', id);
+        return this.http.get('/api/expenses', { params: parameters }).pipe(
+            map(dto => this.toExpense(dto))
+        );
     }
+
     save(expense: Expense): Observable<void> {
-        throw new Error('Method not implemented.');
+        let json = JSON.parse(JSON.stringify(expense));
+        return this.http.post('/api/expenses', json).pipe(
+            map(response => null)
+        );
     }
+
     delete(id: string): Observable<void> {
-        throw new Error('Method not implemented.');
+        let parameters = new HttpParams().append('id', id);
+        return this.http.delete('/api/expenses', { params: parameters }).pipe(
+            map(response => null)
+        );
+    }
+
+    private toExpense(dto: any): Expense {
+        let expense = new Expense();
+        expense.id = dto.id;
+        expense.date = new Date(Date.parse(dto.date));
+        expense.amount = dto.amount;
+        expense.personId = dto.personId;
+        expense.categoryId = dto.categoryId;
+        expense.comment = dto.comment;
+        return expense;
     }
 }
