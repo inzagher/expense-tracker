@@ -1,7 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { SettingsPageComponent } from './view/settings-page/settings-page.component';
 
-const routes: Routes = [];
+const routes: Routes = [
+    { path: 'settings', component: SettingsPageComponent },
+    { path: '**', redirectTo: 'settings' }
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

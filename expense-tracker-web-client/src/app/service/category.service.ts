@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Category } from '../model/category';
 
 export abstract class CategoryDataAccessService {
@@ -12,14 +12,17 @@ export abstract class CategoryDataAccessService {
 @Injectable({ providedIn: 'root' })
 export class HttpCategoryDataAccessService extends CategoryDataAccessService {
     list(): Observable<Category[]> {
-        throw new Error('Method not implemented.');
+        return of([]);
     }
+
     getById(id: string): Observable<Category> {
         throw new Error('Method not implemented.');
     }
+
     save(category: Category): Observable<void> {
         throw new Error('Method not implemented.');
     }
+
     delete(id: string): Observable<void> {
         throw new Error('Method not implemented.');
     }

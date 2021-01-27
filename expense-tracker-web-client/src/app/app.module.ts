@@ -3,10 +3,10 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { BackupDataAccessService, HttpBackupDataAccessService } from './service/backup-data-access.service';
-import { CategoryDataAccessService, HttpCategoryDataAccessService } from './service/category-data-access.service';
-import { ExpenseDataAccessService, HttpExpenseDataAccessService } from './service/expense-data-access.service';
-import { HttpPersonDataAccessService, PersonDataAccessService } from './service/person-data-access.service';
+import { BackupDataAccessService, HttpBackupDataAccessService } from './service/backup.service';
+import { CategoryDataAccessService, HttpCategoryDataAccessService } from './service/category.service';
+import { ExpenseDataAccessService, HttpExpenseDataAccessService } from './service/expense.service';
+import { HttpPersonDataAccessService, PersonDataAccessService } from './service/person.service';
 
 import { SettingsPageComponent } from './view/settings-page/settings-page.component';
 

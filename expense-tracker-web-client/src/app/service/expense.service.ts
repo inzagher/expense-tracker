@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Expense } from '../model/expense';
 
 export abstract class ExpenseDataAccessService {
@@ -12,7 +12,7 @@ export abstract class ExpenseDataAccessService {
 @Injectable({ providedIn: 'root' })
 export class HttpExpenseDataAccessService extends ExpenseDataAccessService {
     list(): Observable<Expense[]> {
-        throw new Error('Method not implemented.');
+        return of([]);
     }
     getById(id: string): Observable<Expense> {
         throw new Error('Method not implemented.');
