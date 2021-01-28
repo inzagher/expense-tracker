@@ -13,7 +13,7 @@ import { PersonDataAccessService } from 'src/app/service/person.service';
 @Component({
     selector: 'app-settings-page',
     templateUrl: './settings-page.component.html',
-    styleUrls: ['./settings-page.component.css']
+    styleUrls: ['./settings-page.component.scss']
 })
 export class SettingsPageComponent implements OnInit {
     public categories: Category[] = null;
