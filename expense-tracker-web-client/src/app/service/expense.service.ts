@@ -3,9 +3,10 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Expense } from '../model/expense';
+import { ExpenseFilter } from '../model/expense-filter';
 
 export abstract class ExpenseService {
-    abstract list(): Observable<Expense[]>;
+    abstract find(filter: ExpenseFilter): Observable<Expense[]>;
     abstract getById(id: string): Observable<Expense>;
     abstract save(expense: Expense): Observable<void>;
     abstract delete(id: string): Observable<void>;
@@ -17,10 +18,8 @@ export class HttpExpenseService extends ExpenseService {
         super();
     }
 
-    list(): Observable<Expense[]> {
-        return this.http.get('/api/expenses').pipe(
-            map((list: any[]) => list.map(dto => this.toExpense(dto)))
-        );
+    find(filter: ExpenseFilter): Observable<Expense[]> {
+        throw new Error('Method not implemented.');
     }
 
     getById(id: string): Observable<Expense> {
