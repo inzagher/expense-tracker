@@ -1,1 +1,31 @@
-<p>settings-page works!</p>
+<div>
+    <h2>Backups</h2>
+    <table mat-table [dataSource]="backups" class="mat-elevation-z8">
+        <ng-container matColumnDef="time">
+            <th mat-header-cell *matHeaderCellDef>Time</th>
+            <td mat-cell *matCellDef="let metadata"> {{metadata.time | date:'dd.MM.yyyy HH:mm:ss'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="expenses">
+            <th mat-header-cell *matHeaderCellDef> Expenses </th>
+            <td mat-cell *matCellDef="let metadata"> {{metadata.expenses}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="categories">
+            <th mat-header-cell *matHeaderCellDef> Categories </th>
+            <td mat-cell *matCellDef="let metadata"> {{metadata.categories}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="persons">
+            <th mat-header-cell *matHeaderCellDef> Persons </th>
+            <td mat-cell *matCellDef="let metadata"> {{metadata.persons}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="columns"></tr>
+        <tr mat-row *matRowDef="let row; columns: columns;"></tr>
+    </table>
+    <div>
+        <button mat-raised-button color="primary" (click)="onCancel()">Backup database</button>
+        <button mat-raised-button color="primary" (click)='onOk()'>Restore database</button>
+    </div>
+</div>

@@ -32,6 +32,10 @@ export class SettingsPageComponent implements OnInit {
         this.reload();
     }
 
+    public get columns(): string[] {
+        return ['time', 'expenses', 'categories', 'persons']
+    }
+
     private reload() {
         this.loading = true;
         this.backups = this.categories = this.persons = null;
