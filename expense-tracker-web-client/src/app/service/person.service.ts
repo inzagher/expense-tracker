@@ -47,7 +47,7 @@ export class HttpPersonDataAccessService extends PersonDataAccessService {
     private toPerson(dto: any): Person {
         let person = new Person();
         person.id = dto.id;
-        person.name = person.name;
+        person.name = dto.name;
         return person;
     }
 }

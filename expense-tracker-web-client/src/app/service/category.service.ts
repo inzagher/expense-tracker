@@ -54,6 +54,7 @@ export class HttpCategoryService extends CategoryService {
         category.color.green = dto.color.green;
         category.color.blue = dto.color.blue;
         category.description = dto.description;
+        category.obsolete = dto.obsolete;
         return category;
     }
 }

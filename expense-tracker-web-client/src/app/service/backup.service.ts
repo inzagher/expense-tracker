@@ -30,7 +30,7 @@ export class HttpBackupService extends BackupService {
 
     restoreDatabase(backup: Blob): Observable<void> {
         let formData = new FormData();
-        formData.append('data', backup);
+        formData.append('file', backup);
         return this.http.post('/api/restore-database', formData).pipe(
             map(response => null)
         );

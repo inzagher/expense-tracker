@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { merge } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
@@ -16,6 +16,8 @@ import { PersonDataAccessService } from 'src/app/service/person.service';
     styleUrls: ['./settings-page.component.scss']
 })
 export class SettingsPageComponent implements OnInit {
+    @ViewChild("fileUpload", { static: false }) fileUpload: ElementRef;
+
     public categories: Category[] = null;
     public persons: Person[] = null;
     public backups: BackupMetadata[] = null;
@@ -28,11 +30,61 @@ export class SettingsPageComponent implements OnInit {
         private personService: PersonDataAccessService
     ) {  }
 
+    public get backupColumns(): string[] {
+        return ['time', 'expenses', 'categories', 'persons'];
+    }
+
+    public get categoryColumns(): string[] {
+        return ['color', 'name', 'obsolete', 'description'];
+    }
+
+    public get pesronColumns(): string[] {
+        return ['name'];
+    }
+
     ngOnInit(): void {
         this.reload();
     }
 
-    private reload() {
+    backupDatabase(): void {
+        this.backupService.backupDatabase().subscribe(
+            (metadata) => { this.reload(); }
+        )
+    }
+
+    restoreDatabase(files: File[]): void {
+        if (files.length > 0) {
+            this.backupService.restoreDatabase(files[0]).subscribe(
+                () => { this.reload(); }
+            );
+        }
+    }
+
+    addPerson(): void {
+
+    }
+
+    addCategory(): void {
+
+    }
+
+    editPerson(): void {
+
+    }
+
+    editCategory(): void {
+
+    }
+
+    deletePerson(): void {
+
+    }
+
+    deleteCategory(): void {
+
+    }
+
+    private reload(): void {
         this.loading = true;
         this.backups = this.categories = this.persons = null;
 
