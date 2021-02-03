@@ -1,5 +1,5 @@
 export class Color {
-    public red: number;
-    public green: number;
-    public blue: number;
+    public red: number = 0;
+    public green: number = 0;
+    public blue: number = 0;
 }

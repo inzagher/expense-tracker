@@ -12,11 +12,17 @@ import { HttpPersonDataAccessService, PersonDataAccessService } from './service/
 
 import { AppComponent } from './app.component';
 import { SettingsPageComponent } from './view/settings-page/settings-page.component';
+import { ExpenseEditorDialogComponent } from './view/expense-editor-dialog/expense-editor-dialog.component';
+import { CategoryEditorDialogComponent } from './view/category-editor-dialog/category-editor-dialog.component';
+import { PersonEditorDialogComponent } from './view/person-editor-dialog/person-editor-dialog.component';
 
 @NgModule({
     declarations: [
         AppComponent,
-        SettingsPageComponent
+        SettingsPageComponent,
+        ExpenseEditorDialogComponent,
+        CategoryEditorDialogComponent,
+        PersonEditorDialogComponent
     ],
     imports: [
         AppRoutingModule,
