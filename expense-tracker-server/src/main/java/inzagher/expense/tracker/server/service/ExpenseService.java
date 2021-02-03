@@ -1,14 +1,20 @@
 package inzagher.expense.tracker.server.service;
 
 import inzagher.expense.tracker.server.dto.ExpenseDTO;
+import inzagher.expense.tracker.server.dto.ExpenseFilterDTO;
 import inzagher.expense.tracker.server.model.Category;
 import inzagher.expense.tracker.server.model.Expense;
+import inzagher.expense.tracker.server.model.ExpenseFilter;
 import inzagher.expense.tracker.server.model.Person;
 import inzagher.expense.tracker.server.repository.CategoryRepository;
 import inzagher.expense.tracker.server.repository.ExpenseRepository;
 import inzagher.expense.tracker.server.repository.PersonRepository;
+
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +35,22 @@ public class ExpenseService {
         this.expenseRepository = expenseRepository;
         this.categoryRepository = categoryRepository;
         this.personRepository = personRepository;
+    }
+
+    public List<ExpenseDTO> findExpenses(ExpenseFilterDTO dto) {
+        ExpenseFilter filter = new ExpenseFilter();
+        filter.setAmountFrom(dto.getAmountTo());
+        filter.setAmountTo(dto.getAmountTo());
+        filter.setAmountExact(dto.getAmountExact());
+        filter.setDateExact(dto.getDateExact());
+        filter.setDateFrom(dto.getDateFrom());
+        filter.setDateTo(dto.getDateTo());
+        filter.setDescriptionLike(dto.getDescriptionLike());
+        dto.getCategoryIdentifiers().forEach(filter.getCategoryIdentifiers()::add);
+        dto.getPersonIdentifiers().forEach(filter.getPersonIdentifiers()::add);
+        return expenseRepository.find(filter).stream()
+                .map(Expense::toDTO)
+                .collect(Collectors.toList());
     }
     
     public Optional<ExpenseDTO> getExpenseById(UUID id) {

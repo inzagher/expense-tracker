@@ -1,7 +1,9 @@
 package inzagher.expense.tracker.server.controller;
 
 import inzagher.expense.tracker.server.dto.ExpenseDTO;
+import inzagher.expense.tracker.server.dto.ExpenseFilterDTO;
 import inzagher.expense.tracker.server.service.ExpenseService;
+import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -24,6 +26,11 @@ public class ExpenseApiController {
     @GetMapping(path = "/api/expenses/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ExpenseDTO read(@PathVariable UUID id) {
         return expenseService.getExpenseById(id).orElse(null);
+    }
+
+    @PostMapping(path = "/api/expenses/search", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public List<ExpenseDTO> find(ExpenseFilterDTO filter) {
+        return expenseService.findExpenses(filter);
     }
 
     @PostMapping(path = "/api/expenses", consumes = MediaType.APPLICATION_JSON_VALUE)
