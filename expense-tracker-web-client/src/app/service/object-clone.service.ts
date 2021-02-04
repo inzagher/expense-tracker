@@ -2,33 +2,23 @@ import { Injectable } from "@angular/core";
 
 @Injectable({ providedIn: 'root' })
 export class ObjectCloneService {
-    deepCopy<T>(obj): T {
-        let copy;
-
-        if (null == obj || "object" != typeof obj) return obj;
-
-        if (obj instanceof Date) {
-            copy = new Date();
-            copy.setTime(obj.getTime());
-            return copy;
+    deepCopy<T>(target: T): T {
+        if (target === null) {
+            return target;
         }
-
-        if (obj instanceof Array) {
-            copy = [];
-            for (var i = 0, len = obj.length; i < len; i++) {
-                copy[i] = this.deepCopy(obj[i]);
-            }
-            return copy;
+        if (target instanceof Date) {
+            return new Date(target.getTime()) as any;
         }
-
-        if (obj instanceof Object) {
-            copy = {};
-            for (var attr in obj) {
-                if (obj.hasOwnProperty(attr)) copy[attr] = this.deepCopy(obj[attr]);
-            }
-            return copy;
+        if (target instanceof Array) {
+            const cp = [] as any[];
+            (target as any[]).forEach((v) => { cp.push(v); });
+            return cp.map((n: any) => this.deepCopy<any>(n)) as any;
         }
-
-        throw new Error("Unable to copy object");
+        if (typeof target === 'object' && target !== {}) {
+            const cp = { ...(target as { [key: string]: any }) } as { [key: string]: any };
+            Object.keys(cp).forEach(k => { cp[k] = this.deepCopy<any>(cp[k]); });
+            return cp as T;
+        }
+        return target;
     }
 }

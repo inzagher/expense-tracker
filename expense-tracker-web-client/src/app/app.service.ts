@@ -1,7 +1,9 @@
 import { Injectable } from "@angular/core";
-import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
+import { MatDialog } from "@angular/material/dialog";
+
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
+
 import { CategoryEditorDialogComponent } from "./view/category-editor-dialog/category-editor-dialog.component";
 import { ExpenseEditorDialogComponent } from "./view/expense-editor-dialog/expense-editor-dialog.component";
 import { PersonEditorDialogComponent } from "./view/person-editor-dialog/person-editor-dialog.component";

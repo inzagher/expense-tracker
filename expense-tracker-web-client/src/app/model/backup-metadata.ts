@@ -1,7 +1,7 @@
 export class BackupMetadata {
-    public id: string;
-    public time: Date;
-    public expenses: number;
-    public categories: number;
-    public persons: number;
+    public id: string | null = null;
+    public time: Date = new Date();
+    public expenses: number = 0;
+    public categories: number = 0;
+    public persons: number = 0;
 }

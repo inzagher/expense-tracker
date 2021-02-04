@@ -23,7 +23,7 @@ export class HttpPersonDataAccessService extends PersonDataAccessService {
     }
 
     list(): Observable<Person[]> {
-        return this.http.get('/api/persons').pipe(
+        return this.http.get<any[]>('/api/persons').pipe(
             map((list: any[]) => list.map(dto => this.toPerson(dto)))
         );
     }
@@ -38,14 +38,14 @@ export class HttpPersonDataAccessService extends PersonDataAccessService {
     save(person: Person): Observable<void> {
         let json = JSON.parse(JSON.stringify(person));
         return this.http.post('/api/persons', json).pipe(
-            map(response => null)
+            map(response => {})
         );
     }
 
     delete(id: string): Observable<void> {
         let parameters = new HttpParams().append('id', id);
         return this.http.delete('/api/persons', { params: parameters }).pipe(
-            map(response => null)
+            map(response => {})
         );
     }
 

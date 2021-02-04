@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { merge } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
@@ -16,13 +16,11 @@ import { PersonDataAccessService } from 'src/app/service/person.service';
     styleUrls: ['./settings-page.component.scss']
 })
 export class SettingsPageComponent implements OnInit {
-    @ViewChild("fileUpload", { static: false }) fileUpload: ElementRef;
-
-    public categories: Category[] = null;
-    public persons: Person[] = null;
-    public backups: BackupMetadata[] = null;
+    public categories: Category[] | null = null;
+    public persons: Person[] | null = null;
+    public backups: BackupMetadata[] | null = null;
+    public error: string | null = null;
     public loading: boolean = false;
-    public error: string = null;
 
     constructor(
         private backupService: BackupService,

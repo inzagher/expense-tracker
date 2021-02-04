@@ -32,14 +32,14 @@ export class HttpExpenseService extends ExpenseService {
     save(expense: Expense): Observable<void> {
         let json = JSON.parse(JSON.stringify(expense));
         return this.http.post('/api/expenses', json).pipe(
-            map(response => null)
+            map(response => { })
         );
     }
 
     delete(id: string): Observable<void> {
         let parameters = new HttpParams().append('id', id);
         return this.http.delete('/api/expenses', { params: parameters }).pipe(
-            map(response => null)
+            map(response => { })
         );
     }
 

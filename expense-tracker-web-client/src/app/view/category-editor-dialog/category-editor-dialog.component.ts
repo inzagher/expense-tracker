@@ -10,8 +10,8 @@ import { Category } from './../../model/category';
     styleUrls: ['./category-editor-dialog.component.scss']
 })
 export class CategoryEditorDialogComponent implements OnInit {
-    public model: Category = null;
-    public error: string = null;
+    public model: Category | null = null;
+    public error: string | null = null;
 
     constructor(
         @Inject(MAT_DIALOG_DATA) private id: string | null,
@@ -22,6 +22,7 @@ export class CategoryEditorDialogComponent implements OnInit {
     ngOnInit(): void {
         if (this.id == null) {
             this.model = new Category();
+            return;
         }
 
         this.categoryService.getById(this.id).subscribe(

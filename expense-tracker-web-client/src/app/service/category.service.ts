@@ -24,7 +24,7 @@ export class HttpCategoryService extends CategoryService {
     }
 
     list(): Observable<Category[]> {
-        return this.http.get('/api/categories').pipe(
+        return this.http.get<any[]>('/api/categories').pipe(
             map((list: any[]) => list.map(dto => this.toCategory(dto)))
         );
     }
@@ -39,18 +39,18 @@ export class HttpCategoryService extends CategoryService {
     save(category: Category): Observable<void> {
         let json = JSON.parse(JSON.stringify(category));
         return this.http.post('/api/categories', json).pipe(
-            map(response => null)
+            map(response => { })
         );
     }
 
     delete(id: string): Observable<void> {
         let parameters = new HttpParams().append('id', id);
         return this.http.delete('/api/categories', { params: parameters }).pipe(
-            map(response => null)
+            map(response => { })
         );
     }
 
-    private toCategory(dto): Category {
+    private toCategory(dto: any): Category {
         let category = new Category();
         category.id = dto.id;
         category.name = dto.name;
@@ -79,7 +79,7 @@ export class StubCategoryService extends CategoryService {
 
     getById(id: string): Observable<Category> {
         return new Observable<Category>((observer) => {
-            let person = this.memoryDataService.persons
+            let person = this.memoryDataService.categories
                 .map(p => this.objectCloneService.deepCopy<Category>(p))
                 .find(p => p.id === id);
 

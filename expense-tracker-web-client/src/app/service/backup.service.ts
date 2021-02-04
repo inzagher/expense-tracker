@@ -22,7 +22,7 @@ export class HttpBackupService extends BackupService {
     }
 
     list(): Observable<BackupMetadata[]> {
-        return this.http.get('/api/backups').pipe(
+        return this.http.get<any[]>('/api/backups').pipe(
             map((list: any[]) => list.map(dto => this.toBackupMetadata(dto)))
         );
     }
@@ -37,7 +37,7 @@ export class HttpBackupService extends BackupService {
         let formData = new FormData();
         formData.append('file', backup);
         return this.http.post('/api/restore-database', formData).pipe(
-            map(response => null)
+            map(response => { })
         );
     }
 
