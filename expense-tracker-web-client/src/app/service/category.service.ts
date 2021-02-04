@@ -1,9 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+
 import { Category } from '../model/category';
 import { Color } from '../model/color';
+
+import { MemoryDataAccessService } from './memory-data-access.service';
+import { ObjectCloneService } from './object-clone.service';
 
 export abstract class CategoryService {
     abstract list(): Observable<Category[]>;
@@ -56,5 +61,38 @@ export class HttpCategoryService extends CategoryService {
         category.description = dto.description;
         category.obsolete = dto.obsolete;
         return category;
+    }
+}
+
+@Injectable({ providedIn: 'root' })
+export class StubCategoryService extends CategoryService {
+    constructor(
+        private memoryDataService: MemoryDataAccessService,
+        private objectCloneService: ObjectCloneService,
+    ) { super(); }
+
+    list(): Observable<Category[]> {
+        return of(this.memoryDataService.categories.map(p => {
+            return this.objectCloneService.deepCopy<Category>(p);
+        }));
+    }
+
+    getById(id: string): Observable<Category> {
+        return new Observable<Category>((observer) => {
+            let person = this.memoryDataService.persons
+                .map(p => this.objectCloneService.deepCopy<Category>(p))
+                .find(p => p.id === id);
+
+            if (person) { observer.next(person); observer.complete(); }
+            else { observer.error('Category not found.'); }
+        });
+    }
+
+    save(category: Category): Observable<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    delete(id: string): Observable<void> {
+        throw new Error('Method not implemented.');
     }
 }

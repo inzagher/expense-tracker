@@ -54,3 +54,23 @@ export class HttpExpenseService extends ExpenseService {
         return expense;
     }
 }
+
+@Injectable({ providedIn: 'root' })
+export class StubExpenseService extends ExpenseService {
+
+    find(filter: ExpenseFilter): Observable<Expense[]> {
+        throw new Error('Method not implemented.');
+    }
+
+    getById(id: string): Observable<Expense> {
+        throw new Error('Method not implemented.');
+    }
+
+    save(expense: Expense): Observable<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    delete(id: string): Observable<void> {
+        throw new Error('Method not implemented.');
+    }
+}

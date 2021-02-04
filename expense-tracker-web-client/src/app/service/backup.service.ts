@@ -1,8 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+
 import { BackupMetadata } from '../model/backup-metadata';
+
+import { MemoryDataAccessService } from './memory-data-access.service';
+import { ObjectCloneService } from './object-clone.service';
 
 export abstract class BackupService {
     abstract list(): Observable<BackupMetadata[]>;
@@ -44,5 +49,27 @@ export class HttpBackupService extends BackupService {
         metadata.categories = dto.categories;
         metadata.persons = dto.persons;
         return metadata;
+    }
+}
+
+@Injectable({ providedIn: 'root' })
+export class StubBackupService extends BackupService {
+    constructor(
+        private memoryDataService: MemoryDataAccessService,
+        private objectCloneService: ObjectCloneService,
+    ) { super(); }
+
+    list(): Observable<BackupMetadata[]> {
+        return of(this.memoryDataService.backups.map(p => {
+            return this.objectCloneService.deepCopy<BackupMetadata>(p);
+        }));
+    }
+
+    backupDatabase(): Observable<BackupMetadata> {
+        throw new Error('Method not implemented.');
+    }
+
+    restoreDatabase(backup: Blob): Observable<void> {
+        throw new Error('Method not implemented.');
     }
 }
