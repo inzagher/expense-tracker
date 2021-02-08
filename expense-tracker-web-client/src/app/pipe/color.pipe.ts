@@ -5,9 +5,14 @@ import { Color } from '../model/color';
 export class ColorPipe implements PipeTransform {
     transform(color: Color): any {
         let result = "#";
-        result += color.red.toString(16);
-        result += color.green.toString(16);
-        result += color.blue.toString(16);
+        result += this.toHex(color.red);
+        result += this.toHex(color.green);
+        result += this.toHex(color.blue);
         return result;
+    }
+
+    private toHex(n: number) {
+        var hex = n.toString(16);
+        return hex.length == 1 ? "0" + hex : hex;
     }
 }

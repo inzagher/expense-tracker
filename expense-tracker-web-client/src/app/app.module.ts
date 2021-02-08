@@ -15,6 +15,8 @@ import { SettingsPageComponent } from './view/settings-page/settings-page.compon
 import { ExpenseEditorDialogComponent } from './view/expense-editor-dialog/expense-editor-dialog.component';
 import { CategoryEditorDialogComponent } from './view/category-editor-dialog/category-editor-dialog.component';
 import { PersonEditorDialogComponent } from './view/person-editor-dialog/person-editor-dialog.component';
+
+import { ColorPipe } from './pipe/color.pipe';
 import { environment } from 'src/environments/environment';
 
 @NgModule({
@@ -23,7 +25,8 @@ import { environment } from 'src/environments/environment';
         SettingsPageComponent,
         ExpenseEditorDialogComponent,
         CategoryEditorDialogComponent,
-        PersonEditorDialogComponent
+        PersonEditorDialogComponent,
+        ColorPipe
     ],
     imports: [
         AppRoutingModule,
@@ -31,6 +34,11 @@ import { environment } from 'src/environments/environment';
         BrowserAnimationsModule,
         HttpClientModule,
         MaterialModule
+    ],
+    entryComponents: [
+        PersonEditorDialogComponent,
+        CategoryEditorDialogComponent,
+        ExpenseEditorDialogComponent
     ],
     providers: [
         { provide: BackupService, useClass: environment.production ? HttpBackupService : StubBackupService },

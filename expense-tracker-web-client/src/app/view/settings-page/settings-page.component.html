@@ -43,9 +43,7 @@
         <tr mat-row *matRowDef="let row; columns: pesronColumns;"></tr>
     </table>
     <div>
-        <button mat-raised-button color="primary" (click)="addPerson()">Add</button>
-        <button mat-raised-button color="primary" (click)='editPerson()'>Edit</button>
-        <button mat-raised-button color="primary" (click)='deletePerson()'>Delete</button>
+        <button mat-raised-button color="primary" (click)="editPerson(null)">Add</button>
     </div>
 </div>
 <div>
@@ -54,9 +52,7 @@
         <ng-container matColumnDef="color">
             <th mat-header-cell *matHeaderCellDef>Color</th>
             <td mat-cell *matCellDef="let category">
-                {{category.color.red}},
-                {{category.color.green}},
-                {{category.color.blue}}
+                <div class="rectangle" [style.background-color] = "category.color | color"></div>
             </td>
         </ng-container>
 
@@ -79,8 +75,6 @@
         <tr mat-row *matRowDef="let row; columns: categoryColumns;"></tr>
     </table>
     <div>
-        <button mat-raised-button color="primary" (click)="addCategory()">Add</button>
-        <button mat-raised-button color="primary" (click)='editCategory()'>Edit</button>
-        <button mat-raised-button color="primary" (click)='deleteCategory()'>Delete</button>
+        <button mat-raised-button color="primary" (click)="editCategory(null)">Add</button>
     </div>
 </div>

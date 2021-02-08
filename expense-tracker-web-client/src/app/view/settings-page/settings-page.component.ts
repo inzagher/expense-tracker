@@ -6,6 +6,7 @@ import { BackupMetadata } from 'src/app/model/backup-metadata';
 import { Category } from 'src/app/model/category';
 import { Person } from 'src/app/model/person';
 
+import { AppService } from 'src/app/app.service';
 import { BackupService } from 'src/app/service/backup.service';
 import { CategoryService } from 'src/app/service/category.service';
 import { PersonDataAccessService } from 'src/app/service/person.service';
@@ -23,6 +24,7 @@ export class SettingsPageComponent implements OnInit {
     public loading: boolean = false;
 
     constructor(
+        private appService: AppService,
         private backupService: BackupService,
         private categoryService: CategoryService,
         private personService: PersonDataAccessService
@@ -45,41 +47,31 @@ export class SettingsPageComponent implements OnInit {
     }
 
     backupDatabase(): void {
-        this.backupService.backupDatabase().subscribe(
-            (metadata) => { this.reload(); }
-        )
+        this.backupService.backupDatabase()
+            .subscribe((md) => { this.reload(); });
     }
 
     restoreDatabase(files: File[]): void {
         if (files.length > 0) {
-            this.backupService.restoreDatabase(files[0]).subscribe(
-                () => { this.reload(); }
-            );
+            this.backupService.restoreDatabase(files[0])
+                .subscribe(() => { this.reload(); });
         }
     }
 
-    addPerson(): void {
-
+    editPerson(id: string | null): void {
+        this.appService.openPersonEditor(id)
+            .subscribe((s) => { this.reload(); });
     }
 
-    addCategory(): void {
-
-    }
-
-    editPerson(): void {
-
-    }
-
-    editCategory(): void {
-
+    editCategory(id: string | null): void {
+        this.appService.openCategoryEditor(id)
+            .subscribe((s) => { this.reload(); });
     }
 
     deletePerson(): void {
-
     }
 
     deleteCategory(): void {
-
     }
 
     private reload(): void {
