@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { CategoryService } from './../../service/category.service';
-import { Category } from './../../model/category';
+import { CategoryService } from './../../../service/category.service';
+import { Category } from './../../../model/category';
 
 @Component({
     selector: 'app-category-editor-dialog',

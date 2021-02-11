@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { SettingsPageComponent } from './view/settings-page/settings-page.component';
+import { SettingsPageComponent } from './view/page/settings-page/settings-page.component';
 
 const routes: Routes = [
     { path: 'settings', component: SettingsPageComponent },

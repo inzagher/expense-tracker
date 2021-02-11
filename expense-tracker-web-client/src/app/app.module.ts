@@ -11,10 +11,10 @@ import { ExpenseService, HttpExpenseService, StubExpenseService } from './servic
 import { HttpPersonDataAccessService, PersonDataAccessService, StubPersonDataAccessService } from './service/person.service';
 
 import { AppComponent } from './app.component';
-import { SettingsPageComponent } from './view/settings-page/settings-page.component';
-import { ExpenseEditorDialogComponent } from './view/expense-editor-dialog/expense-editor-dialog.component';
-import { CategoryEditorDialogComponent } from './view/category-editor-dialog/category-editor-dialog.component';
-import { PersonEditorDialogComponent } from './view/person-editor-dialog/person-editor-dialog.component';
+import { SettingsPageComponent } from './view/page/settings-page/settings-page.component';
+import { ExpenseEditorDialogComponent } from './view/dialog/expense-editor-dialog/expense-editor-dialog.component';
+import { CategoryEditorDialogComponent } from './view/dialog/category-editor-dialog/category-editor-dialog.component';
+import { PersonEditorDialogComponent } from './view/dialog/person-editor-dialog/person-editor-dialog.component';
 
 import { ColorPipe } from './pipe/color.pipe';
 import { environment } from 'src/environments/environment';

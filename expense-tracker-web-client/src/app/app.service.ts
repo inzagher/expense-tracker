@@ -4,9 +4,9 @@ import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 
-import { CategoryEditorDialogComponent } from "./view/category-editor-dialog/category-editor-dialog.component";
-import { ExpenseEditorDialogComponent } from "./view/expense-editor-dialog/expense-editor-dialog.component";
-import { PersonEditorDialogComponent } from "./view/person-editor-dialog/person-editor-dialog.component";
+import { CategoryEditorDialogComponent } from "./view/dialog/category-editor-dialog/category-editor-dialog.component";
+import { ExpenseEditorDialogComponent } from "./view/dialog/expense-editor-dialog/expense-editor-dialog.component";
+import { PersonEditorDialogComponent } from "./view/dialog/person-editor-dialog/person-editor-dialog.component";
 
 @Injectable({ providedIn: 'root' })
 export class AppService {
