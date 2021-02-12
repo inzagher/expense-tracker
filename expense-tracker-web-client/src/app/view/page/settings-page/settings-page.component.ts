@@ -9,7 +9,7 @@ import { Person } from 'src/app/model/person';
 import { AppService } from 'src/app/app.service';
 import { BackupService } from 'src/app/service/backup.service';
 import { CategoryService } from 'src/app/service/category.service';
-import { PersonDataAccessService } from 'src/app/service/person.service';
+import { PersonService as PersonService } from 'src/app/service/person.service';
 
 @Component({
     selector: 'app-settings-page',
@@ -27,7 +27,7 @@ export class SettingsPageComponent implements OnInit {
         private appService: AppService,
         private backupService: BackupService,
         private categoryService: CategoryService,
-        private personService: PersonDataAccessService
+        private personService: PersonService
     ) {  }
 
     public get backupColumns(): string[] {

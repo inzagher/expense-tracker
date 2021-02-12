@@ -6,10 +6,10 @@ import { map } from 'rxjs/operators';
 
 import { Person } from '../model/person';
 
-import { MemoryDataAccessService } from './memory-data-access.service';
+import { MemoryDataService } from './memory-data.service';
 import { ObjectCloneService } from './object-clone.service';
 
-export abstract class PersonDataAccessService {
+export abstract class PersonService {
     abstract list(): Observable<Person[]>;
     abstract getById(id: string): Observable<Person>;
     abstract save(person: Person): Observable<void>;
@@ -17,7 +17,7 @@ export abstract class PersonDataAccessService {
 }
 
 @Injectable({ providedIn: 'root' })
-export class HttpPersonDataAccessService extends PersonDataAccessService {
+export class HttpPersonDataAccessService extends PersonService {
     constructor(private http: HttpClient) {
         super();
     }
@@ -58,9 +58,9 @@ export class HttpPersonDataAccessService extends PersonDataAccessService {
 }
 
 @Injectable({ providedIn: 'root' })
-export class StubPersonDataAccessService extends PersonDataAccessService {
+export class StubPersonDataAccessService extends PersonService {
     constructor(
-        private memoryDataService: MemoryDataAccessService,
+        private memoryDataService: MemoryDataService,
         private objectCloneService: ObjectCloneService,
     ) { super(); }
 

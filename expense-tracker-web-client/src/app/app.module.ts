@@ -8,9 +8,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { BackupService, HttpBackupService, StubBackupService } from './service/backup.service';
 import { CategoryService, HttpCategoryService, StubCategoryService } from './service/category.service';
 import { ExpenseService, HttpExpenseService, StubExpenseService } from './service/expense.service';
-import { HttpPersonDataAccessService, PersonDataAccessService, StubPersonDataAccessService } from './service/person.service';
+import { HttpPersonDataAccessService, PersonService, StubPersonDataAccessService } from './service/person.service';
 
 import { AppComponent } from './app.component';
+import { HomePageComponent } from './view/page/home-page/home-page.component';
 import { SettingsPageComponent } from './view/page/settings-page/settings-page.component';
 import { ExpenseEditorDialogComponent } from './view/dialog/expense-editor-dialog/expense-editor-dialog.component';
 import { CategoryEditorDialogComponent } from './view/dialog/category-editor-dialog/category-editor-dialog.component';
@@ -26,6 +27,7 @@ import { environment } from 'src/environments/environment';
         ExpenseEditorDialogComponent,
         CategoryEditorDialogComponent,
         PersonEditorDialogComponent,
+        HomePageComponent,
         ColorPipe
     ],
     imports: [
@@ -42,7 +44,7 @@ import { environment } from 'src/environments/environment';
     ],
     providers: [
         { provide: BackupService, useClass: environment.production ? HttpBackupService : StubBackupService },
-        { provide: PersonDataAccessService, useClass: environment.production ? HttpPersonDataAccessService : StubPersonDataAccessService },
+        { provide: PersonService, useClass: environment.production ? HttpPersonDataAccessService : StubPersonDataAccessService },
         { provide: CategoryService, useClass: environment.production ? HttpCategoryService : StubCategoryService },
         { provide: ExpenseService, useClass: environment.production ? HttpExpenseService : StubExpenseService }
     ],

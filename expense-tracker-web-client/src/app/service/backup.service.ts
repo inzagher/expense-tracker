@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 
 import { BackupMetadata } from '../model/backup-metadata';
 
-import { MemoryDataAccessService } from './memory-data-access.service';
+import { MemoryDataService } from './memory-data.service';
 import { ObjectCloneService } from './object-clone.service';
 
 export abstract class BackupService {
@@ -55,7 +55,7 @@ export class HttpBackupService extends BackupService {
 @Injectable({ providedIn: 'root' })
 export class StubBackupService extends BackupService {
     constructor(
-        private memoryDataService: MemoryDataAccessService,
+        private memoryDataService: MemoryDataService,
         private objectCloneService: ObjectCloneService,
     ) { super(); }
 

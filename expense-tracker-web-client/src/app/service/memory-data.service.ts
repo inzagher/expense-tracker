@@ -6,7 +6,7 @@ import { Expense } from "../model/expense";
 import { Person } from "../model/person";
 
 @Injectable({ providedIn: 'root' })
-export class MemoryDataAccessService {
+export class MemoryDataService {
     public readonly expenses: Expense[] = [];
     public readonly persons: Person[] = [];
     public readonly categories: Category[] = [];

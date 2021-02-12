@@ -7,7 +7,7 @@ import { map } from 'rxjs/operators';
 import { Category } from '../model/category';
 import { Color } from '../model/color';
 
-import { MemoryDataAccessService } from './memory-data-access.service';
+import { MemoryDataService } from './memory-data.service';
 import { ObjectCloneService } from './object-clone.service';
 
 export abstract class CategoryService {
@@ -67,7 +67,7 @@ export class HttpCategoryService extends CategoryService {
 @Injectable({ providedIn: 'root' })
 export class StubCategoryService extends CategoryService {
     constructor(
-        private memoryDataService: MemoryDataAccessService,
+        private memoryDataService: MemoryDataService,
         private objectCloneService: ObjectCloneService,
     ) { super(); }
 
