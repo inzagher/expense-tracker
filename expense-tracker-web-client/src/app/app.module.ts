@@ -46,10 +46,10 @@ import { environment } from 'src/environments/environment';
         ExpenseEditorDialogComponent
     ],
     providers: [
-        { provide: BackupService, useClass: environment.production ? HttpBackupService : StubBackupService },
-        { provide: PersonService, useClass: environment.production ? HttpPersonDataAccessService : StubPersonDataAccessService },
-        { provide: CategoryService, useClass: environment.production ? HttpCategoryService : StubCategoryService },
-        { provide: ExpenseService, useClass: environment.production ? HttpExpenseService : StubExpenseService }
+        { provide: BackupService, useClass: environment.backend ? HttpBackupService : StubBackupService },
+        { provide: PersonService, useClass: environment.backend ? HttpPersonDataAccessService : StubPersonDataAccessService },
+        { provide: CategoryService, useClass: environment.backend ? HttpCategoryService : StubCategoryService },
+        { provide: ExpenseService, useClass: environment.backend ? HttpExpenseService : StubExpenseService }
     ],
     bootstrap: [AppComponent]
 })
