@@ -2,6 +2,7 @@ import { CalculationResult } from "../model/calculation-result";
 
 enum MathOperationType { Addition, Subtraction, Multiplication, Division }
 type MathOperationProcessor = (left: number, right: number) => number;
+type NullableString = string | null;
 
 export class CalculatorService {
     constructor(private precision: number) {
@@ -22,29 +23,31 @@ export class CalculatorService {
         [  MathOperationType.Division, (left, right) => left / right ],
     ]);
 
-    public calculate(expression: string): CalculationResult {
+    public calculate(expression: NullableString): CalculationResult {
         if (this.isExpressionNullOrWhiteSpace(expression)) {
             return CalculationResult.failed();
         }
 
         if (this.isExpressionNumber(expression)) {
-            let value = Number.parseFloat(expression);
+            let value = Number.parseFloat(expression as string);
             return CalculationResult.succeeded(value);
         }
 
-        let processed: string = expression;
+        let processed: NullableString = expression;
         processed = this.processBrackets(processed);
         processed = this.processOperations(processed, MathOperationType.Multiplication, MathOperationType.Division);
         processed = this.processOperations(processed, MathOperationType.Addition, MathOperationType.Subtraction);
-        return this.isExpressionNumber(processed) ? CalculationResult.succeeded(Number.parseFloat(processed)) : CalculationResult.failed();
+        return this.isExpressionNumber(processed)
+            ? CalculationResult.succeeded(Number.parseFloat(processed as string))
+            : CalculationResult.failed();
     }
 
-    private processBrackets(expression: string): string {
+    private processBrackets(expression: NullableString): NullableString {
         if (this.isExpressionNullOrWhiteSpace(expression)) {
             return null;
         }
 
-        let result: string = expression;
+        let result: string = expression as string;
         while (this.hasExpressionBrackets(result)) {
             let closingBracketIndex: number = result.indexOf(this.CLOSING_BRACKET);
             if (closingBracketIndex === -1) {
@@ -72,12 +75,12 @@ export class CalculatorService {
         return result;
     }
 
-    private processOperations(expression: string, ...selectedOperations: MathOperationType[]): string {
+    private processOperations(expression: NullableString, ...selectedOperations: MathOperationType[]): NullableString {
         if (this.isExpressionNullOrWhiteSpace(expression)) {
             return null;
         }
 
-        let processedExpression: string = expression;
+        let processedExpression: string = expression as string;
         let allOperationSymbols: string[] = Array.from(this.operationSymbolMap.keys());
         let selectedOperationSymbols: string[] = Array.from(this.operationSymbolMap.entries())
             .filter(pair => selectedOperations.includes(pair[1] as MathOperationType))
@@ -107,8 +110,8 @@ export class CalculatorService {
             }
 
             let actionSymbol = processedExpression[actionIndex];
-            let actionType: MathOperationType = this.operationSymbolMap.get(actionSymbol);
-            let processor: MathOperationProcessor = this.operationProcessors.get(actionType);
+            let actionType: MathOperationType = this.operationSymbolMap.get(actionSymbol) as MathOperationType;
+            let processor: MathOperationProcessor = this.operationProcessors.get(actionType) as MathOperationProcessor;
             let calculated: number = processor(Number.parseFloat(leftOperandAsString.trim()), Number.parseFloat(rightOperandAsString.trim()));
             calculated = Number.parseFloat(calculated.toPrecision(this.precision));
 
@@ -119,17 +122,18 @@ export class CalculatorService {
         return processedExpression;
     }
 
-    private isExpressionNumber(expression: string): boolean {
+    private isExpressionNumber(expression: NullableString): boolean {
         return this.isExpressionNullOrWhiteSpace(expression) === false
-                && this.indexOfAny(expression, Array.from(this.operationSymbolMap.keys())) === -1
-                && this.indexOfAny(expression, [ this.OPENING_BRACKET, this.CLOSING_BRACKET ]) === -1;
+                && this.indexOfAny(expression as string, Array.from(this.operationSymbolMap.keys())) === -1
+                && this.indexOfAny(expression as string, [ this.OPENING_BRACKET, this.CLOSING_BRACKET ]) === -1;
     }
 
-    private isExpressionNullOrWhiteSpace(expression: string): boolean {
+    private isExpressionNullOrWhiteSpace(expression: NullableString): boolean {
         return expression === null || expression == undefined || expression === '';
     }
 
-    private hasExpressionBrackets(expression: string): boolean {
+    private hasExpressionBrackets(expression: NullableString): boolean {
+        if (expression === null) { return false; }
         return expression.indexOf(this.OPENING_BRACKET) !== -1
             || expression.indexOf(this.CLOSING_BRACKET) !== -1;
     }
