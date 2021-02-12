@@ -1,9 +1,10 @@
 import { Injectable } from "@angular/core";
-import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
+import { MatDialog } from "@angular/material/dialog";
 
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 
+import { ConfirmationDialogComponent, IConformationDialogData } from './view/dialog/confirmation-dialog/confirmation-dialog.component';
 import { CategoryEditorDialogComponent } from "./view/dialog/category-editor-dialog/category-editor-dialog.component";
 import { ExpenseEditorDialogComponent } from "./view/dialog/expense-editor-dialog/expense-editor-dialog.component";
 import { PersonEditorDialogComponent } from "./view/dialog/person-editor-dialog/person-editor-dialog.component";
@@ -11,6 +12,12 @@ import { PersonEditorDialogComponent } from "./view/dialog/person-editor-dialog/
 @Injectable({ providedIn: 'root' })
 export class AppService {
     constructor(private dialog: MatDialog) {
+    }
+
+    showConfirmationDialog(caption: string, question: string): Observable<boolean> {
+        let data: IConformationDialogData = { caption: caption, question: question  };
+        return this.dialog.open(ConfirmationDialogComponent, { data: data })
+            .afterClosed().pipe(map(r => !!r));
     }
 
     openExpenseEditor(id: string | null): Observable<boolean> {
