@@ -1,3 +1,4 @@
+import * as uuid from 'uuid';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
@@ -5,9 +6,9 @@ import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { BackupMetadata } from '../model/backup-metadata';
-
 import { MemoryDataService } from './memory-data.service';
-import { ObjectCloneService } from './object-clone.service';
+import { ObjectUtils } from '../util/object-utils';
+import { RxUtils } from '../util/rx-utils';
 
 export abstract class BackupService {
     abstract list(): Observable<BackupMetadata[]>;
@@ -54,22 +55,34 @@ export class HttpBackupService extends BackupService {
 
 @Injectable({ providedIn: 'root' })
 export class StubBackupService extends BackupService {
-    constructor(
-        private memoryDataService: MemoryDataService,
-        private objectCloneService: ObjectCloneService,
-    ) { super(); }
+    constructor(private memoryDataService: MemoryDataService) {
+        super();
+    }
 
     list(): Observable<BackupMetadata[]> {
-        return of(this.memoryDataService.backups.map(p => {
-            return this.objectCloneService.deepCopy<BackupMetadata>(p);
-        }));
+        return RxUtils.asObservable(() =>
+            this.memoryDataService.backups.map(b => {
+                return ObjectUtils.deepCopy(b);
+            })
+        );
     }
 
     backupDatabase(): Observable<BackupMetadata> {
-        throw new Error('Method not implemented.');
+        return RxUtils.asObservable(() => {
+            let metadata = new BackupMetadata();
+            metadata.id = uuid.v4();
+            metadata.time = new Date();
+            metadata.persons = this.memoryDataService.persons.length;
+            metadata.categories = this.memoryDataService.categories.length;
+            metadata.expenses = this.memoryDataService.expenses.length;
+            this.memoryDataService.backups.push(metadata);
+            return metadata;
+        });
     }
 
     restoreDatabase(backup: Blob): Observable<void> {
-        throw new Error('Method not implemented.');
+        return RxUtils.asObservable(() => {
+            this.memoryDataService.generateTestData();
+        });
     }
 }

@@ -1,3 +1,4 @@
+import * as uuid from 'uuid';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
@@ -5,9 +6,9 @@ import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { Person } from '../model/person';
-
 import { MemoryDataService } from './memory-data.service';
-import { ObjectCloneService } from './object-clone.service';
+import { ObjectUtils } from '../util/object-utils';
+import { RxUtils } from '../util/rx-utils';
 
 export abstract class PersonService {
     abstract list(): Observable<Person[]>;
@@ -59,33 +60,41 @@ export class HttpPersonDataAccessService extends PersonService {
 
 @Injectable({ providedIn: 'root' })
 export class StubPersonDataAccessService extends PersonService {
-    constructor(
-        private memoryDataService: MemoryDataService,
-        private objectCloneService: ObjectCloneService,
-    ) { super(); }
+    constructor(private memoryDataService: MemoryDataService) {
+        super();
+    }
 
     list(): Observable<Person[]> {
-        return of(this.memoryDataService.persons.map(p => {
-            return this.objectCloneService.deepCopy<Person>(p);
-        }));
+        return RxUtils.asObservable(() =>
+            this.memoryDataService.persons
+                .map(p => { return ObjectUtils.deepCopy(p); })
+        );
     }
 
     getById(id: string): Observable<Person> {
-        return new Observable<Person>((observer) => {
-            let person = this.memoryDataService.persons
-                .map(p => this.objectCloneService.deepCopy<Person>(p))
-                .find(p => p.id === id);
-
-            if (person) { observer.next(person); observer.complete(); }
-            else { observer.error('Person not found.'); }
+        return RxUtils.asObservable(() => {
+            let person = this.memoryDataService.persons.find(p => p.id === id);
+            if (person) { return ObjectUtils.deepCopy(person); }
+            else { throw 'Person not found.'; }
         });
     }
 
     save(person: Person): Observable<void> {
-        throw new Error('Method not implemented.');
+        return RxUtils.asObservable(() => {
+            let copy = ObjectUtils.deepCopy(person);
+            if (copy.id === null) { copy.id = uuid.v4(); }
+
+            let index = this.memoryDataService.persons.findIndex(p => p.id === person.id);
+            if (index !== -1) { this.memoryDataService.persons[index] = copy; }
+            else { this.memoryDataService.persons.push(copy);  }
+        });
     }
 
     delete(id: string): Observable<void> {
-        throw new Error('Method not implemented.');
+        return RxUtils.asObservable(() => {
+            let index = this.memoryDataService.persons.findIndex(p => p.id === id);
+            if (index !== -1) { this.memoryDataService.persons.splice(index, 1); }
+            else { throw 'Person not found.'; }
+        });
     }
 }

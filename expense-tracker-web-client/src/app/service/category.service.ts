@@ -1,3 +1,4 @@
+import * as uuid from 'uuid';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
@@ -8,7 +9,8 @@ import { Category } from '../model/category';
 import { Color } from '../model/color';
 
 import { MemoryDataService } from './memory-data.service';
-import { ObjectCloneService } from './object-clone.service';
+import { ObjectUtils } from '../util/object-utils';
+import { RxUtils } from '../util/rx-utils';
 
 export abstract class CategoryService {
     abstract list(): Observable<Category[]>;
@@ -66,33 +68,42 @@ export class HttpCategoryService extends CategoryService {
 
 @Injectable({ providedIn: 'root' })
 export class StubCategoryService extends CategoryService {
-    constructor(
-        private memoryDataService: MemoryDataService,
-        private objectCloneService: ObjectCloneService,
-    ) { super(); }
+    constructor(private memoryDataService: MemoryDataService) {
+        super();
+    }
 
     list(): Observable<Category[]> {
-        return of(this.memoryDataService.categories.map(p => {
-            return this.objectCloneService.deepCopy<Category>(p);
-        }));
+        return RxUtils.asObservable(() =>
+            this.memoryDataService.categories.map(c => {
+                return ObjectUtils.deepCopy(c);
+            })
+        );
     }
 
     getById(id: string): Observable<Category> {
-        return new Observable<Category>((observer) => {
-            let person = this.memoryDataService.categories
-                .map(p => this.objectCloneService.deepCopy<Category>(p))
-                .find(p => p.id === id);
-
-            if (person) { observer.next(person); observer.complete(); }
-            else { observer.error('Category not found.'); }
+        return RxUtils.asObservable(() => {
+            let category = this.memoryDataService.categories.find(p => p.id === id);
+            if (category) { return ObjectUtils.deepCopy(category); }
+            else { throw 'Category not found.'; }
         });
     }
 
     save(category: Category): Observable<void> {
-        throw new Error('Method not implemented.');
+        return RxUtils.asObservable(() => {
+            let copy = ObjectUtils.deepCopy(category);
+            if (copy.id === null) { copy.id = uuid.v4(); }
+
+            let index = this.memoryDataService.categories.findIndex(p => p.id === category.id);
+            if (index !== -1) { this.memoryDataService.categories[index] = copy; }
+            else { this.memoryDataService.categories.push(copy);  }
+        });
     }
 
     delete(id: string): Observable<void> {
-        throw new Error('Method not implemented.');
+        return RxUtils.asObservable(() => {
+            let index = this.memoryDataService.categories.findIndex(x => x.id === id);
+            if (index !== -1) { this.memoryDataService.categories.splice(index, 1); }
+            else { throw 'Category not found.'; }
+        });
     }
 }

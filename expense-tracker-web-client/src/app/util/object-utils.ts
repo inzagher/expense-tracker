@@ -1,8 +1,5 @@
-import { Injectable } from "@angular/core";
-
-@Injectable({ providedIn: 'root' })
-export class ObjectCloneService {
-    deepCopy<T>(target: T): T {
+export class ObjectUtils {
+    static deepCopy<T>(target: T): T {
         if (target === null) {
             return target;
         }

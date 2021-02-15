@@ -1,9 +1,16 @@
+import * as uuid from 'uuid';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+
 import { Expense } from '../model/expense';
 import { ExpenseFilter } from '../model/expense-filter';
+
+import { MemoryDataService } from './memory-data.service';
+import { ObjectUtils } from '../util/object-utils';
+import { RxUtils } from '../util/rx-utils';
 
 export abstract class ExpenseService {
     abstract find(filter: ExpenseFilter): Observable<Expense[]>;
@@ -57,20 +64,38 @@ export class HttpExpenseService extends ExpenseService {
 
 @Injectable({ providedIn: 'root' })
 export class StubExpenseService extends ExpenseService {
+    constructor(private memoryDataService: MemoryDataService) {
+        super();
+    }
 
     find(filter: ExpenseFilter): Observable<Expense[]> {
         throw new Error('Method not implemented.');
     }
 
     getById(id: string): Observable<Expense> {
-        throw new Error('Method not implemented.');
+        return RxUtils.asObservable(() => {
+            let expense = this.memoryDataService.expenses.find(e => e.id === id);
+            if (expense) { return ObjectUtils.deepCopy(expense); }
+            else { throw 'Expense not found.'; }
+        });
     }
 
     save(expense: Expense): Observable<void> {
-        throw new Error('Method not implemented.');
+        return RxUtils.asObservable(() => {
+            let copy = ObjectUtils.deepCopy(expense);
+            if (copy.id === null) { copy.id = uuid.v4(); }
+
+            let index = this.memoryDataService.expenses.findIndex(p => p.id === expense.id);
+            if (index !== -1) { this.memoryDataService.expenses[index] = copy; }
+            else { this.memoryDataService.expenses.push(copy);  }
+        });
     }
 
     delete(id: string): Observable<void> {
-        throw new Error('Method not implemented.');
+        return RxUtils.asObservable(() => {
+            let index = this.memoryDataService.expenses.findIndex(p => p.id === id);
+            if (index !== -1) { this.memoryDataService.expenses.splice(index, 1); }
+            else { throw 'Expense not found.'; }
+        });
     }
 }
