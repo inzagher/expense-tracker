@@ -25,8 +25,8 @@
         <tr mat-row *matRowDef="let row; columns: backupColumns;"></tr>
     </table>
     <div>
-        <button mat-raised-button color="primary" (click)="backupDatabase()">Backup database</button>
-        <button mat-raised-button color="primary" (click)='fileUpload.click()'>Restore database</button>
+        <button mat-raised-button color="primary" (click)="backupDatabase()">Backup</button>
+        <button mat-raised-button color="primary" (click)='fileUpload.click()'>Restore</button>
         <input id="fileUpload" type="file" accept="application/zip" #fileUpload
                [hidden]="true"(change)="restoreDatabase($event.target.files)">
     </div>
@@ -37,6 +37,18 @@
         <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef>Name</th>
             <td mat-cell *matCellDef="let person"> {{person.name}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td align="right" mat-cell *matCellDef="let person">
+                <button mat-icon-button (click)="editPerson(person.id)" color="accent">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button (click)="deletePerson(person.id)" color="accent">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="pesronColumns"></tr>
@@ -69,6 +81,18 @@
         <ng-container matColumnDef="description">
             <th mat-header-cell *matHeaderCellDef>Description</th>
             <td mat-cell *matCellDef="let category"> {{category.description}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td align="right" mat-cell *matCellDef="let category">
+                <button mat-icon-button (click)="editCategory(category.id)" color="accent">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button (click)="deleteCategory(category.id)" color="accent">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="categoryColumns"></tr>

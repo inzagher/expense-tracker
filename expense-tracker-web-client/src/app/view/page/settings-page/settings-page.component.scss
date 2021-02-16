@@ -4,6 +4,12 @@ table {
 .mat-column-color {
     max-width: 50px;
 }
+.mat-column-action {
+    min-width: 100px;
+    max-width: 100px;
+    overflow: initial;
+    justify-content: right;
+}
 .rectangle {
     height: 15px;
     width: 35px;

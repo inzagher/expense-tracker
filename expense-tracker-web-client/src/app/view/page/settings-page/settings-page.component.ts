@@ -35,11 +35,11 @@ export class SettingsPageComponent implements OnInit {
     }
 
     public get categoryColumns(): string[] {
-        return ['color', 'name', 'obsolete', 'description'];
+        return ['color', 'name', 'obsolete', 'description', 'action'];
     }
 
     public get pesronColumns(): string[] {
-        return ['name'];
+        return ['name', 'action'];
     }
 
     ngOnInit(): void {

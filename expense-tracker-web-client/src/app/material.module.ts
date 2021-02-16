@@ -7,11 +7,13 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
     exports: [
         FormsModule,
         MatButtonModule,
+        MatDividerModule,
         MatInputModule,
         MatFormFieldModule,
         MatMenuModule,
