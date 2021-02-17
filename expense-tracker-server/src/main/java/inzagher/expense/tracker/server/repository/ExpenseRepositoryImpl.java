@@ -7,7 +7,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -87,12 +86,12 @@ public class ExpenseRepositoryImpl implements ExpenseRepositoryExtension {
             ExpenseFilter filter
     ) {
         if (filter.getCategoryIdentifiers() != null && filter.getCategoryIdentifiers().size() > 0) {
-            In<UUID> in = cb.in(root.get("category").get("id"));
+            In<Integer> in = cb.in(root.get("category").get("id"));
             filter.getCategoryIdentifiers().forEach((id) -> { in.value(id); });
             predicates.add(in);
         }
         if (filter.getPersonIdentifiers() != null && filter.getPersonIdentifiers().size() > 0) {
-            In<UUID> in = cb.in(root.get("person").get("id"));
+            In<Integer> in = cb.in(root.get("person").get("id"));
             filter.getPersonIdentifiers().forEach((id) -> { in.value(id); });
             predicates.add(in);
         }

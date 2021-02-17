@@ -2,7 +2,6 @@ package inzagher.expense.tracker.server.model;
 
 import inzagher.expense.tracker.server.dto.PersonDTO;
 import java.io.Serializable;
-import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,17 +13,17 @@ import javax.persistence.Table;
 @Table(name = "persons")
 public class Person implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(nullable = false, updatable = false, columnDefinition = "UUID")
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false, updatable = false)
+    private Integer id;
     @Column(name="name")
     private String name;
 
-    public UUID getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

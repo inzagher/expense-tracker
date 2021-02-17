@@ -62,26 +62,26 @@ export class SettingsPageComponent implements OnInit {
         }
     }
 
-    editPerson(id: string | null): void {
+    editPerson(id: number | null): void {
         this.appService.openPersonEditor(id).subscribe(
             (saved) => { if (saved) this.reload(); }
         );
     }
 
-    editCategory(id: string | null): void {
+    editCategory(id: number | null): void {
         this.appService.openCategoryEditor(id).subscribe(
             (saved) => { if (saved) this.reload(); }
         );
     }
 
-    deletePerson(id: string): void {
+    deletePerson(id: number): void {
         let caption = 'Warning';
         let question = 'Are you sure you want to delete person?';
         let delete$ = this.expecuteAndReload(this.personService.delete(id));
         this.confirmAndExecute(caption, question, delete$).subscribe();
     }
 
-    deleteCategory(id: string): void {
+    deleteCategory(id: number): void {
         let caption = 'Warning';
         let question = 'Are you sure you want to delete category?';
         let delete$ = this.expecuteAndReload(this.categoryService.delete(id));

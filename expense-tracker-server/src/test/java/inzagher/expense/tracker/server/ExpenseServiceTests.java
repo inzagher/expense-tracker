@@ -8,7 +8,6 @@ import inzagher.expense.tracker.server.service.ExpenseService;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Optional;
-import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -68,7 +67,7 @@ public class ExpenseServiceTests {
         expense.setCategoryId(food.getId());
         expense.setAmount(BigDecimal.valueOf(51.20D));
         expense.setDescription("ANOTHER FOOD PURCHASE");
-        UUID storedRecordID = expenseService.storeExpense(expense);
+        Integer storedRecordID = expenseService.storeExpense(expense);
         assertNotNull(storedRecordID);
         assertEquals(2L, manager.countExpenses());
         assertEquals(2L, manager.countCategories());
@@ -81,7 +80,7 @@ public class ExpenseServiceTests {
         ExpenseDTO expense = purchase.toDTO();
         expense.setAmount(BigDecimal.valueOf(90.00D));
         expense.setCategoryId(phone.getId());
-        UUID storedRecordID = expenseService.storeExpense(expense);
+        Integer storedRecordID = expenseService.storeExpense(expense);
         assertEquals(purchase.getId(), storedRecordID);
         assertEquals(1L, manager.countExpenses());
         assertEquals(2L, manager.countCategories());

@@ -8,7 +8,6 @@ import inzagher.expense.tracker.server.repository.ExpenseRepository;
 import inzagher.expense.tracker.server.repository.PersonRepository;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,11 +33,11 @@ public class PersonService {
                 .collect(Collectors.toList());
     }
     
-    public Optional<PersonDTO> getPersonById(UUID id) {
+    public Optional<PersonDTO> getPersonById(Integer id) {
         return personRepository.findById(id).map(Person::toDTO);
     }
     
-    public UUID storePerson(PersonDTO dto) {
+    public Integer storePerson(PersonDTO dto) {
         Person model;
         if (dto.getId() != null) {
             Optional<Person> loadedPerson = personRepository.findById(dto.getId());
@@ -50,12 +49,12 @@ public class PersonService {
         return personRepository.saveAndFlush(model).getId();
     }
     
-    public void deletePerson(UUID id) {
+    public void deletePerson(Integer id) {
         resetDependentExpenses(id);
         personRepository.deleteById(id);
     }
     
-    private void resetDependentExpenses(UUID personID) {
+    private void resetDependentExpenses(Integer personID) {
         ExpenseFilter filter = new ExpenseFilter();
         filter.getPersonIdentifiers().add(personID);
         List<Expense> list = expenseRepository.find(filter);

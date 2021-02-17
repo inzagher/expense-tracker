@@ -1,8 +1,8 @@
 export class Expense {
-    public id: string | null = null;
+    public id: number | null = null;
     public date: Date = new Date();
     public amount: number = 0;
-    public personId: string = '';
-    public categoryId: string = '';
+    public personId: number | null = null;
+    public categoryId: number | null = null;
     public comment: string = '';
 }

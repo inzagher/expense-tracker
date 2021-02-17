@@ -9,7 +9,6 @@ import inzagher.expense.tracker.server.repository.CategoryRepository;
 import inzagher.expense.tracker.server.repository.ExpenseRepository;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,11 +34,11 @@ public class CategoryService {
                 .collect(Collectors.toList());
     }
     
-    public Optional<CategoryDTO> getCategoryById(UUID id) {
+    public Optional<CategoryDTO> getCategoryById(Integer id) {
         return categoryRepository.findById(id).map(Category::toDTO);
     }
     
-    public UUID storeCategory(CategoryDTO dto) {
+    public Integer storeCategory(CategoryDTO dto) {
         Category model;
         Integer red = dto.getColor().getRed();
         Integer green = dto.getColor().getGreen();
@@ -57,12 +56,12 @@ public class CategoryService {
         return categoryRepository.saveAndFlush(model).getId();
     }
     
-    public void deleteCategory(UUID id) {
+    public void deleteCategory(Integer id) {
         resetDependentExpenses(id);
         categoryRepository.deleteById(id);
     }
     
-    private void resetDependentExpenses(UUID categoryID) {
+    private void resetDependentExpenses(Integer categoryID) {
         ExpenseFilter filter = new ExpenseFilter();
         filter.getCategoryIdentifiers().add(categoryID);
         List<Expense> list = expenseRepository.find(filter);

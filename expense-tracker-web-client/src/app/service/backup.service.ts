@@ -1,4 +1,3 @@
-import * as uuid from 'uuid';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 

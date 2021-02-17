@@ -3,7 +3,6 @@ package inzagher.expense.tracker.server.controller;
 import inzagher.expense.tracker.server.dto.PersonDTO;
 import inzagher.expense.tracker.server.service.PersonService;
 import java.util.List;
-import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,7 +27,7 @@ public class PersonApiController {
     }
     
     @GetMapping(path = "/api/persons/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public PersonDTO read(@PathVariable UUID id) {
+    public PersonDTO read(@PathVariable Integer id) {
         return personService.getPersonById(id).orElse(null);
     }
 
@@ -38,7 +37,7 @@ public class PersonApiController {
     }
     
     @DeleteMapping(path = "/api/persons/{id}")
-    public void delete(@PathVariable UUID id) {
+    public void delete(@PathVariable Integer id) {
         personService.deletePerson(id);
     }
 }

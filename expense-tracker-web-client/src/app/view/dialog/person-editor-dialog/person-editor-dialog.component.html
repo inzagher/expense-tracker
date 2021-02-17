@@ -3,9 +3,9 @@
     <mat-divider></mat-divider>
 </h2>
 <div mat-dialog-content>
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" *ngIf="model">
         <mat-label>Name</mat-label>
-        <input *ngIf="model" matInput autocomplete="off" placeholder="Person name" [(ngModel)]="model.name">
+        <input matInput autocomplete="off" placeholder="Person name" [(ngModel)]="model.name">
     </mat-form-field>
 </div>
 <p class="error" *ngIf="error">{{error}}</p>

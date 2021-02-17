@@ -2,7 +2,6 @@ package inzagher.expense.tracker.server.model;
 
 import inzagher.expense.tracker.server.dto.CategoryDTO;
 import java.io.Serializable;
-import java.util.UUID;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
@@ -17,9 +16,9 @@ import javax.persistence.Table;
 @Table(name = "categories")
 public class Category implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(nullable = false, updatable = false, columnDefinition = "UUID")
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false, updatable = false)
+    private Integer id;
     @Column(name="name")
     private String name;
     @Embedded
@@ -34,11 +33,11 @@ public class Category implements Serializable {
     @Column(name="obsolete")
     private Boolean obsolete;
 
-    public UUID getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

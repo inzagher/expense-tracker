@@ -20,17 +20,17 @@ export class AppService {
             .afterClosed().pipe(map(r => !!r));
     }
 
-    openExpenseEditor(id: string | null): Observable<boolean> {
+    openExpenseEditor(id: number | null): Observable<boolean> {
         return this.dialog.open(ExpenseEditorDialogComponent, { data: id })
             .afterClosed().pipe(map(r => !!r));
     }
 
-    openCategoryEditor(id: string | null): Observable<boolean> {
+    openCategoryEditor(id: number | null): Observable<boolean> {
         return this.dialog.open(CategoryEditorDialogComponent, { data: id })
             .afterClosed().pipe(map(r => !!r));
     }
 
-    openPersonEditor(id: string | null): Observable<boolean> {
+    openPersonEditor(id: number | null): Observable<boolean> {
         return this.dialog.open(PersonEditorDialogComponent, { data: id })
             .afterClosed().pipe(map(r => !!r));
     }

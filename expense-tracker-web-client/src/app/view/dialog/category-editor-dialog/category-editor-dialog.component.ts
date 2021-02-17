@@ -14,7 +14,7 @@ export class CategoryEditorDialogComponent implements OnInit {
     public error: string | null = null;
 
     constructor(
-        @Inject(MAT_DIALOG_DATA) private id: string | null,
+        @Inject(MAT_DIALOG_DATA) private id: number | null,
         private dialogRef: MatDialogRef<CategoryEditorDialogComponent, boolean>,
         private categoryService: CategoryService
     ) { }

@@ -4,7 +4,6 @@ import inzagher.expense.tracker.server.dto.ExpenseDTO;
 import inzagher.expense.tracker.server.dto.ExpenseFilterDTO;
 import inzagher.expense.tracker.server.service.ExpenseService;
 import java.util.List;
-import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,7 +23,7 @@ public class ExpenseApiController {
     }
     
     @GetMapping(path = "/api/expenses/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ExpenseDTO read(@PathVariable UUID id) {
+    public ExpenseDTO read(@PathVariable Integer id) {
         return expenseService.getExpenseById(id).orElse(null);
     }
 
@@ -39,7 +38,7 @@ public class ExpenseApiController {
     }
     
     @DeleteMapping(path = "/api/expenses/{id}")
-    public void delete(@PathVariable UUID id) {
+    public void delete(@PathVariable Integer id) {
         expenseService.deleteExpense(id);
     }
 }

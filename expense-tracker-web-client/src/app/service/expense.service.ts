@@ -1,6 +1,5 @@
-import * as uuid from 'uuid';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -14,9 +13,9 @@ import { RxUtils } from '../util/rx-utils';
 
 export abstract class ExpenseService {
     abstract find(filter: ExpenseFilter): Observable<Expense[]>;
-    abstract getById(id: string): Observable<Expense>;
+    abstract getById(id: number): Observable<Expense>;
     abstract save(expense: Expense): Observable<void>;
-    abstract delete(id: string): Observable<void>;
+    abstract delete(id: number): Observable<void>;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -29,9 +28,8 @@ export class HttpExpenseService extends ExpenseService {
         throw new Error('Method not implemented.');
     }
 
-    getById(id: string): Observable<Expense> {
-        let parameters = new HttpParams().append('id', id);
-        return this.http.get('/api/expenses', { params: parameters }).pipe(
+    getById(id: number): Observable<Expense> {
+        return this.http.get('/api/expenses/' + id).pipe(
             map(dto => this.toExpense(dto))
         );
     }
@@ -43,9 +41,8 @@ export class HttpExpenseService extends ExpenseService {
         );
     }
 
-    delete(id: string): Observable<void> {
-        let parameters = new HttpParams().append('id', id);
-        return this.http.delete('/api/expenses', { params: parameters }).pipe(
+    delete(id: number): Observable<void> {
+        return this.http.delete('/api/expenses/' + id).pipe(
             map(response => { })
         );
     }
@@ -72,7 +69,7 @@ export class StubExpenseService extends ExpenseService {
         throw new Error('Method not implemented.');
     }
 
-    getById(id: string): Observable<Expense> {
+    getById(id: number): Observable<Expense> {
         return RxUtils.asObservable(() => {
             let expense = this.memoryDataService.expenses.find(e => e.id === id);
             if (expense) { return ObjectUtils.deepCopy(expense); }
@@ -83,7 +80,7 @@ export class StubExpenseService extends ExpenseService {
     save(expense: Expense): Observable<void> {
         return RxUtils.asObservable(() => {
             let copy = ObjectUtils.deepCopy(expense);
-            if (copy.id === null) { copy.id = uuid.v4(); }
+            if (copy.id === null) { copy.id = this.memoryDataService.nextExpenseId(); }
 
             let index = this.memoryDataService.expenses.findIndex(p => p.id === expense.id);
             if (index !== -1) { this.memoryDataService.expenses[index] = copy; }
@@ -91,7 +88,7 @@ export class StubExpenseService extends ExpenseService {
         });
     }
 
-    delete(id: string): Observable<void> {
+    delete(id: number): Observable<void> {
         return RxUtils.asObservable(() => {
             let index = this.memoryDataService.expenses.findIndex(p => p.id === id);
             if (index !== -1) { this.memoryDataService.expenses.splice(index, 1); }

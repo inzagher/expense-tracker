@@ -58,11 +58,11 @@ export class HomePageComponent implements OnInit {
         });
     }
 
-    editExpense(id: string | null) {
+    editExpense(id: number | null) {
         this.appService.openExpenseEditor(id)
             .subscribe((s) => { this.reload(); });
     }
 
-    deleteExpenses(id: string) {
+    deleteExpense(id: number) {
     }
 }

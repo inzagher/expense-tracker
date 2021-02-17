@@ -1,8 +1,7 @@
-import * as uuid from 'uuid';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { Person } from '../model/person';
@@ -12,9 +11,9 @@ import { RxUtils } from '../util/rx-utils';
 
 export abstract class PersonService {
     abstract list(): Observable<Person[]>;
-    abstract getById(id: string): Observable<Person>;
+    abstract getById(id: number): Observable<Person>;
     abstract save(person: Person): Observable<void>;
-    abstract delete(id: string): Observable<void>;
+    abstract delete(id: number): Observable<void>;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -29,9 +28,8 @@ export class HttpPersonDataAccessService extends PersonService {
         );
     }
 
-    getById(id: string): Observable<Person> {
-        let parameters = new HttpParams().append('id', id);
-        return this.http.get('/api/persons', { params: parameters }).pipe(
+    getById(id: number): Observable<Person> {
+        return this.http.get('/api/persons/' + id).pipe(
             map(dto => this.toPerson(dto))
         );
     }
@@ -43,9 +41,8 @@ export class HttpPersonDataAccessService extends PersonService {
         );
     }
 
-    delete(id: string): Observable<void> {
-        let parameters = new HttpParams().append('id', id);
-        return this.http.delete('/api/persons', { params: parameters }).pipe(
+    delete(id: number): Observable<void> {
+        return this.http.delete('/api/persons/' + id).pipe(
             map(response => {})
         );
     }
@@ -71,7 +68,7 @@ export class StubPersonDataAccessService extends PersonService {
         );
     }
 
-    getById(id: string): Observable<Person> {
+    getById(id: number): Observable<Person> {
         return RxUtils.asObservable(() => {
             let person = this.memoryDataService.persons.find(p => p.id === id);
             if (person) { return ObjectUtils.deepCopy(person); }
@@ -82,7 +79,7 @@ export class StubPersonDataAccessService extends PersonService {
     save(person: Person): Observable<void> {
         return RxUtils.asObservable(() => {
             let copy = ObjectUtils.deepCopy(person);
-            if (copy.id === null) { copy.id = uuid.v4(); }
+            if (copy.id === null) { copy.id = this.memoryDataService.nextPersonId(); }
 
             let index = this.memoryDataService.persons.findIndex(p => p.id === person.id);
             if (index !== -1) { this.memoryDataService.persons[index] = copy; }
@@ -90,7 +87,7 @@ export class StubPersonDataAccessService extends PersonService {
         });
     }
 
-    delete(id: string): Observable<void> {
+    delete(id: number): Observable<void> {
         return RxUtils.asObservable(() => {
             let index = this.memoryDataService.persons.findIndex(p => p.id === id);
             if (index !== -1) { this.memoryDataService.persons.splice(index, 1); }

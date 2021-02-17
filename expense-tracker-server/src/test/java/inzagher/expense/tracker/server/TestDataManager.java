@@ -13,7 +13,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,15 +61,15 @@ public class TestDataManager {
         backupMetadataRepository.deleteAllInBatch();
     }
     
-    public Optional<Expense> getExpense(UUID id) {
+    public Optional<Expense> getExpense(Integer id) {
         return expenseRepository.findById(id);
     }
     
-    public Optional<Category> getCatetory(UUID id) {
+    public Optional<Category> getCatetory(Integer id) {
         return categoryRepository.findById(id);
     }
     
-    public Optional<Person> getPerson(UUID id) {
+    public Optional<Person> getPerson(Integer id) {
         return personRepository.findById(id);
     }
     

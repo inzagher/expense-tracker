@@ -5,7 +5,6 @@ import inzagher.expense.tracker.server.dto.ExpenseDTO;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -22,9 +21,9 @@ import org.hibernate.annotations.OnDeleteAction;
 @Table(name = "expenses")
 public class Expense implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(nullable = false, updatable = false, columnDefinition = "UUID")
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false, updatable = false)
+    private Integer id;
     @Column(name="date")
     @Convert(converter = LocalDateConverter.class)
     private LocalDate date;
@@ -41,11 +40,11 @@ public class Expense implements Serializable {
     @Column(name="description")
     private String description;
 
-    public UUID getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

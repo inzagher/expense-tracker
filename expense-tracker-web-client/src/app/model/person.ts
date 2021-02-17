@@ -1,4 +1,4 @@
 export class Person {
-    public id: string | null = null;
+    public id: number | null = null;
     public name: string = '';
 }

@@ -1,6 +1,5 @@
 package inzagher.expense.tracker.server.dto;
 
-import java.util.UUID;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
@@ -8,17 +7,17 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType
 @XmlAccessorType(XmlAccessType.FIELD)
 public class CategoryDTO {
-    private UUID id;
+    private Integer id;
     private String name;
     private ColorDTO color;
     private String description;
     private Boolean obsolete;
 
-    public UUID getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

@@ -7,7 +7,6 @@ import inzagher.expense.tracker.server.model.Expense;
 import inzagher.expense.tracker.server.model.Person;
 import inzagher.expense.tracker.server.service.CategoryService;
 import java.util.Optional;
-import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -71,7 +70,7 @@ public class CategoryServiceTests {
         education.setDescription("YEARLY EDUCATION BILL");
         education.setColor(new ColorDTO(30, 30, 30));
         education.setObsolete(false);
-        UUID storedRecordID = categoryService.storeCategory(education);
+        Integer storedRecordID = categoryService.storeCategory(education);
         assertNotNull(storedRecordID);
         assertEquals(3L, manager.countCategories());
         assertEquals("EDUCATION", manager.getCatetory(storedRecordID).get().getName());
@@ -81,7 +80,7 @@ public class CategoryServiceTests {
     public void categoryEditingTest() {
         CategoryDTO category = phone.toDTO();
         category.setColor(new ColorDTO(16, 16, 16));
-        UUID storedRecordID = categoryService.storeCategory(category);
+        Integer storedRecordID = categoryService.storeCategory(category);
         assertEquals(phone.getId(), storedRecordID);
         assertEquals(2L, manager.countCategories());
         assertEquals(16, manager.getCatetory(phone.getId()).get().getColor().getRed());

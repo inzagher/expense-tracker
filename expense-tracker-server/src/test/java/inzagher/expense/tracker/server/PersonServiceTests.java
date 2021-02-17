@@ -6,7 +6,6 @@ import inzagher.expense.tracker.server.model.Expense;
 import inzagher.expense.tracker.server.model.Person;
 import inzagher.expense.tracker.server.service.PersonService;
 import java.util.Optional;
-import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -67,7 +66,7 @@ public class PersonServiceTests {
     public void personCreationTest() {
         PersonDTO alice = new PersonDTO();
         alice.setName("ALICE");
-        UUID storedRecordID = personService.storePerson(alice);
+        Integer storedRecordID = personService.storePerson(alice);
         assertNotNull(storedRecordID);
         assertEquals(3L, manager.countPersons());
         assertEquals("ALICE", manager.getPerson(storedRecordID).get().getName());
@@ -77,7 +76,7 @@ public class PersonServiceTests {
     public void personEditingTest() {
         PersonDTO person = stan.toDTO();
         person.setName("STANLEY");
-        UUID storedRecordID = personService.storePerson(person);
+        Integer storedRecordID = personService.storePerson(person);
         assertEquals(stan.getId(), storedRecordID);
         assertEquals(2L, manager.countPersons());
         assertEquals("STANLEY", manager.getPerson(stan.getId()).get().getName());

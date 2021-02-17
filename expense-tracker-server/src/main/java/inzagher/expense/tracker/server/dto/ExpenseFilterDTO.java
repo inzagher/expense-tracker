@@ -9,13 +9,12 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @XmlType
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ExpenseFilterDTO {
-    private final List<UUID> categoryIdentifiers = new ArrayList<>();
-    private final List<UUID> personIdentifiers = new ArrayList<>();
+    private final List<Integer> categoryIdentifiers = new ArrayList<>();
+    private final List<Integer> personIdentifiers = new ArrayList<>();
     private BigDecimal amountExact;
     private BigDecimal amountFrom;
     private BigDecimal amountTo;
@@ -27,11 +26,11 @@ public class ExpenseFilterDTO {
     private LocalDate dateTo;
     private String descriptionLike;
 
-    public List<UUID> getCategoryIdentifiers() {
+    public List<Integer> getCategoryIdentifiers() {
         return categoryIdentifiers;
     }
 
-    public List<UUID> getPersonIdentifiers() {
+    public List<Integer> getPersonIdentifiers() {
         return personIdentifiers;
     }
 

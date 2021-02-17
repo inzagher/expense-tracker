@@ -1,8 +1,7 @@
-import * as uuid from 'uuid';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { Category } from '../model/category';
@@ -14,9 +13,9 @@ import { RxUtils } from '../util/rx-utils';
 
 export abstract class CategoryService {
     abstract list(): Observable<Category[]>;
-    abstract getById(id: string): Observable<Category>;
+    abstract getById(id: number): Observable<Category>;
     abstract save(category: Category): Observable<void>;
-    abstract delete(id: string): Observable<void>;
+    abstract delete(id: number): Observable<void>;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -31,9 +30,8 @@ export class HttpCategoryService extends CategoryService {
         );
     }
 
-    getById(id: string): Observable<Category> {
-        let parameters = new HttpParams().append('id', id);
-        return this.http.get('/api/categories', { params: parameters }).pipe(
+    getById(id: number): Observable<Category> {
+        return this.http.get('/api/categories/' + id).pipe(
             map(dto => this.toCategory(dto))
         );
     }
@@ -45,9 +43,8 @@ export class HttpCategoryService extends CategoryService {
         );
     }
 
-    delete(id: string): Observable<void> {
-        let parameters = new HttpParams().append('id', id);
-        return this.http.delete('/api/categories', { params: parameters }).pipe(
+    delete(id: number): Observable<void> {
+        return this.http.delete('/api/categories/' + id).pipe(
             map(response => { })
         );
     }
@@ -80,7 +77,7 @@ export class StubCategoryService extends CategoryService {
         );
     }
 
-    getById(id: string): Observable<Category> {
+    getById(id: number): Observable<Category> {
         return RxUtils.asObservable(() => {
             let category = this.memoryDataService.categories.find(p => p.id === id);
             if (category) { return ObjectUtils.deepCopy(category); }
@@ -91,7 +88,7 @@ export class StubCategoryService extends CategoryService {
     save(category: Category): Observable<void> {
         return RxUtils.asObservable(() => {
             let copy = ObjectUtils.deepCopy(category);
-            if (copy.id === null) { copy.id = uuid.v4(); }
+            if (copy.id === null) { copy.id = this.memoryDataService.nextCategoryId(); }
 
             let index = this.memoryDataService.categories.findIndex(p => p.id === category.id);
             if (index !== -1) { this.memoryDataService.categories[index] = copy; }
@@ -99,7 +96,7 @@ export class StubCategoryService extends CategoryService {
         });
     }
 
-    delete(id: string): Observable<void> {
+    delete(id: number): Observable<void> {
         return RxUtils.asObservable(() => {
             let index = this.memoryDataService.categories.findIndex(x => x.id === id);
             if (index !== -1) { this.memoryDataService.categories.splice(index, 1); }

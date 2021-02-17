@@ -1,7 +1,7 @@
 import { Color } from './color';
 
 export class Category {
-    public id: string | null = null;
+    public id: number | null = null;
     public name: string = '';
     public description: string = '';
     public color: Color = new Color();

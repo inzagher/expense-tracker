@@ -9,12 +9,9 @@ import inzagher.expense.tracker.server.model.Person;
 import inzagher.expense.tracker.server.repository.CategoryRepository;
 import inzagher.expense.tracker.server.repository.ExpenseRepository;
 import inzagher.expense.tracker.server.repository.PersonRepository;
-
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,11 +50,11 @@ public class ExpenseService {
                 .collect(Collectors.toList());
     }
     
-    public Optional<ExpenseDTO> getExpenseById(UUID id) {
+    public Optional<ExpenseDTO> getExpenseById(Integer id) {
         return expenseRepository.findById(id).map(Expense::toDTO);
     }
     
-    public UUID storeExpense(ExpenseDTO dto) {
+    public Integer storeExpense(ExpenseDTO dto) {
         Expense model;
         if (dto.getId() != null) {
             Optional<Expense> loadedExpense = expenseRepository.findById(dto.getId());
@@ -80,7 +77,7 @@ public class ExpenseService {
         return expenseRepository.saveAndFlush(model).getId();
     }
     
-    public void deleteExpense(UUID id) {
+    public void deleteExpense(Integer id) {
         expenseRepository.deleteById(id);
     }
 }

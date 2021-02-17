@@ -18,23 +18,39 @@ export class MemoryDataService {
 
     generateTestData(): void {
         this.persons.splice(0, this.persons.length);
-        this.persons.push({ id: 'bc9d24ea-a0a8-4ce5-82af-1043ea126bfe', name: 'Tom' });
-        this.persons.push({ id: 'cc48334a-0a72-4547-a78a-9de73f49484e', name: 'Bob' });
-        this.persons.push({ id: 'd623f047-fc37-472b-a120-f7a4503bf6a0', name: 'Alice' });
+        this.persons.push({ id: 0, name: 'Tom' });
+        this.persons.push({ id: 1, name: 'Bob' });
+        this.persons.push({ id: 2, name: 'Alice' });
 
         this.categories.splice(0, this.categories.length);
-        this.categories.push({ id: '7190ceea-3980-446f-a238-c8f9510aa26c', name: 'FOOD', color: { red: 255, green: 255, blue: 255 }, description: 'DAILY FOOD EXPENSES', obsolete: false });
-        this.categories.push({ id: '17011461-2238-4e97-8df2-ead48c7fa827', name: 'RENT', color: { red: 255, green: 0, blue: 0 }, description: 'MONTHLY RENT PAYMENTS', obsolete: false });
-        this.categories.push({ id: 'd623f047-fc37-472b-a120-f7a4503bf6a0', name: 'PHONE', color: { red: 255, green: 255, blue: 0 }, description: 'MONTHLY RENT PAYMENTS', obsolete: false });
-        this.categories.push({ id: 'a044e90c-3fe5-41be-97bf-cfed367597f5', name: 'EDUCATION', color: { red: 0, green: 255, blue: 0 }, description: 'YEARLY EDUCATION PAYMENTS', obsolete: false });
+        this.categories.push({ id: 0, name: 'FOOD', color: { red: 255, green: 255, blue: 255 }, description: 'DAILY FOOD EXPENSES', obsolete: false });
+        this.categories.push({ id: 1, name: 'RENT', color: { red: 255, green: 0, blue: 0 }, description: 'MONTHLY RENT PAYMENTS', obsolete: false });
+        this.categories.push({ id: 2, name: 'PHONE', color: { red: 255, green: 255, blue: 0 }, description: 'MONTHLY RENT PAYMENTS', obsolete: false });
+        this.categories.push({ id: 3, name: 'EDUCATION', color: { red: 0, green: 255, blue: 0 }, description: 'YEARLY EDUCATION PAYMENTS', obsolete: false });
 
         this.backups.splice(0, this.backups.length);
         this.backups.push({ id: 0, time: new Date(), expenses: this.expenses.length, categories: this.categories.length, persons: this.persons.length });
     }
 
     nextBackupId(): number {
-        return this.backups.filter(b => !!b.id).length > 0
-            ? Math.max(...this.backups.map(b => b.id as number)) + 1
+        return this.nextId(this.backups);
+    }
+
+    nextPersonId(): number {
+        return this.nextId(this.persons);
+    }
+
+    nextCategoryId(): number {
+        return this.nextId(this.categories);
+    }
+
+    nextExpenseId(): number {
+        return this.nextId(this.expenses);
+    }
+
+    private nextId<T>(array: Array<T>): number {
+        return array.filter((element: any) => !!element.id).length > 0
+            ? Math.max(...array.map(b => (b as any).id)) + 1
             : 0;
     }
 }
