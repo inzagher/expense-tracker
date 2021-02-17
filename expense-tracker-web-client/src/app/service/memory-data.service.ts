@@ -29,12 +29,12 @@ export class MemoryDataService {
         this.categories.push({ id: 'a044e90c-3fe5-41be-97bf-cfed367597f5', name: 'EDUCATION', color: { red: 0, green: 255, blue: 0 }, description: 'YEARLY EDUCATION PAYMENTS', obsolete: false });
 
         this.backups.splice(0, this.backups.length);
-        this.backups.push({
-            id: '4166018e-7eb4-411e-81dd-a13c90830a12',
-            time: new Date(),
-            expenses: this.expenses.length,
-            categories: this.categories.length,
-            persons: this.persons.length
-        });
+        this.backups.push({ id: 0, time: new Date(), expenses: this.expenses.length, categories: this.categories.length, persons: this.persons.length });
+    }
+
+    nextBackupId(): number {
+        return this.backups.filter(b => !!b.id).length > 0
+            ? Math.max(...this.backups.map(b => b.id as number)) + 1
+            : 0;
     }
 }

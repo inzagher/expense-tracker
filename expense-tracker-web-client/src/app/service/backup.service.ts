@@ -70,7 +70,7 @@ export class StubBackupService extends BackupService {
     backupDatabase(): Observable<BackupMetadata> {
         return RxUtils.asObservable(() => {
             let metadata = new BackupMetadata();
-            metadata.id = uuid.v4();
+            metadata.id = this.memoryDataService.nextBackupId();
             metadata.time = new Date();
             metadata.persons = this.memoryDataService.persons.length;
             metadata.categories = this.memoryDataService.categories.length;

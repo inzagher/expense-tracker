@@ -11,18 +11,18 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @XmlType
 @XmlAccessorType(XmlAccessType.FIELD)
 public class BackupMetadataDTO {
-    private UUID id;
+    private Integer id;
     @XmlJavaTypeAdapter(LocalDateTimeXmlAdapter.class)
     private LocalDateTime time;
     private Integer expenses;
     private Integer categories;
     private Integer persons;
 
-    public UUID getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

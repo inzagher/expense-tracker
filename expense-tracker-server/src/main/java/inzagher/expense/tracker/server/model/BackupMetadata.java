@@ -4,7 +4,6 @@ import inzagher.expense.tracker.server.converter.LocalDateTimeConverter;
 import inzagher.expense.tracker.server.dto.BackupMetadataDTO;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -17,9 +16,9 @@ import javax.persistence.Table;
 @Table(name = "backups")
 public class BackupMetadata implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(nullable = false, updatable = false, columnDefinition = "UUID")
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false, updatable = false)
+    private Integer id;
     @Column(name="time")
     @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime time;
@@ -30,11 +29,11 @@ public class BackupMetadata implements Serializable {
     @Column(name="persons")
     private Integer persons;
 
-    public UUID getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
