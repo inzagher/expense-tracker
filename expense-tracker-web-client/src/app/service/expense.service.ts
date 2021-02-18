@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { Expense } from '../model/expense';
@@ -25,7 +25,7 @@ export class HttpExpenseService extends ExpenseService {
     }
 
     find(filter: ExpenseFilter): Observable<Expense[]> {
-        throw new Error('Method not implemented.');
+        return of([]);
     }
 
     getById(id: number): Observable<Expense> {
@@ -66,7 +66,7 @@ export class StubExpenseService extends ExpenseService {
     }
 
     find(filter: ExpenseFilter): Observable<Expense[]> {
-        throw new Error('Method not implemented.');
+        return of([]);
     }
 
     getById(id: number): Observable<Expense> {
