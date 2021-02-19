@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+
 import { merge, Observable } from 'rxjs';
 import { concatMap, map, tap } from 'rxjs/operators';
 
@@ -14,9 +16,17 @@ import { PersonService } from 'src/app/service/person.service';
 @Component({
     selector: 'app-settings-page',
     templateUrl: './settings-page.component.html',
-    styleUrls: ['./settings-page.component.scss']
+    styleUrls: ['./settings-page.component.scss'],
+    animations: [
+        trigger('detailExpand', [
+          state('collapsed', style({height: '0px', minHeight: '0'})),
+          state('expanded', style({height: '*'})),
+          transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        ]),
+    ],
 })
 export class SettingsPageComponent implements OnInit {
+    public selectedCategory: Category | null = null;
     public categories: Category[] | null = null;
     public persons: Person[] | null = null;
     public backups: BackupMetadata[] | null = null;
@@ -35,7 +45,7 @@ export class SettingsPageComponent implements OnInit {
     }
 
     public get categoryColumns(): string[] {
-        return ['color', 'name', 'obsolete', 'description', 'action'];
+        return ['color', 'name', 'action'];
     }
 
     public get pesronColumns(): string[] {
