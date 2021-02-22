@@ -1,5 +1,12 @@
 table {
     width: 100%;
+    margin-bottom: 5px;
+}
+h3 {
+    margin: 0;
+}
+.section {
+    padding: 10px;
 }
 .mat-column-color {
     max-width: 50px;
@@ -9,6 +16,12 @@ table {
     max-width: 100px;
     overflow: initial;
     justify-content: right;
+}
+.mat-raised-button:first-child {
+    margin-left: 0;
+}
+.mat-raised-button {
+    margin-left: 5px;
 }
 .rectangle {
     height: 15px;
