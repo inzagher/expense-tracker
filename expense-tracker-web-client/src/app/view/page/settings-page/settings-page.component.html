@@ -85,10 +85,12 @@
         <ng-container matColumnDef="action">
             <th mat-header-cell *matHeaderCellDef></th>
             <td align="right" mat-cell *matCellDef="let category">
-                <button mat-icon-button (click)="editCategory(category.id)" color="accent">
+                <button (click)="editCategory(category.id); $event.stopPropagation()"
+                        mat-icon-button color="accent">
                     <mat-icon>edit</mat-icon>
                 </button>
-                <button mat-icon-button (click)="deleteCategory(category.id)" color="accent">
+                <button (click)="deleteCategory(category.id); $event.stopPropagation()"
+                        mat-icon-button color="accent">
                     <mat-icon>delete</mat-icon>
                 </button>
             </td>
