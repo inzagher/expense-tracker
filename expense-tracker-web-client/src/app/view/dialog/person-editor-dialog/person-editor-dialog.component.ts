@@ -32,7 +32,8 @@ export class PersonEditorDialogComponent implements OnInit {
     }
 
     isValid(): boolean {
-        return !!this.model && !!this.model.name && this.model.name.length > 0;
+        return this.model !== null
+            && this.model.name.length > 0;
     }
 
     submit(): void {
