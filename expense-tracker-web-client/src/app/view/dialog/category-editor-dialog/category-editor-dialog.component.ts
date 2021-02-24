@@ -1,8 +1,9 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { CategoryService } from './../../../service/category.service';
 import { Category } from './../../../model/category';
+import { ObjectUtils } from 'src/app/util/object-utils';
 
 @Component({
     selector: 'app-category-editor-dialog',
@@ -16,6 +17,7 @@ export class CategoryEditorDialogComponent implements OnInit {
     constructor(
         @Inject(MAT_DIALOG_DATA) private id: number | null,
         private dialogRef: MatDialogRef<CategoryEditorDialogComponent, boolean>,
+        private changeDetectorRef: ChangeDetectorRef,
         private categoryService: CategoryService
     ) { }
 
@@ -31,12 +33,25 @@ export class CategoryEditorDialogComponent implements OnInit {
         );
     }
 
+    onColorChanged(): void {
+        if (this.model === null) { return; }
+        this.model.color = ObjectUtils.deepCopy(this.model.color);
+    }
+
     isValid(): boolean {
-        return false;
+        return this.model !== null
+            && this.model.name.length > 1
+            && this.model.description.length > 1;
     }
 
     submit(): void {
-        this.dialogRef.close(true);
+        if (this.model) {
+            this.error = null;
+            this.categoryService.save(this.model).subscribe(
+                () => { this.dialogRef.close(true); },
+                (e) => { this.error = 'Failed to store data.'; }
+            );
+        }
     }
 
     cancel(): void {

@@ -1,0 +1,31 @@
+.mat-form-field-wrapper {
+    margin: .15em 0;
+}
+.mat-slider-horizontal {
+    margin-left: 5px;
+    flex: 1 1 auto;
+}
+.mat-slider-value {
+    width: 22px;
+    text-align: center;
+}
+.full-width {
+    width: 100%;
+}
+.flex-container {
+    width: 100%;
+    display: flex;
+    align-content: center;
+    align-items: center;
+}
+.color-lable {
+    margin-right: 5px;
+}
+.color-rectangle {
+    height: 15px;
+    width: 35px;
+    border: solid black 1px;
+}
+.spacer {
+    flex: 1 1 auto;
+}

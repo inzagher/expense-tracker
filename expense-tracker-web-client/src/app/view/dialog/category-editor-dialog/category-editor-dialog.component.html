@@ -1,1 +1,49 @@
-<p>category-editor-dialog works!</p>
+<h2 mat-dialog-title>
+    Category
+    <mat-divider></mat-divider>
+</h2>
+<div mat-dialog-content>
+    <mat-form-field appearance="outline" *ngIf="model" class="full-width">
+        <mat-label>Name</mat-label>
+        <input matInput autocomplete="off" placeholder="Category name" [(ngModel)]="model.name">
+    </mat-form-field>
+    <mat-form-field appearance="outline" *ngIf="model" class="full-width">
+        <mat-label>Description</mat-label>
+        <input matInput autocomplete="off" placeholder="Category description" [(ngModel)]="model.description">
+    </mat-form-field>
+    <div class="flex-container full-width" *ngIf="model">
+        <mat-label>R</mat-label>
+        <mat-slider min="0" max="255" step="1.0"
+                    [(ngModel)]="model.color.red"
+                    (change)="onColorChanged()">
+        </mat-slider>
+        <span class="mat-slider-value">{{model.color.red}}</span>
+    </div>
+    <div class="flex-container full-width" *ngIf="model">
+        <mat-label>G</mat-label>
+        <mat-slider min="0" max="255" step="1.0"
+                    [(ngModel)]="model.color.green"
+                    (change)="onColorChanged()">
+        </mat-slider>
+        <span class="mat-slider-value">{{model.color.green}}</span>
+    </div>
+    <div class="flex-container full-width" *ngIf="model">
+        <mat-label>B</mat-label>
+        <mat-slider min="0" max="255" step="1.0"
+                    [(ngModel)]="model.color.blue"
+                    (change)="onColorChanged()">
+        </mat-slider>
+        <span class="mat-slider-value">{{model.color.blue}}</span>
+    </div>
+    <div class="flex-container full-width" *ngIf="model">
+        <div class="color-lable">Color</div>
+        <div class="color-rectangle" [style.background-color]="model.color | color"></div>
+        <div class="spacer"></div>
+        <mat-checkbox color="primary" [(ngModel)]="model.obsolete">Obsolete</mat-checkbox>
+    </div>
+</div>
+<p class="error" *ngIf="error">{{error}}</p>
+<div mat-dialog-actions align="end">
+    <button mat-raised-button color="accent" (click)="cancel()">Cancel</button>
+    <button mat-raised-button color="primary" (click)="submit()" [disabled]="!isValid()">Submit</button>
+</div>
