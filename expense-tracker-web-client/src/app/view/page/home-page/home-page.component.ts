@@ -46,8 +46,8 @@ export class HomePageComponent implements OnInit {
         let daysInMonth = DateUtils.daysInMonth(this.date);
 
         let expenseFilter = new ExpenseFilter();
-        expenseFilter.from = new Date(year, month, 1);
-        expenseFilter.to = new Date(year, month, daysInMonth);
+        expenseFilter.dateFrom = new Date(year, month, 1);
+        expenseFilter.dateTo = new Date(year, month, daysInMonth);
 
         let persons$ = this.personService.list().pipe(tap(list => this.persons = list));
         let categories$ = this.categoryService.list().pipe(tap(list => this.categories = list));

@@ -8,7 +8,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { BackupService, HttpBackupService, StubBackupService } from './service/backup.service';
 import { CategoryService, HttpCategoryService, StubCategoryService } from './service/category.service';
 import { ExpenseService, HttpExpenseService, StubExpenseService } from './service/expense.service';
-import { HttpPersonDataAccessService, PersonService, StubPersonDataAccessService } from './service/person.service';
+import { PersonService, HttpPersonDataAccessService, StubPersonDataAccessService } from './service/person.service';
+import { ReportService, HttpReportService, StubReportService } from './service/report.service';
 
 import { AppComponent } from './app.component';
 import { HomePageComponent } from './view/page/home-page/home-page.component';
@@ -49,7 +50,8 @@ import { environment } from 'src/environments/environment';
         { provide: BackupService, useClass: environment.backend ? HttpBackupService : StubBackupService },
         { provide: PersonService, useClass: environment.backend ? HttpPersonDataAccessService : StubPersonDataAccessService },
         { provide: CategoryService, useClass: environment.backend ? HttpCategoryService : StubCategoryService },
-        { provide: ExpenseService, useClass: environment.backend ? HttpExpenseService : StubExpenseService }
+        { provide: ExpenseService, useClass: environment.backend ? HttpExpenseService : StubExpenseService },
+        { provide: ReportService, useClass: environment.backend ? HttpReportService : StubReportService }
     ],
     bootstrap: [AppComponent]
 })
