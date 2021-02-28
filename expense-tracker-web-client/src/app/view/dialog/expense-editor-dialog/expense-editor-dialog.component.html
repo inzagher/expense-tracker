@@ -1,1 +1,11 @@
-<p>expense-editor-dialog works!</p>
+<h2 mat-dialog-title>
+    Expense
+    <mat-divider></mat-divider>
+</h2>
+<div mat-dialog-content>
+</div>
+<p class="error" *ngIf="error">{{error}}</p>
+<div mat-dialog-actions align="end">
+    <button mat-raised-button color="accent" (click)="cancel()">Cancel</button>
+    <button mat-raised-button color="primary" (click)="submit()" [disabled]="!isValid()">Submit</button>
+</div>
