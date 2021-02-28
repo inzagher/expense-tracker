@@ -27,7 +27,7 @@ public class ExpenseApiController {
         return expenseService.getExpenseById(id).orElse(null);
     }
 
-    @PostMapping(path = "/api/expenses/search", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/api/expenses/find", consumes = MediaType.APPLICATION_JSON_VALUE)
     public List<ExpenseDTO> find(ExpenseFilterDTO filter) {
         return expenseService.findExpenses(filter);
     }

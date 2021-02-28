@@ -4,5 +4,5 @@ export class Expense {
     public amount: number = 0;
     public personId: number | null = null;
     public categoryId: number | null = null;
-    public comment: string = '';
+    public description: string = '';
 }

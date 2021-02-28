@@ -25,7 +25,10 @@ export class HttpExpenseService extends ExpenseService {
     }
 
     find(filter: ExpenseFilter): Observable<Expense[]> {
-        return of([]);
+        let json = JSON.parse(JSON.stringify(filter));
+        return this.http.post<any[]>('/api/expenses/find', json).pipe(
+            map((list: any[]) => list.map(dto => this.toExpense(dto)))
+        );
     }
 
     getById(id: number): Observable<Expense> {
@@ -54,7 +57,7 @@ export class HttpExpenseService extends ExpenseService {
         expense.amount = dto.amount;
         expense.personId = dto.personId;
         expense.categoryId = dto.categoryId;
-        expense.comment = dto.comment;
+        expense.description = dto.comment;
         return expense;
     }
 }
@@ -66,7 +69,11 @@ export class StubExpenseService extends ExpenseService {
     }
 
     find(filter: ExpenseFilter): Observable<Expense[]> {
-        return of([]);
+        return RxUtils.asObservable(() => {
+            return this.memoryDataService.expenses
+                .filter(e => this.isExpenseMatched(e, filter))
+                .map(e => ObjectUtils.deepCopy(e))
+        });
     }
 
     getById(id: number): Observable<Expense> {
@@ -94,5 +101,17 @@ export class StubExpenseService extends ExpenseService {
             if (index !== -1) { this.memoryDataService.expenses.splice(index, 1); }
             else { throw 'Expense not found.'; }
         });
+    }
+
+    private isExpenseMatched(expense: Expense, filter: ExpenseFilter): boolean {
+        return (filter.amountExact === null || expense.amount === filter.amountExact)
+            && (filter.amountFrom === null || expense.amount >= filter.amountFrom)
+            && (filter.amountTo === null || expense.amount <= filter.amountTo)
+            && (filter.dateExact === null || expense.date.getTime() === filter.dateExact.getTime())
+            && (filter.dateFrom === null || expense.date.getTime() >= filter.dateFrom.getTime())
+            && (filter.dateTo === null || expense.date.getTime() <= filter.dateTo.getTime())
+            && (filter.descriptionLike === null || expense.description.toLowerCase().includes(filter.descriptionLike.toLowerCase()))
+            && (filter.categoryIdentifiers.length === 0 || expense.categoryId !== null && filter.categoryIdentifiers.includes(expense.categoryId))
+            && (filter.personIdentifiers.length === 0 || expense.personId !== null && filter.personIdentifiers.includes(expense.personId));
     }
 }
