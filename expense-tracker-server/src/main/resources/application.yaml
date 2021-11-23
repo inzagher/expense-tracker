@@ -1,0 +1,16 @@
+backup:
+  directory: target/backups
+spring:
+  datasource:
+    driver-class-name: "org.sqlite.JDBC"
+    url: "jdbc:sqlite:target/expenses.db"
+    hikari.data-source-properties.date_class: "text"
+  jpa:
+    properties:
+      hibernate:
+        dialect: "org.hibernate.dialect.SQLiteDialect"
+        show_sql: true
+        hbm2ddl:
+          auto: none
+flyway:
+  locations: "classpath:db/migration/{vendor}"

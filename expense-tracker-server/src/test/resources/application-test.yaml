@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    driver-class-name: "org.sqlite.JDBC"
+    url: "jdbc:sqlite::memory:"
+    hikari.data-source-properties.date_class: "text"
+  jpa:
+    properties:
+      hibernate:
+        dialect: "org.hibernate.dialect.SQLiteDialect"
+        show_sql: true
+        hbm2ddl:
+          auto: create-drop
+flyway:
+  enabled: false
