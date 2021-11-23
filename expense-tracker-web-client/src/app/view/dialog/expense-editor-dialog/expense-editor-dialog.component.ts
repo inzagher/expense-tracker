@@ -1,11 +1,13 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { concat, iif, Observable, of } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { Category } from 'src/app/model/category';
 
-import { Expense } from 'src/app/model/expense';
+import { Observable, iif, merge } from 'rxjs';
+import { tap } from 'rxjs/operators';
+
 import { Person } from 'src/app/model/person';
+import { Category } from 'src/app/model/category';
+import { Expense } from 'src/app/model/expense';
+
 import { CategoryService } from 'src/app/service/category.service';
 import { ExpenseService } from 'src/app/service/expense.service';
 import { PersonService } from 'src/app/service/person.service';
@@ -31,16 +33,10 @@ export class ExpenseEditorDialogComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        let persons$ = this.personService.list().pipe(
-            tap(list => this.persons = list)
-        );
-        let categories$ = this.categoryService.list().pipe(
-            tap(list => this.categories = list)
-        );
-        let expense$ = this.loadExpense().pipe(
-            tap(expense => this.model = expense)
-        );
-        concat(persons$, categories$, expense$).subscribe({
+        let persons$ = this.personService.list().pipe(tap(list => this.persons = list));
+        let categories$ = this.categoryService.list().pipe(tap(list => this.categories = list));
+        let expense$ = this.loadExpense().pipe(tap(expense => this.model = expense));
+        merge(persons$, categories$, expense$).subscribe({
             error: (error) => { this.error = 'Failed to load data.'; }
         });
     }

@@ -15,11 +15,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestPropertySource;
 
 @ActiveProfiles("test")
-@SpringBootTest(classes = {TestingConfiguration.class})
-@TestPropertySource(locations="classpath:test.properties")
+@SpringBootTest(classes = ServiceRunner.class)
 public class ExpenseServiceTests {
     @Autowired
     private ExpenseService expenseService;

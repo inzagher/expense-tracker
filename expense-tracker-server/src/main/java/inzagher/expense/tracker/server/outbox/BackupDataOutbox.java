@@ -1,4 +1,4 @@
-package inzagher.expense.tracker.server.core;
+package inzagher.expense.tracker.server.outbox;
 
 import inzagher.expense.tracker.server.model.BackupMetadata;
 import java.io.OutputStream;

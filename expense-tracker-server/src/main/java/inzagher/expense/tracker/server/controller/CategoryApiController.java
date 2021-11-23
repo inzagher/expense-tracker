@@ -4,7 +4,6 @@ import inzagher.expense.tracker.server.dto.CategoryDTO;
 import inzagher.expense.tracker.server.service.CategoryService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,17 +20,17 @@ public class CategoryApiController {
         this.categoryService = categoryService;
     }
     
-    @GetMapping(path = "/api/categories", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/api/categories")
     public List<CategoryDTO> list() {
         return categoryService.getAllCategories();
     }
     
-    @GetMapping(path = "/api/categories/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/api/categories/{id}")
     public CategoryDTO read(@PathVariable Integer id) {
         return categoryService.getCategoryById(id).orElse(null);
     }
 
-    @PostMapping(path = "/api/categories", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/api/categories")
     public void save(@RequestBody CategoryDTO category) {
         categoryService.storeCategory(category);
     }

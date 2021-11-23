@@ -1,22 +1,16 @@
 package inzagher.expense.tracker.server.model;
 
-import inzagher.expense.tracker.server.converter.LocalDateConverter;
 import inzagher.expense.tracker.server.dto.ExpenseDTO;
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import lombok.Data;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import javax.persistence.*;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+@Data
 @Entity
 @Table(name = "expenses")
 public class Expense implements Serializable {
@@ -25,7 +19,6 @@ public class Expense implements Serializable {
     @Column(nullable = false, updatable = false)
     private Integer id;
     @Column(name="date")
-    @Convert(converter = LocalDateConverter.class)
     private LocalDate date;
     @ManyToOne
     @OnDelete(action = OnDeleteAction.NO_ACTION)
@@ -39,54 +32,6 @@ public class Expense implements Serializable {
     private BigDecimal amount;
     @Column(name="description")
     private String description;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    public Person getPerson() {
-        return person;
-    }
-
-    public void setPerson(Person person) {
-        this.person = person;
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
     
     public ExpenseDTO toDTO() {
         ExpenseDTO dto = new ExpenseDTO();

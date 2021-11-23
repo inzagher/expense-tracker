@@ -5,7 +5,6 @@ import inzagher.expense.tracker.server.dto.YearlyReportItemDTO;
 import inzagher.expense.tracker.server.service.ReportService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,16 +18,14 @@ public class ReportApiController {
         this.reportService = reportService;
     }
 
-    @GetMapping (path = "/api/reports/monthly-category-report/{year}/{month}",
-                 produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping (path = "/api/reports/monthly-category-report/{year}/{month}")
     public List<CategoryReportItemDTO> monthlyCategoryReport(
             @PathVariable Integer year, @PathVariable Integer month
     ) {
         return reportService.createMonthlyCategoryReport(year, month);
     }
 
-    @GetMapping (path = "/api/reports/yearly-report/{year}",
-                 produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping (path = "/api/reports/yearly-report/{year}")
     public List<YearlyReportItemDTO> yearlyReport(@PathVariable Integer year) {
         return reportService.createYearlyReport(year);
     }

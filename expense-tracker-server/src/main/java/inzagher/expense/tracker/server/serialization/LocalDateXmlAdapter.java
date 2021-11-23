@@ -1,4 +1,4 @@
-package inzagher.expense.tracker.server.xml;
+package inzagher.expense.tracker.server.serialization;
 
 import java.time.LocalDate;
 import javax.xml.bind.annotation.adapters.XmlAdapter;

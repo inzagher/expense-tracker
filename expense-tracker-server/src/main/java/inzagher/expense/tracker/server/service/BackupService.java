@@ -1,6 +1,6 @@
 package inzagher.expense.tracker.server.service;
 
-import inzagher.expense.tracker.server.core.BackupDataOutbox;
+import inzagher.expense.tracker.server.outbox.BackupDataOutbox;
 import inzagher.expense.tracker.server.dto.BackupDataDTO;
 import inzagher.expense.tracker.server.dto.BackupMetadataDTO;
 import inzagher.expense.tracker.server.dto.CategoryDTO;
@@ -30,6 +30,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,7 +75,9 @@ public class BackupService {
     }
     
     public Optional<BackupMetadataDTO> getLastBackupInfo() {
-        return backupMetadataRepository.last().map(BackupMetadata::toDTO);
+        var request = PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, "time"));
+        var backups =  backupMetadataRepository.findAll(request).toList();
+        return backups.size() > 0 ? Optional.of(backups.get(0).toDTO()) : Optional.empty();
     }
     
     public BackupMetadataDTO createDatabaseBackup() {

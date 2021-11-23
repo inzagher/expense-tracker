@@ -4,7 +4,6 @@ import inzagher.expense.tracker.server.dto.PersonDTO;
 import inzagher.expense.tracker.server.service.PersonService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,17 +20,17 @@ public class PersonApiController {
         this.personService = personService;
     }
     
-    @GetMapping(path = "/api/persons", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/api/persons")
     public List<PersonDTO> list() {
         return personService.getAllPersons();
     }
     
-    @GetMapping(path = "/api/persons/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/api/persons/{id}")
     public PersonDTO read(@PathVariable Integer id) {
         return personService.getPersonById(id).orElse(null);
     }
 
-    @PostMapping(path = "/api/persons", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/api/persons")
     public void save(@RequestBody PersonDTO person) {
         personService.storePerson(person);
     }

@@ -1,6 +1,5 @@
-package inzagher.expense.tracker.server.impl;
+package inzagher.expense.tracker.server.outbox;
 
-import inzagher.expense.tracker.server.core.BackupDataOutbox;
 import inzagher.expense.tracker.server.model.BackupMetadata;
 import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
 

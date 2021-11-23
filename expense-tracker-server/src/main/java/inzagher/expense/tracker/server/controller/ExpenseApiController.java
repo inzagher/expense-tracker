@@ -5,7 +5,6 @@ import inzagher.expense.tracker.server.dto.ExpenseFilterDTO;
 import inzagher.expense.tracker.server.service.ExpenseService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,17 +21,17 @@ public class ExpenseApiController {
         this.expenseService = expenseService;
     }
     
-    @GetMapping(path = "/api/expenses/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/api/expenses/{id}")
     public ExpenseDTO read(@PathVariable Integer id) {
         return expenseService.getExpenseById(id).orElse(null);
     }
 
-    @PostMapping(path = "/api/expenses/find", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/api/expenses/find")
     public List<ExpenseDTO> find(ExpenseFilterDTO filter) {
         return expenseService.findExpenses(filter);
     }
 
-    @PostMapping(path = "/api/expenses", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/api/expenses")
     public void save(@RequestBody ExpenseDTO expense) {
         expenseService.storeExpense(expense);
     }

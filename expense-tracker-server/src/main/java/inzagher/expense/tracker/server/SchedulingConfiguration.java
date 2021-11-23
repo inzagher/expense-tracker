@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile("!test")
+@Profile("production")
 @EnableScheduling
 public class SchedulingConfiguration {
     private final BackupService backupService;

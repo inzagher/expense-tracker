@@ -1,12 +1,15 @@
 package inzagher.expense.tracker.server;
 
-import inzagher.expense.tracker.server.core.BackupDataOutbox;
-import inzagher.expense.tracker.server.impl.MemoryBackupDataOutbox;
+import inzagher.expense.tracker.server.outbox.BackupDataOutbox;
+import inzagher.expense.tracker.server.outbox.MemoryBackupDataOutbox;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
-public class TestingConfiguration extends ServiceRunner {
+@Configuration
+public class TestingConfiguration {
     @Bean
-    @Override
+    @Profile("test")
     public BackupDataOutbox backupDataOutbox() {
         return new MemoryBackupDataOutbox();
     }
