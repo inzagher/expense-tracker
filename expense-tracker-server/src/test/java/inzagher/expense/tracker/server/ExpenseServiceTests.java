@@ -95,6 +95,6 @@ public class ExpenseServiceTests {
     }
 
     private void assertAmountEquals(BigDecimal expected, BigDecimal actual) {
-        assertTrue(expected.compareTo(actual) == 0, "AMOUNT MISMATCH");
+        assertEquals(0, expected.compareTo(actual), "AMOUNT MISMATCH");
     }
 }

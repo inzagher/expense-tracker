@@ -22,7 +22,7 @@ public class BackupApiController {
     
     @GetMapping(path = "/api/backups")
     public List<BackupMetadataDTO> list() {
-        return backupService.getAllBackupInfos();
+        return backupService.getAllBackupInfo();
     }
     
     @GetMapping(path = "/api/backup-database")

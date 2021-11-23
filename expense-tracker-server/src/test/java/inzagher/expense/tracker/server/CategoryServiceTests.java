@@ -71,7 +71,7 @@ public class CategoryServiceTests {
         Integer storedRecordID = categoryService.storeCategory(education);
         assertNotNull(storedRecordID);
         assertEquals(3L, manager.countCategories());
-        assertEquals("EDUCATION", manager.getCatetory(storedRecordID).get().getName());
+        assertEquals("EDUCATION", manager.getCategory(storedRecordID).get().getName());
     }
     
     @Test
@@ -81,7 +81,7 @@ public class CategoryServiceTests {
         Integer storedRecordID = categoryService.storeCategory(category);
         assertEquals(phone.getId(), storedRecordID);
         assertEquals(2L, manager.countCategories());
-        assertEquals(16, manager.getCatetory(phone.getId()).get().getColor().getRed());
+        assertEquals(16, manager.getCategory(phone.getId()).get().getColor().getRed());
     }
     
     @Test
@@ -95,6 +95,6 @@ public class CategoryServiceTests {
         categoryService.deleteCategory(phone.getId());
         assertEquals(1L, manager.countCategories());
         assertEquals(1L, manager.countExpenses());
-        assertFalse(manager.getCatetory(payment.getId()).isPresent());
+        assertFalse(manager.getCategory(payment.getId()).isPresent());
     }
 }

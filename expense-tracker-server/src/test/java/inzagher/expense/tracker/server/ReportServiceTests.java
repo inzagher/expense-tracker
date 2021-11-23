@@ -135,14 +135,14 @@ public class ReportServiceTests {
                 .filter(item -> item.getCategory().getId().equals(category.getId()))
                 .findFirst().orElseThrow(() -> new RuntimeException("CATEGORY NOT FOUND"))
                 .getAmount();
-        Boolean areEqual = BigDecimal.valueOf(expectedAmount).compareTo(actualAmount) == 0;
+        boolean areEqual = BigDecimal.valueOf(expectedAmount).compareTo(actualAmount) == 0;
         assertTrue(areEqual, "AMOUNT MISMATCH FOR CATEGORY: " + category.getName());
     }
     
     private void assertYearlyReportItem(Double expectedAmount,
             List<YearlyReportItemDTO> report, int month) {
         BigDecimal actualAmount = report.get(month - 1).getAmount();
-        Boolean areEqual = BigDecimal.valueOf(expectedAmount).compareTo(actualAmount) == 0;
+        boolean areEqual = BigDecimal.valueOf(expectedAmount).compareTo(actualAmount) == 0;
         assertTrue(areEqual, "AMOUNT MISMATCH FOR MONTH: " + month);
     }
 }

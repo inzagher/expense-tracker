@@ -10,7 +10,7 @@ import java.util.List;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class BackupDataDTO {
-    @XmlElement(name="pesron")
+    @XmlElement(name="person")
     @XmlElementWrapper(name="persons")
     private List<PersonDTO> persons;
     @XmlElement(name="category")

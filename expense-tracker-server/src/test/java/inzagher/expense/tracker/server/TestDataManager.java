@@ -65,7 +65,7 @@ public class TestDataManager {
         return expenseRepository.findById(id);
     }
     
-    public Optional<Category> getCatetory(Integer id) {
+    public Optional<Category> getCategory(Integer id) {
         return categoryRepository.findById(id);
     }
     

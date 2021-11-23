@@ -62,13 +62,13 @@ public class BackupService {
         this.personRepository = personRepository;
         this.backupMetadataRepository = backupMetadataRepository;
         this.backupDataOutbox = backupDataOutbox;
-        
-        Class[] classes = new Class[]{ BackupDataDTO.class };
+
+        var classes = new Class[]{ BackupDataDTO.class };
         try { jaxbContext = JAXBContext.newInstance(classes); }
         catch(JAXBException e) { throw new RuntimeException(e); }
     }
     
-    public List<BackupMetadataDTO> getAllBackupInfos() {
+    public List<BackupMetadataDTO> getAllBackupInfo() {
         return backupMetadataRepository.findAll().stream()
                 .map(BackupMetadata::toDTO)
                 .collect(Collectors.toList());

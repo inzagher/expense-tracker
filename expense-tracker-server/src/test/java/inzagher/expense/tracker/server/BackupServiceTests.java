@@ -66,7 +66,7 @@ public class BackupServiceTests {
     
     @Test
     public void backupInfoListTest() {
-        List<BackupMetadataDTO> list = backupService.getAllBackupInfos();
+        List<BackupMetadataDTO> list = backupService.getAllBackupInfo();
         assertEquals(3, list.size());
     }
     
@@ -92,6 +92,9 @@ public class BackupServiceTests {
     
     private byte[] loadTestResource(String name) {
         URL url = getClass().getClassLoader().getResource(name);
+        if (url == null) {
+            throw new RuntimeException("Resource url is null");
+        }
         try (InputStream is = url.openStream()) {
             byte[] result = new byte[is.available()];
             is.read(result);
