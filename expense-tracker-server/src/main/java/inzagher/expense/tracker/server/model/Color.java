@@ -1,13 +1,12 @@
 package inzagher.expense.tracker.server.model;
 
 import inzagher.expense.tracker.server.dto.ColorDTO;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Embeddable;
 
-@Data
+@Getter
+@Setter
 @Embeddable
 @NoArgsConstructor
 @AllArgsConstructor

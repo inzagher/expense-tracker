@@ -2,11 +2,13 @@ package inzagher.expense.tracker.server.model;
 
 import inzagher.expense.tracker.server.dto.CategoryReportItemDTO;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 public class CategorySummaryItem {
     private Category category;

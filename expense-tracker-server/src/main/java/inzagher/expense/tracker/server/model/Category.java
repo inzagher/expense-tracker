@@ -1,7 +1,8 @@
 package inzagher.expense.tracker.server.model;
 
 import inzagher.expense.tracker.server.dto.CategoryDTO;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import javax.persistence.AttributeOverride;
@@ -14,7 +15,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "categories")
 public class Category implements Serializable {

@@ -1,7 +1,8 @@
 package inzagher.expense.tracker.server.model;
 
 import inzagher.expense.tracker.server.dto.ExpenseDTO;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -10,7 +11,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "expenses")
 public class Expense implements Serializable {

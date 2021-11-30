@@ -1,13 +1,15 @@
 package inzagher.expense.tracker.server.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 public class ExpenseFilter {
     private final List<Integer> categoryIdentifiers = new ArrayList<>();
     private final List<Integer> personIdentifiers = new ArrayList<>();
