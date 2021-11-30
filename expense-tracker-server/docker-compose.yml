@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  expense-tracker-server:
+    build: .
+    container_name: expense-tracker
+    ports:
+      - "8080:8080"
+    environment:
+      - "SPRING_PROFILES_ACTIVE=production"
