@@ -13,4 +13,5 @@ spring:
         hbm2ddl:
           auto: none
 flyway:
+  table: "migrations"
   locations: "classpath:db/migration/{vendor}"
