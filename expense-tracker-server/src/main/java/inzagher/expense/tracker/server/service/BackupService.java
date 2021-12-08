@@ -26,10 +26,10 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -37,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class BackupService {
     private static final int STATE_IDLE = 0;
     private static final int STATE_BUSY = 1;
@@ -48,25 +49,6 @@ public class BackupService {
     private final PersonRepository personRepository;
     private final BackupMetadataRepository backupMetadataRepository;
     private final BackupDataOutbox backupDataOutbox;
-    
-    @Autowired
-    public BackupService(
-            ExpenseRepository expenseRepository,
-            CategoryRepository categoryRepository,
-            PersonRepository personRepository,
-            BackupMetadataRepository backupMetadataRepository,
-            BackupDataOutbox backupDataOutbox
-    ) {
-        this.expenseRepository = expenseRepository;
-        this.categoryRepository = categoryRepository;
-        this.personRepository = personRepository;
-        this.backupMetadataRepository = backupMetadataRepository;
-        this.backupDataOutbox = backupDataOutbox;
-
-        var classes = new Class[]{ BackupDataDTO.class };
-        try { jaxbContext = JAXBContext.newInstance(classes); }
-        catch(JAXBException e) { throw new RuntimeException(e); }
-    }
     
     public List<BackupMetadataDTO> getAllBackupInfo() {
         return backupMetadataRepository.findAll().stream()
