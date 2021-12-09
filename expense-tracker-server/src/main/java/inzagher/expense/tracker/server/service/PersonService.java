@@ -1,40 +1,37 @@
 package inzagher.expense.tracker.server.service;
 
 import inzagher.expense.tracker.server.dto.PersonDTO;
+import inzagher.expense.tracker.server.mapper.PersonMapper;
 import inzagher.expense.tracker.server.model.Expense;
 import inzagher.expense.tracker.server.model.ExpenseFilter;
 import inzagher.expense.tracker.server.model.Person;
 import inzagher.expense.tracker.server.repository.ExpenseRepository;
 import inzagher.expense.tracker.server.repository.PersonRepository;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
+
+@Slf4j
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class PersonService {
     private final ExpenseRepository expenseRepository;
     private final PersonRepository personRepository;
-
-    @Autowired
-    public PersonService(ExpenseRepository expenseRepository,
-            PersonRepository personRepository
-    ) {
-        this.expenseRepository = expenseRepository;
-        this.personRepository = personRepository;
-    }
+    private final PersonMapper personMapper;
     
     public List<PersonDTO> getAllPersons() {
         return personRepository.findAll().stream()
-                .map(Person::toDTO)
-                .collect(Collectors.toList());
+                .map(personMapper::toDTO)
+                .toList();
     }
     
     public Optional<PersonDTO> getPersonById(Integer id) {
-        return personRepository.findById(id).map(Person::toDTO);
+        return personRepository.findById(id).map(personMapper::toDTO);
     }
     
     public Integer storePerson(PersonDTO dto) {

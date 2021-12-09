@@ -2,6 +2,7 @@ package inzagher.expense.tracker.server.service;
 
 import inzagher.expense.tracker.server.dto.CategoryReportItemDTO;
 import inzagher.expense.tracker.server.dto.YearlyReportItemDTO;
+import inzagher.expense.tracker.server.mapper.CategoryMapper;
 import inzagher.expense.tracker.server.model.ExpenseFilter;
 import inzagher.expense.tracker.server.repository.CategoryRepository;
 import inzagher.expense.tracker.server.repository.ExpenseRepository;
@@ -20,6 +21,7 @@ import java.util.List;
 public class ReportService {
     private final CategoryRepository categoryRepository;
     private final ExpenseRepository expenseRepository;
+    private final CategoryMapper categoryMapper;
 
     @Transactional
     public List<CategoryReportItemDTO> createMonthlyCategoryReport(int year, int month) {
@@ -30,7 +32,7 @@ public class ReportService {
             filter.setDateFrom(LocalDate.of(year, month, 1));
             filter.setDateTo(filter.getDateFrom().plusMonths(1).minusDays(1));
             filter.getCategoryIdentifiers().add(category.getId());
-            report.add(new CategoryReportItemDTO(category.toDTO(), expenseRepository.sum(filter)));
+            report.add(new CategoryReportItemDTO(categoryMapper.toDTO(category), expenseRepository.sum(filter)));
         }
         return report;
     }

@@ -1,6 +1,7 @@
 package inzagher.expense.tracker.server;
 
 import inzagher.expense.tracker.server.dto.ExpenseDTO;
+import inzagher.expense.tracker.server.mapper.ExpenseMapper;
 import inzagher.expense.tracker.server.model.Category;
 import inzagher.expense.tracker.server.model.Expense;
 import inzagher.expense.tracker.server.model.Person;
@@ -23,6 +24,8 @@ public class ExpenseServiceTests {
     private ExpenseService expenseService;
     @Autowired
     private TestDataManager manager;
+    @Autowired
+    private ExpenseMapper mapper;
     
     private Person tom;
     private Category food;
@@ -75,7 +78,7 @@ public class ExpenseServiceTests {
     
     @Test
     public void expenseEditingTest() {
-        ExpenseDTO expense = purchase.toDTO();
+        ExpenseDTO expense = mapper.toDTO(purchase);
         expense.setAmount(BigDecimal.valueOf(90.00D));
         expense.setCategoryId(phone.getId());
         Integer storedRecordID = expenseService.storeExpense(expense);

@@ -1,6 +1,5 @@
 package inzagher.expense.tracker.server.model;
 
-import inzagher.expense.tracker.server.dto.CategoryDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,12 +19,15 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "categories")
 public class Category implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, updatable = false)
     private Integer id;
+
     @Column(name="name")
     private String name;
+
     @Embedded
     @AttributeOverrides({
         @AttributeOverride(name = "red", column = @Column( name = "color_red" )),
@@ -33,18 +35,10 @@ public class Category implements Serializable {
         @AttributeOverride(name = "blue", column = @Column( name = "color_blue" ))
     })
     private Color color;
+
     @Column(name="description")
     private String description;
+
     @Column(name="obsolete")
     private Boolean obsolete;
-    
-    public CategoryDTO toDTO() {
-        CategoryDTO dto = new CategoryDTO();
-        dto.setId(id);
-        dto.setName(name);
-        dto.setColor(color.toDTO());
-        dto.setDescription(description);
-        dto.setObsolete(obsolete);
-        return dto;
-    }
 }

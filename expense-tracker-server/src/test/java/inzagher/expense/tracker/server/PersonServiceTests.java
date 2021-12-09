@@ -1,6 +1,7 @@
 package inzagher.expense.tracker.server;
 
 import inzagher.expense.tracker.server.dto.PersonDTO;
+import inzagher.expense.tracker.server.mapper.PersonMapper;
 import inzagher.expense.tracker.server.model.Category;
 import inzagher.expense.tracker.server.model.Expense;
 import inzagher.expense.tracker.server.model.Person;
@@ -21,6 +22,8 @@ public class PersonServiceTests {
     private PersonService personService;
     @Autowired
     private TestDataManager manager;
+    @Autowired
+    private PersonMapper mapper;
     
     private Person bob;
     private Person stan;
@@ -72,7 +75,7 @@ public class PersonServiceTests {
     
     @Test
     public void personEditingTest() {
-        PersonDTO person = stan.toDTO();
+        PersonDTO person = mapper.toDTO(stan);
         person.setName("STANLEY");
         Integer storedRecordID = personService.storePerson(person);
         assertEquals(stan.getId(), storedRecordID);

@@ -1,6 +1,5 @@
 package inzagher.expense.tracker.server.model;
 
-import inzagher.expense.tracker.server.dto.PersonDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,13 +20,7 @@ public class Person implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, updatable = false)
     private Integer id;
+
     @Column(name="name")
     private String name;
-    
-    public PersonDTO toDTO() {
-        PersonDTO dto = new PersonDTO();
-        dto.setId(id);
-        dto.setName(name);
-        return dto;
-    }
 }

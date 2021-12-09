@@ -1,41 +1,38 @@
 package inzagher.expense.tracker.server.service;
 
 import inzagher.expense.tracker.server.dto.CategoryDTO;
+import inzagher.expense.tracker.server.mapper.CategoryMapper;
 import inzagher.expense.tracker.server.model.Category;
 import inzagher.expense.tracker.server.model.Color;
 import inzagher.expense.tracker.server.model.Expense;
 import inzagher.expense.tracker.server.model.ExpenseFilter;
 import inzagher.expense.tracker.server.repository.CategoryRepository;
 import inzagher.expense.tracker.server.repository.ExpenseRepository;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
+
+@Slf4j
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class CategoryService {
     private final ExpenseRepository expenseRepository;
     private final CategoryRepository categoryRepository;
-
-    @Autowired
-    public CategoryService(ExpenseRepository expenseRepository,
-            CategoryRepository categoryRepository
-    ) {
-        this.expenseRepository = expenseRepository;
-        this.categoryRepository = categoryRepository;
-    }
+    private final CategoryMapper categoryMapper;
     
     public List<CategoryDTO> getAllCategories() {
         return categoryRepository.findAll().stream()
-                .map(Category::toDTO)
-                .collect(Collectors.toList());
+                .map(categoryMapper::toDTO)
+                .toList();
     }
     
     public Optional<CategoryDTO> getCategoryById(Integer id) {
-        return categoryRepository.findById(id).map(Category::toDTO);
+        return categoryRepository.findById(id).map(categoryMapper::toDTO);
     }
     
     public Integer storeCategory(CategoryDTO dto) {

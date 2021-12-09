@@ -1,20 +1,23 @@
 package inzagher.expense.tracker.server.service;
 
+import inzagher.expense.tracker.server.dto.*;
+import inzagher.expense.tracker.server.mapper.*;
+import inzagher.expense.tracker.server.model.*;
 import inzagher.expense.tracker.server.outbox.BackupDataOutbox;
-import inzagher.expense.tracker.server.dto.BackupDataDTO;
-import inzagher.expense.tracker.server.dto.BackupMetadataDTO;
-import inzagher.expense.tracker.server.dto.CategoryDTO;
-import inzagher.expense.tracker.server.dto.ExpenseDTO;
-import inzagher.expense.tracker.server.dto.PersonDTO;
-import inzagher.expense.tracker.server.model.BackupMetadata;
-import inzagher.expense.tracker.server.model.Category;
-import inzagher.expense.tracker.server.model.Color;
-import inzagher.expense.tracker.server.model.Expense;
-import inzagher.expense.tracker.server.model.Person;
 import inzagher.expense.tracker.server.repository.BackupMetadataRepository;
 import inzagher.expense.tracker.server.repository.CategoryRepository;
 import inzagher.expense.tracker.server.repository.ExpenseRepository;
 import inzagher.expense.tracker.server.repository.PersonRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import java.io.ByteArrayInputStream;
 import java.io.OutputStream;
 import java.time.LocalDateTime;
@@ -25,16 +28,8 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -44,32 +39,36 @@ public class BackupService {
     private static final AtomicInteger serviceState = new AtomicInteger();
     
     private final JAXBContext jaxbContext;
+    private final BackupDataOutbox backupDataOutbox;
     private final ExpenseRepository expenseRepository;
     private final CategoryRepository categoryRepository;
     private final PersonRepository personRepository;
     private final BackupMetadataRepository backupMetadataRepository;
-    private final BackupDataOutbox backupDataOutbox;
+    private final BackupMetadataMapper backupMetadataMapper;
+    private final ExpenseMapper expenseMapper;
+    private final CategoryMapper categoryMapper;
+    private final PersonMapper personMapper;
     
     public List<BackupMetadataDTO> getAllBackupInfo() {
         return backupMetadataRepository.findAll().stream()
-                .map(BackupMetadata::toDTO)
-                .collect(Collectors.toList());
+                .map(backupMetadataMapper::toDTO)
+                .toList();
     }
     
     public Optional<BackupMetadataDTO> getLastBackupInfo() {
         var request = PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, "time"));
         var backups =  backupMetadataRepository.findAll(request).toList();
-        return backups.size() > 0 ? Optional.of(backups.get(0).toDTO()) : Optional.empty();
+        return backups.stream().map(backupMetadataMapper::toDTO).findFirst();
     }
-    
+
     public BackupMetadataDTO createDatabaseBackup() {
         if (serviceState.compareAndSet(STATE_IDLE, STATE_BUSY)) {
-            BackupDataDTO data = loadBackupDataFromDatabase();
-            BackupMetadata metadata = createBackupMetadata(data);
+            var data = loadBackupDataFromDatabase();
+            var metadata = createBackupMetadata(data);
             serializeBackupData(metadata, data);
             metadata = backupMetadataRepository.saveAndFlush(metadata);
             serviceState.set(STATE_IDLE);
-            return metadata.toDTO();
+            return backupMetadataMapper.toDTO(metadata);
         } else {
             throw new RuntimeException("Backup service is busy");
         }
@@ -166,17 +165,17 @@ public class BackupService {
         BackupDataDTO dto = new BackupDataDTO();
         List<CategoryDTO> categories = categoryRepository.findAll()
                 .stream()
-                .map(Category::toDTO)
+                .map(categoryMapper::toDTO)
                 .collect(Collectors.toList());
         dto.setCategories(categories);
         List<PersonDTO> persons = personRepository.findAll()
                 .stream()
-                .map(Person::toDTO)
+                .map(personMapper::toDTO)
                 .collect(Collectors.toList());
         dto.setPersons(persons);
         List<ExpenseDTO> expenses = expenseRepository.findAll()
                 .stream()
-                .map(Expense::toDTO)
+                .map(expenseMapper::toDTO)
                 .collect(Collectors.toList());
         dto.setExpenses(expenses);
         return dto;

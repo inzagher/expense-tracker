@@ -2,6 +2,7 @@ package inzagher.expense.tracker.server;
 
 import inzagher.expense.tracker.server.dto.CategoryDTO;
 import inzagher.expense.tracker.server.dto.ColorDTO;
+import inzagher.expense.tracker.server.mapper.CategoryMapper;
 import inzagher.expense.tracker.server.model.Category;
 import inzagher.expense.tracker.server.model.Expense;
 import inzagher.expense.tracker.server.model.Person;
@@ -22,6 +23,8 @@ public class CategoryServiceTests {
     private CategoryService categoryService;
     @Autowired
     private TestDataManager manager;
+    @Autowired
+    private CategoryMapper mapper;
     
     private Expense payment;
     private Category phone;
@@ -76,7 +79,7 @@ public class CategoryServiceTests {
     
     @Test
     public void categoryEditingTest() {
-        CategoryDTO category = phone.toDTO();
+        CategoryDTO category = mapper.toDTO(phone);
         category.setColor(new ColorDTO(16, 16, 16));
         Integer storedRecordID = categoryService.storeCategory(category);
         assertEquals(phone.getId(), storedRecordID);
