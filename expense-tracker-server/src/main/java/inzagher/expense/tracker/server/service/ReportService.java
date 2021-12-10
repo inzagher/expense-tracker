@@ -24,7 +24,7 @@ public class ReportService {
     private final CategoryMapper categoryMapper;
 
     @Transactional
-    public List<CategoryReportItemDTO> createMonthlyCategoryReport(int year, int month) {
+    public List<CategoryReportItemDTO> createCategoryReport(int year, int month) {
         var report = new ArrayList<CategoryReportItemDTO>();
         var categories = categoryRepository.findAll();
         for (var category: categories) {

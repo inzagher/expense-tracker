@@ -3,30 +3,26 @@ package inzagher.expense.tracker.server.controller;
 import inzagher.expense.tracker.server.dto.CategoryReportItemDTO;
 import inzagher.expense.tracker.server.dto.YearlyReportItemDTO;
 import inzagher.expense.tracker.server.service.ReportService;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
+@RequiredArgsConstructor
 public class ReportApiController {
-    private final ReportService reportService;
+    private final ReportService service;
 
-    @Autowired
-    public ReportApiController(ReportService reportService) {
-        this.reportService = reportService;
+    @GetMapping(path = "/api/reports/category/{year}/{month}")
+    public List<CategoryReportItemDTO> getCategoryReport(
+            @PathVariable Integer year, @PathVariable Integer month) {
+        return service.createCategoryReport(year, month);
     }
 
-    @GetMapping (path = "/api/reports/monthly-category-report/{year}/{month}")
-    public List<CategoryReportItemDTO> monthlyCategoryReport(
-            @PathVariable Integer year, @PathVariable Integer month
-    ) {
-        return reportService.createMonthlyCategoryReport(year, month);
-    }
-
-    @GetMapping (path = "/api/reports/yearly-report/{year}")
-    public List<YearlyReportItemDTO> yearlyReport(@PathVariable Integer year) {
-        return reportService.createYearlyReport(year);
+    @GetMapping(path = "/api/reports/yearly/{year}")
+    public List<YearlyReportItemDTO> getYearlyReport(@PathVariable Integer year) {
+        return service.createYearlyReport(year);
     }
 }

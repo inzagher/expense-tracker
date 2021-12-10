@@ -78,19 +78,19 @@ public class ReportServiceTests {
     
     @Test
     public void monthlyCategoryReportTest() {
-        List<CategoryReportItemDTO> jan = reportService.createMonthlyCategoryReport(2020, 1);
+        List<CategoryReportItemDTO> jan = reportService.createCategoryReport(2020, 1);
         assertEquals(3, jan.size());
         assertMonthlyCategoryReportItem(500.00D, jan, rent);
         assertMonthlyCategoryReportItem(380.00D, jan, phone);
         assertMonthlyCategoryReportItem(243.32D, jan, food);
         
-        List<CategoryReportItemDTO> feb = reportService.createMonthlyCategoryReport(2020, 2);
+        List<CategoryReportItemDTO> feb = reportService.createCategoryReport(2020, 2);
         assertEquals(3, feb.size());
         assertMonthlyCategoryReportItem(600.00D, feb, rent);
         assertMonthlyCategoryReportItem(360.00D, feb, phone);
         assertMonthlyCategoryReportItem(337.71D, feb, food);
         
-        List<CategoryReportItemDTO> mar = reportService.createMonthlyCategoryReport(2020, 3);
+        List<CategoryReportItemDTO> mar = reportService.createCategoryReport(2020, 3);
         assertEquals(3, mar.size());
         assertMonthlyCategoryReportItem(0.00D, mar, rent);
         assertMonthlyCategoryReportItem(0.00D, mar, phone);
