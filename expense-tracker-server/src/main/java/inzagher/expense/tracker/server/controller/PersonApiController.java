@@ -1,42 +1,41 @@
 package inzagher.expense.tracker.server.controller;
 
 import inzagher.expense.tracker.server.dto.PersonDTO;
+import inzagher.expense.tracker.server.mapper.PersonMapper;
 import inzagher.expense.tracker.server.service.PersonService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 public class PersonApiController {
-    private final PersonService personService;
-    
-    @Autowired
-    public PersonApiController(PersonService personService) {
-        this.personService = personService;
-    }
+    private final PersonService service;
+    private final PersonMapper mapper;
     
     @GetMapping(path = "/api/persons")
-    public List<PersonDTO> list() {
-        return personService.getAllPersons();
+    public List<PersonDTO> findAll() {
+        return service.findAllPersons();
     }
     
     @GetMapping(path = "/api/persons/{id}")
-    public PersonDTO read(@PathVariable Integer id) {
-        return personService.getPersonById(id).orElse(null);
+    public PersonDTO getById(@PathVariable Integer id) {
+        return service.getPersonById(id);
     }
 
     @PostMapping(path = "/api/persons")
-    public void save(@RequestBody PersonDTO person) {
-        personService.storePerson(person);
+    public void create(@RequestBody PersonDTO person) {
+        service.createPerson(mapper.toCreateCommand(person));
+    }
+
+    @PutMapping(path = "/api/persons")
+    public void edit(@RequestBody PersonDTO person) {
+        service.editPerson(mapper.toEditCommand(person));
     }
     
     @DeleteMapping(path = "/api/persons/{id}")
-    public void delete(@PathVariable Integer id) {
-        personService.deletePerson(id);
+    public void deleteById(@PathVariable Integer id) {
+        service.deletePerson(id);
     }
 }

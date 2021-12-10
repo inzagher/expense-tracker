@@ -61,15 +61,15 @@ public class TestDataManager {
         backupMetadataRepository.deleteAllInBatch();
     }
     
-    public Optional<Expense> getExpense(Integer id) {
+    public Optional<Expense> findExpenseById(Integer id) {
         return expenseRepository.findById(id);
     }
     
-    public Optional<Category> getCategory(Integer id) {
+    public Optional<Category> findCategoryById(Integer id) {
         return categoryRepository.findById(id);
     }
     
-    public Optional<Person> getPerson(Integer id) {
+    public Optional<Person> findPersonById(Integer id) {
         return personRepository.findById(id);
     }
     

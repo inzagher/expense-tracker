@@ -73,7 +73,7 @@ public class ExpenseServiceTests {
         assertEquals(2L, manager.countExpenses());
         assertEquals(2L, manager.countCategories());
         assertEquals(1L, manager.countPersons());
-        assertAmountEquals(BigDecimal.valueOf(51.20D), manager.getExpense(storedRecordID).get().getAmount());
+        assertAmountEquals(BigDecimal.valueOf(51.20D), manager.findExpenseById(storedRecordID).get().getAmount());
     }
     
     @Test
@@ -86,7 +86,7 @@ public class ExpenseServiceTests {
         assertEquals(1L, manager.countExpenses());
         assertEquals(2L, manager.countCategories());
         assertEquals(1L, manager.countPersons());
-        assertAmountEquals(BigDecimal.valueOf(90.00D), manager.getExpense(storedRecordID).get().getAmount());
+        assertAmountEquals(BigDecimal.valueOf(90.00D), manager.findExpenseById(storedRecordID).get().getAmount());
     }
     
     @Test

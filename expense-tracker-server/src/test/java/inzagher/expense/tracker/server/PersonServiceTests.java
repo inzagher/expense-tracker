@@ -1,25 +1,27 @@
 package inzagher.expense.tracker.server;
 
-import inzagher.expense.tracker.server.dto.PersonDTO;
+import inzagher.expense.tracker.server.command.CreatePersonCommand;
+import inzagher.expense.tracker.server.command.EditPersonCommand;
 import inzagher.expense.tracker.server.mapper.PersonMapper;
 import inzagher.expense.tracker.server.model.Category;
 import inzagher.expense.tracker.server.model.Expense;
 import inzagher.expense.tracker.server.model.Person;
 import inzagher.expense.tracker.server.service.PersonService;
-import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.function.Executable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")
 @SpringBootTest(classes = ServiceRunner.class)
 public class PersonServiceTests {
     @Autowired
-    private PersonService personService;
+    private PersonService service;
     @Autowired
     private TestDataManager manager;
     @Autowired
@@ -52,48 +54,49 @@ public class PersonServiceTests {
     
     @Test
     public void personListTest() {
-        assertEquals(2, personService.getAllPersons().size());
+        assertEquals(2, service.findAllPersons().size());
     }
     
     @Test
     public void personLoadingTest() {
-        Optional<PersonDTO> loaded = personService.getPersonById(bob.getId());
-        assertTrue(loaded.isPresent());
-        assertEquals(bob.getId(), loaded.get().getId());
-        assertEquals("BOB", loaded.get().getName());
+        var person = service.getPersonById(bob.getId());
+        assertEquals(bob.getId(), person.getId());
+        assertEquals("BOB", person.getName());
     }
     
     @Test
     public void personCreationTest() {
-        PersonDTO alice = new PersonDTO();
-        alice.setName("ALICE");
-        Integer storedRecordID = personService.storePerson(alice);
-        assertNotNull(storedRecordID);
+        var command = new CreatePersonCommand("ALICE");
+        var id = service.createPerson(command);
         assertEquals(3L, manager.countPersons());
-        assertEquals("ALICE", manager.getPerson(storedRecordID).get().getName());
+        assertStoredPersonData(id, "ALICE");
     }
     
     @Test
     public void personEditingTest() {
-        PersonDTO person = mapper.toDTO(stan);
-        person.setName("STANLEY");
-        Integer storedRecordID = personService.storePerson(person);
-        assertEquals(stan.getId(), storedRecordID);
+        var command = new EditPersonCommand(stan.getId(), "STANLEY");
+        service.editPerson(command);
         assertEquals(2L, manager.countPersons());
-        assertEquals("STANLEY", manager.getPerson(stan.getId()).get().getName());
+        assertStoredPersonData(command.getId(), "STANLEY");
     }
     
     @Test
     public void personDeletionTest() {
-        personService.deletePerson(bob.getId());
+        service.deletePerson(bob.getId());
         assertEquals(1L, manager.countPersons());
     }
     
     @Test
     public void dependentPersonDeletionTest() {
-        personService.deletePerson(stan.getId());
-        assertEquals(1L, manager.countPersons());
-        assertEquals(1L, manager.countExpenses());
-        assertNull(manager.getExpense(purchase.getId()).get().getPerson());
+        Executable deletion = () -> service.deletePerson(stan.getId());
+        assertThrows(RuntimeException.class, deletion);
+        var expense = manager.findExpenseById(purchase.getId());
+        assertNotNull(expense.orElseThrow().getPerson());
+    }
+
+    public void assertStoredPersonData(Integer id, String expectedName) {
+        var entity = manager.findPersonById(id);
+        assertTrue(entity.isPresent());
+        assertEquals(expectedName, entity.get().getName());
     }
 }
