@@ -36,6 +36,6 @@ public class PersonApiController {
     
     @DeleteMapping(path = "/api/persons/{id}")
     public void deleteById(@PathVariable Integer id) {
-        service.deletePerson(id);
+        service.deletePersonById(id);
     }
 }

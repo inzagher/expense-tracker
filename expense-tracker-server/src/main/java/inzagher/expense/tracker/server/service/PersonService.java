@@ -58,7 +58,7 @@ public class PersonService {
     }
 
     @Transactional
-    public void deletePerson(@NonNull Integer id) {
+    public void deletePersonById(@NonNull Integer id) {
         log.info("Delete person with id {}", id);
         if (isAnyExpensePresent(id)) {
             var message = String.format("Person with id %d has expenses", id);

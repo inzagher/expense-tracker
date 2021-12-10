@@ -82,14 +82,16 @@ public class PersonServiceTests {
     
     @Test
     public void personDeletionTest() {
-        service.deletePerson(bob.getId());
+        service.deletePersonById(bob.getId());
         assertEquals(1L, manager.countPersons());
     }
     
     @Test
     public void dependentPersonDeletionTest() {
-        Executable deletion = () -> service.deletePerson(stan.getId());
+        Executable deletion = () -> service.deletePersonById(stan.getId());
         assertThrows(RuntimeException.class, deletion);
+        assertEquals(2L, manager.countPersons());
+        assertEquals(1L, manager.countExpenses());
         var expense = manager.findExpenseById(purchase.getId());
         assertNotNull(expense.orElseThrow().getPerson());
     }
