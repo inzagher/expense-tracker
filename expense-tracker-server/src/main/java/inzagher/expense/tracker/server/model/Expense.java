@@ -1,6 +1,9 @@
 package inzagher.expense.tracker.server.model;
 
+import inzagher.expense.tracker.server.command.CreateExpenseCommand;
+import inzagher.expense.tracker.server.command.EditExpenseCommand;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -12,6 +15,7 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "expenses")
 public class Expense implements Serializable {
@@ -39,4 +43,24 @@ public class Expense implements Serializable {
 
     @Column(name="description")
     private String description;
+
+    public Expense(CreateExpenseCommand command) {
+        date = command.getDate();
+        category = new Category();
+        category.setId(command.getCategoryId());
+        person = new Person();
+        person.setId(command.getPersonId());
+        amount = command.getAmount();
+        description = command.getDescription();
+    }
+
+    public void edit(EditExpenseCommand command) {
+        date = command.getDate();
+        category = new Category();
+        category.setId(command.getCategoryId());
+        person = new Person();
+        person.setId(command.getPersonId());
+        amount = command.getAmount();
+        description = command.getDescription();
+    }
 }

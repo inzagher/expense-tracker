@@ -6,22 +6,23 @@ import inzagher.expense.tracker.server.model.Category;
 import inzagher.expense.tracker.server.model.Expense;
 import inzagher.expense.tracker.server.model.Person;
 import inzagher.expense.tracker.server.service.ExpenseService;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")
 @SpringBootTest(classes = ExpenseTrackerServerApp.class)
 public class ExpenseServiceTests {
     @Autowired
-    private ExpenseService expenseService;
+    private ExpenseService service;
     @Autowired
     private TestDataManager manager;
     @Autowired
@@ -54,10 +55,9 @@ public class ExpenseServiceTests {
     
     @Test
     public void expenseLoadingTest() {
-        Optional<ExpenseDTO> loaded = expenseService.getExpenseById(purchase.getId());
-        assertTrue(loaded.isPresent());
-        assertEquals(purchase.getId(), loaded.get().getId());
-        assertAmountEquals(BigDecimal.valueOf(12.10D), loaded.get().getAmount());
+        var entity = service.getExpenseById(purchase.getId());
+        assertEquals(purchase.getId(), entity.getId());
+        assertAmountEquals(BigDecimal.valueOf(12.10D), entity.getAmount());
     }
     
     @Test
@@ -68,12 +68,14 @@ public class ExpenseServiceTests {
         expense.setCategoryId(food.getId());
         expense.setAmount(BigDecimal.valueOf(51.20D));
         expense.setDescription("ANOTHER FOOD PURCHASE");
-        Integer storedRecordID = expenseService.storeExpense(expense);
-        assertNotNull(storedRecordID);
+        var id = service.createExpense(mapper.toCreateCommand(expense));
+        assertNotNull(id);
         assertEquals(2L, manager.countExpenses());
         assertEquals(2L, manager.countCategories());
         assertEquals(1L, manager.countPersons());
-        assertAmountEquals(BigDecimal.valueOf(51.20D), manager.findExpenseById(storedRecordID).get().getAmount());
+        var entity = manager.findExpenseById(id);
+        assertTrue(entity.isPresent());
+        assertAmountEquals(BigDecimal.valueOf(51.20D), entity.get().getAmount());
     }
     
     @Test
@@ -81,17 +83,20 @@ public class ExpenseServiceTests {
         ExpenseDTO expense = mapper.toDTO(purchase);
         expense.setAmount(BigDecimal.valueOf(90.00D));
         expense.setCategoryId(phone.getId());
-        Integer storedRecordID = expenseService.storeExpense(expense);
-        assertEquals(purchase.getId(), storedRecordID);
+        service.editExpense(mapper.toEditCommand(expense));
         assertEquals(1L, manager.countExpenses());
         assertEquals(2L, manager.countCategories());
         assertEquals(1L, manager.countPersons());
-        assertAmountEquals(BigDecimal.valueOf(90.00D), manager.findExpenseById(storedRecordID).get().getAmount());
+        var entity = manager.findExpenseById(purchase.getId());
+        assertTrue(entity.isPresent());
+        assertEquals("TOM", entity.get().getPerson().getName());
+        assertEquals("PHONE", entity.get().getCategory().getName());
+        assertAmountEquals(BigDecimal.valueOf(90.00D), entity.get().getAmount());
     }
     
     @Test
     public void expenseDeletionTest() {
-        expenseService.deleteExpense(purchase.getId());
+        service.deleteExpenseById(purchase.getId());
         assertEquals(0L, manager.countExpenses());
         assertEquals(2L, manager.countCategories());
         assertEquals(1L, manager.countPersons());

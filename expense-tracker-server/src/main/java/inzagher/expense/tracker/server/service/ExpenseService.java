@@ -1,77 +1,65 @@
 package inzagher.expense.tracker.server.service;
 
+import inzagher.expense.tracker.server.command.CreateExpenseCommand;
+import inzagher.expense.tracker.server.command.EditExpenseCommand;
 import inzagher.expense.tracker.server.dto.ExpenseDTO;
 import inzagher.expense.tracker.server.dto.ExpenseFilterDTO;
 import inzagher.expense.tracker.server.mapper.ExpenseMapper;
-import inzagher.expense.tracker.server.model.Category;
 import inzagher.expense.tracker.server.model.Expense;
-import inzagher.expense.tracker.server.model.ExpenseFilter;
 import inzagher.expense.tracker.server.model.Person;
-import inzagher.expense.tracker.server.repository.CategoryRepository;
 import inzagher.expense.tracker.server.repository.ExpenseRepository;
-import inzagher.expense.tracker.server.repository.PersonRepository;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class ExpenseService {
     private final ExpenseRepository expenseRepository;
-    private final CategoryRepository categoryRepository;
-    private final PersonRepository personRepository;
     private final ExpenseMapper expenseMapper;
 
-    public List<ExpenseDTO> findExpenses(ExpenseFilterDTO dto) {
-        ExpenseFilter filter = new ExpenseFilter();
-        filter.setAmountFrom(dto.getAmountTo());
-        filter.setAmountTo(dto.getAmountTo());
-        filter.setAmountExact(dto.getAmountExact());
-        filter.setDateExact(dto.getDateExact());
-        filter.setDateFrom(dto.getDateFrom());
-        filter.setDateTo(dto.getDateTo());
-        filter.setDescriptionLike(dto.getDescriptionLike());
-        dto.getCategoryIdentifiers().forEach(filter.getCategoryIdentifiers()::add);
-        dto.getPersonIdentifiers().forEach(filter.getPersonIdentifiers()::add);
+    @Transactional
+    public List<ExpenseDTO> findExpenses(@NonNull ExpenseFilterDTO dto) {
+        log.info("Query expenses with filter");
+        var filter = expenseMapper.toFilter(dto);
         return expenseRepository.find(filter).stream()
                 .map(expenseMapper::toDTO)
                 .toList();
     }
-    
-    public Optional<ExpenseDTO> getExpenseById(Integer id) {
-        return expenseRepository.findById(id).map(expenseMapper::toDTO);
+
+    @Transactional
+    public ExpenseDTO getExpenseById(@NonNull Integer id) {
+        log.info("Find expense with id {}", id);
+        return expenseRepository.findById(id)
+                .map(expenseMapper::toDTO)
+                .orElseThrow();
     }
-    
-    public Integer storeExpense(ExpenseDTO dto) {
-        Expense model;
-        if (dto.getId() != null) {
-            Optional<Expense> loadedExpense = expenseRepository.findById(dto.getId());
-            model = loadedExpense.orElseThrow(() -> new RuntimeException("EXPENSE NOT FOUND"));
-        } else {
-            model = new Expense();
-        }
-        
-        Optional<Category> loadedCategory = categoryRepository.findById(dto.getCategoryId());
-        Category category = loadedCategory.orElseThrow(() -> new RuntimeException("CATEGORY NOT FOUND"));
-        
-        Optional<Person> loadedPerson = personRepository.findById(dto.getPersonId());
-        Person person = loadedPerson.orElseThrow(() -> new RuntimeException("PERSON NOT FOUND"));
-        
-        model.setDate(dto.getDate());
-        model.setAmount(dto.getAmount());
-        model.setDescription(dto.getDescription());
-        model.setCategory(category);
-        model.setPerson(person);
-        return expenseRepository.saveAndFlush(model).getId();
+
+    @Transactional
+    public Integer createExpense(@NonNull CreateExpenseCommand command) {
+        log.info("Create expense. Command: {}", command);
+        var entity = new Expense(command);
+        return expenseRepository.save(entity).getId();
     }
-    
-    public void deleteExpense(Integer id) {
+
+    @Transactional
+    public void editExpense(@NonNull EditExpenseCommand command) {
+        log.info("Edit expense. Command: {}", command);
+        var entity = expenseRepository
+                .findById(command.getId())
+                .orElseThrow();
+        entity.edit(command);
+        expenseRepository.save(entity);
+    }
+
+    @Transactional
+    public void deleteExpenseById(@NonNull Integer id) {
+        log.info("Delete expense with id {}", id);
         expenseRepository.deleteById(id);
     }
 }
