@@ -7,20 +7,21 @@ import inzagher.expense.tracker.server.model.Category;
 import inzagher.expense.tracker.server.model.Expense;
 import inzagher.expense.tracker.server.model.Person;
 import inzagher.expense.tracker.server.service.CategoryService;
-import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.function.Executable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")
 @SpringBootTest(classes = ServiceRunner.class)
 public class CategoryServiceTests {
     @Autowired
-    private CategoryService categoryService;
+    private CategoryService service;
     @Autowired
     private TestDataManager manager;
     @Autowired
@@ -41,7 +42,7 @@ public class CategoryServiceTests {
         assertEquals(2L, manager.countCategories());
         assertEquals(1L, manager.countExpenses());
     }
-    
+
     @AfterEach
     public void afterEachTest() {
         manager.truncateAllTables();
@@ -53,15 +54,14 @@ public class CategoryServiceTests {
     
     @Test
     public void categoryListTest() {
-        assertEquals(2, categoryService.getAllCategories().size());
+        assertEquals(2, service.findAllCategories().size());
     }
     
     @Test
     public void categoryLoadingTest() {
-        Optional<CategoryDTO> loaded = categoryService.getCategoryById(rent.getId());
-        assertTrue(loaded.isPresent());
-        assertEquals(rent.getId(), loaded.get().getId());
-        assertEquals("RENT", loaded.get().getName());
+        var category = service.getCategoryById(rent.getId());
+        assertEquals(rent.getId(), category.getId());
+        assertEquals("RENT", category.getName());
     }
     
     @Test
@@ -71,33 +71,41 @@ public class CategoryServiceTests {
         education.setDescription("YEARLY EDUCATION BILL");
         education.setColor(new ColorDTO(30, 30, 30));
         education.setObsolete(false);
-        Integer storedRecordID = categoryService.storeCategory(education);
-        assertNotNull(storedRecordID);
+        var command = mapper.toCreateCommand(education);
+        var id = service.createCategory(command);
         assertEquals(3L, manager.countCategories());
-        assertEquals("EDUCATION", manager.findCategoryById(storedRecordID).get().getName());
+        var entity = manager.findCategoryById(id);
+        assertTrue(entity.isPresent());
+        assertEquals("EDUCATION", entity.get().getName());
     }
     
     @Test
     public void categoryEditingTest() {
-        CategoryDTO category = mapper.toDTO(phone);
+        var category = mapper.toDTO(phone);
         category.setColor(new ColorDTO(16, 16, 16));
-        Integer storedRecordID = categoryService.storeCategory(category);
-        assertEquals(phone.getId(), storedRecordID);
+        var command = mapper.toEditCommand(category);
+        service.editCategory(command);
         assertEquals(2L, manager.countCategories());
-        assertEquals(16, manager.findCategoryById(phone.getId()).get().getColor().getRed());
+        var entity = manager.findCategoryById(phone.getId());
+        assertTrue(entity.isPresent());
+        assertEquals(16, entity.get().getColor().getRed());
+        assertEquals(16, entity.get().getColor().getGreen());
+        assertEquals(16, entity.get().getColor().getBlue());
     }
     
     @Test
     public void categoryDeletionTest() {
-        categoryService.deleteCategory(phone.getId());
+        service.deleteCategoryById(rent.getId());
         assertEquals(1L, manager.countCategories());
     }
     
     @Test
     public void dependentCategoryDeletionTest() {
-        categoryService.deleteCategory(phone.getId());
-        assertEquals(1L, manager.countCategories());
+        Executable deletion = () -> service.deleteCategoryById(phone.getId());
+        assertThrows(RuntimeException.class, deletion);
+        assertEquals(2L, manager.countCategories());
         assertEquals(1L, manager.countExpenses());
-        assertFalse(manager.findCategoryById(payment.getId()).isPresent());
+        var expense = manager.findExpenseById(payment.getId());
+        assertNotNull(expense.orElseThrow().getCategory());
     }
 }

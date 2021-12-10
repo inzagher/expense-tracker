@@ -1,6 +1,9 @@
 package inzagher.expense.tracker.server.model;
 
+import inzagher.expense.tracker.server.command.CreateCategoryCommand;
+import inzagher.expense.tracker.server.command.EditCategoryCommand;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
@@ -16,6 +19,7 @@ import javax.persistence.Table;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "categories")
 public class Category implements Serializable {
@@ -41,4 +45,24 @@ public class Category implements Serializable {
 
     @Column(name="obsolete")
     private Boolean obsolete;
+
+    public Category(CreateCategoryCommand command) {
+        name = command.getName();
+        color = new Color();
+        color.setRed(command.getColorRed());
+        color.setGreen(command.getColorGreen());
+        color.setBlue(command.getColorBlue());
+        description = command.getDescription();
+        obsolete = false;
+    }
+
+    public void edit(EditCategoryCommand command) {
+        name = command.getName();
+        color = new Color();
+        color.setRed(command.getColorRed());
+        color.setGreen(command.getColorGreen());
+        color.setBlue(command.getColorBlue());
+        description = command.getDescription();
+        obsolete = command.getObsolete();
+    }
 }

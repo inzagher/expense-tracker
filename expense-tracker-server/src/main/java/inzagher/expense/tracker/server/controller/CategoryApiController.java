@@ -1,42 +1,41 @@
 package inzagher.expense.tracker.server.controller;
 
 import inzagher.expense.tracker.server.dto.CategoryDTO;
+import inzagher.expense.tracker.server.mapper.CategoryMapper;
 import inzagher.expense.tracker.server.service.CategoryService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 public class CategoryApiController {
-    private final CategoryService categoryService;
-    
-    @Autowired
-    public CategoryApiController(CategoryService categoryService) {
-        this.categoryService = categoryService;
-    }
-    
+    private final CategoryService service;
+    private final CategoryMapper mapper;
+
     @GetMapping(path = "/api/categories")
-    public List<CategoryDTO> list() {
-        return categoryService.getAllCategories();
+    public List<CategoryDTO> findAll() {
+        return service.findAllCategories();
     }
-    
+
     @GetMapping(path = "/api/categories/{id}")
-    public CategoryDTO read(@PathVariable Integer id) {
-        return categoryService.getCategoryById(id).orElse(null);
+    public CategoryDTO getById(@PathVariable Integer id) {
+        return service.getCategoryById(id);
     }
 
     @PostMapping(path = "/api/categories")
-    public void save(@RequestBody CategoryDTO category) {
-        categoryService.storeCategory(category);
+    public void create(@RequestBody CategoryDTO category) {
+        service.createCategory(mapper.toCreateCommand(category));
     }
-    
+
+    @PutMapping(path = "/api/categories")
+    public void edit(@RequestBody CategoryDTO category) {
+        service.editCategory(mapper.toEditCommand(category));
+    }
+
     @DeleteMapping(path = "/api/categories/{id}")
-    public void delete(@PathVariable Integer id) {
-        categoryService.deleteCategory(id);
+    public void deleteById(@PathVariable Integer id) {
+        service.deleteCategoryById(id);
     }
 }

@@ -1,69 +1,75 @@
 package inzagher.expense.tracker.server.service;
 
+import inzagher.expense.tracker.server.command.CreateCategoryCommand;
+import inzagher.expense.tracker.server.command.EditCategoryCommand;
 import inzagher.expense.tracker.server.dto.CategoryDTO;
 import inzagher.expense.tracker.server.mapper.CategoryMapper;
-import inzagher.expense.tracker.server.model.Category;
-import inzagher.expense.tracker.server.model.Color;
-import inzagher.expense.tracker.server.model.Expense;
-import inzagher.expense.tracker.server.model.ExpenseFilter;
+import inzagher.expense.tracker.server.model.*;
 import inzagher.expense.tracker.server.repository.CategoryRepository;
 import inzagher.expense.tracker.server.repository.ExpenseRepository;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class CategoryService {
     private final ExpenseRepository expenseRepository;
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
-    
-    public List<CategoryDTO> getAllCategories() {
+
+    @Transactional
+    public List<CategoryDTO> findAllCategories() {
+        log.info("Find all categories");
         return categoryRepository.findAll().stream()
                 .map(categoryMapper::toDTO)
                 .toList();
     }
-    
-    public Optional<CategoryDTO> getCategoryById(Integer id) {
-        return categoryRepository.findById(id).map(categoryMapper::toDTO);
+
+    @Transactional
+    public CategoryDTO getCategoryById(@NonNull Integer id) {
+        log.info("Find category with id {}", id);
+        return categoryRepository.findById(id)
+                .map(categoryMapper::toDTO)
+                .orElseThrow();
     }
-    
-    public Integer storeCategory(CategoryDTO dto) {
-        Category model;
-        Integer red = dto.getColor().getRed();
-        Integer green = dto.getColor().getGreen();
-        Integer blue = dto.getColor().getBlue();
-        if (dto.getId() != null) {
-            Optional<Category> loadedCategory = categoryRepository.findById(dto.getId());
-            model = loadedCategory.orElseThrow(() -> new RuntimeException("CATEGORY NOT FOUND"));
-        } else {
-            model = new Category();
+
+    @Transactional
+    public Integer createCategory(@NonNull CreateCategoryCommand command) {
+        log.info("Create category. Command: {}", command);
+        var entity = new Category(command);
+        return categoryRepository.save(entity).getId();
+    }
+
+    @Transactional
+    public void editCategory(@NonNull EditCategoryCommand command) {
+        log.info("Edit category. Command: {}", command);
+        var entity = categoryRepository
+                .findById(command.getId())
+                .orElseThrow();
+        entity.edit(command);
+        categoryRepository.save(entity);
+    }
+
+    @Transactional
+    public void deleteCategoryById(@NonNull Integer id) {
+        log.info("Delete category with id {}", id);
+        if (isAnyExpensePresent(id)) {
+            var message = String.format("Category with id %d has expenses", id);
+            throw new RuntimeException(message);
         }
-        model.setName(dto.getName());
-        model.setDescription(dto.getDescription());
-        model.setColor(new Color(red, green, blue));
-        model.setObsolete(dto.getObsolete());
-        return categoryRepository.saveAndFlush(model).getId();
-    }
-    
-    public void deleteCategory(Integer id) {
-        resetDependentExpenses(id);
         categoryRepository.deleteById(id);
     }
-    
-    private void resetDependentExpenses(Integer categoryID) {
-        ExpenseFilter filter = new ExpenseFilter();
-        filter.getCategoryIdentifiers().add(categoryID);
-        List<Expense> list = expenseRepository.find(filter);
-        list.forEach(e -> e.setCategory(null));
-        expenseRepository.saveAll(list);
-        expenseRepository.flush();
+
+    private Boolean isAnyExpensePresent(Integer categoryId) {
+        log.info("Find expenses with category id {}", categoryId);
+        var filter = new ExpenseFilter();
+        filter.getCategoryIdentifiers().add(categoryId);
+        return expenseRepository.find(filter).size() > 0;
     }
 }
