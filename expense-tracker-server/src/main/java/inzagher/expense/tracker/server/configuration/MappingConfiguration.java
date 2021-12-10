@@ -1,4 +1,4 @@
-package inzagher.expense.tracker.server;
+package inzagher.expense.tracker.server.configuration;
 
 import inzagher.expense.tracker.server.mapper.BackupMetadataMapper;
 import inzagher.expense.tracker.server.mapper.CategoryMapper;
