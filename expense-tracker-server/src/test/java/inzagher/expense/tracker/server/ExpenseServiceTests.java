@@ -18,7 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("test")
-@SpringBootTest(classes = ServiceRunner.class)
+@SpringBootTest(classes = ExpenseTrackerServerApp.class)
 public class ExpenseServiceTests {
     @Autowired
     private ExpenseService expenseService;

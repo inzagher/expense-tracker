@@ -18,7 +18,7 @@ import org.springframework.test.context.ActiveProfiles;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")
-@SpringBootTest(classes = ServiceRunner.class)
+@SpringBootTest(classes = ExpenseTrackerServerApp.class)
 public class PersonServiceTests {
     @Autowired
     private PersonService service;

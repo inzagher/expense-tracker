@@ -19,7 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("test")
-@SpringBootTest(classes = ServiceRunner.class)
+@SpringBootTest(classes = ExpenseTrackerServerApp.class)
 public class BackupServiceTests {
     private static final String TEST_DESCRIPTION = "BACKUP TEST";
     
