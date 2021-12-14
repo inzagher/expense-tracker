@@ -10,6 +10,7 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface CategoryMapper {
     CategoryDTO toDTO(Category model);
+    Category toModel(CategoryDTO dto);
     @Mapping(source = "color.red", target = "colorRed")
     @Mapping(source = "color.green", target = "colorGreen")
     @Mapping(source = "color.blue", target = "colorBlue")

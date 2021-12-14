@@ -6,7 +6,6 @@ import inzagher.expense.tracker.server.dto.ExpenseDTO;
 import inzagher.expense.tracker.server.dto.ExpenseFilterDTO;
 import inzagher.expense.tracker.server.mapper.ExpenseMapper;
 import inzagher.expense.tracker.server.model.Expense;
-import inzagher.expense.tracker.server.model.Person;
 import inzagher.expense.tracker.server.repository.ExpenseRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

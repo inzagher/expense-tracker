@@ -3,43 +3,42 @@ package inzagher.expense.tracker.server.service;
 import inzagher.expense.tracker.server.dto.*;
 import inzagher.expense.tracker.server.mapper.*;
 import inzagher.expense.tracker.server.model.*;
-import inzagher.expense.tracker.server.outbox.BackupDataOutbox;
 import inzagher.expense.tracker.server.repository.BackupMetadataRepository;
 import inzagher.expense.tracker.server.repository.CategoryRepository;
 import inzagher.expense.tracker.server.repository.ExpenseRepository;
 import inzagher.expense.tracker.server.repository.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import java.io.ByteArrayInputStream;
-import java.io.OutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
 
 @Slf4j
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class BackupService {
+    @Value("${backup.directory}")
+    private String backupDirectory;
+
     private static final int STATE_IDLE = 0;
     private static final int STATE_BUSY = 1;
-    private static final AtomicInteger serviceState = new AtomicInteger();
-    
-    private final JAXBContext jaxbContext;
-    private final BackupDataOutbox backupDataOutbox;
+    private static final String ZIP_ENTRY_NAME = "expenses.xml";
+
+    private final AtomicInteger serviceState = new AtomicInteger();
+    private final SerializationService serializationService;
     private final ExpenseRepository expenseRepository;
     private final CategoryRepository categoryRepository;
     private final PersonRepository personRepository;
@@ -48,84 +47,60 @@ public class BackupService {
     private final ExpenseMapper expenseMapper;
     private final CategoryMapper categoryMapper;
     private final PersonMapper personMapper;
-    
-    public List<BackupMetadataDTO> getAllBackupInfo() {
+
+    @Transactional
+    public List<BackupMetadataDTO> findAllMetadataRecords() {
+        log.info("Find all backup metadata records");
         return backupMetadataRepository.findAll().stream()
                 .map(backupMetadataMapper::toDTO)
                 .toList();
     }
-    
-    public Optional<BackupMetadataDTO> getLastBackupInfo() {
+
+    @Transactional
+    public Optional<BackupMetadataDTO> findLastMetadataRecord() {
+        log.info("Find last backup metadata record");
         var request = PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, "time"));
         var backups =  backupMetadataRepository.findAll(request).toList();
         return backups.stream().map(backupMetadataMapper::toDTO).findFirst();
     }
 
+    @Transactional
     public BackupMetadataDTO createDatabaseBackup() {
+        log.info("Create database backup");
         if (serviceState.compareAndSet(STATE_IDLE, STATE_BUSY)) {
-            var data = loadBackupDataFromDatabase();
-            var metadata = createBackupMetadata(data);
-            serializeBackupData(metadata, data);
-            metadata = backupMetadataRepository.saveAndFlush(metadata);
-            serviceState.set(STATE_IDLE);
-            return backupMetadataMapper.toDTO(metadata);
+            try {
+                var data = loadBackupDataFromDatabase();
+                var metadata = createBackupMetadata(data);
+                metadata = backupMetadataRepository.save(metadata);
+                writeBackupToFile(serializationService.serializeAndZip(data, ZIP_ENTRY_NAME));
+                return backupMetadataMapper.toDTO(metadata);
+            } finally {
+                serviceState.set(STATE_IDLE);
+            }
         } else {
             throw new RuntimeException("Backup service is busy");
         }
     }
-    
+
+    @Transactional
     public void restoreDatabaseFromBackup(byte[] data) {
+        log.info("Restore database from backup");
         if (serviceState.compareAndSet(STATE_IDLE, STATE_BUSY)) {
-            BackupDataDTO dto = deserializeBackupData(data);
-            truncateAllTables();
-            storeBackupDataInDatabase(dto);
-            serviceState.set(STATE_IDLE);
+            try {
+                var dto = serializationService.deserializeZippedData(
+                        BackupDataDTO.class, data, ZIP_ENTRY_NAME);
+                truncateAllTables();
+                storeBackupDataInDatabase(dto);
+            } finally {
+                serviceState.set(STATE_IDLE);
+            }
         } else {
             throw new RuntimeException("Backup service is busy");
         }
-    }
-    
-    private Person createPerson(PersonDTO dto) {
-        Person person = new Person();
-        person.setId(dto.getId());
-        person.setName(dto.getName());
-        return person;
-    }
-    
-    private Category createCategory(CategoryDTO dto) {
-        Integer red = dto.getColor().getRed();
-        Integer green = dto.getColor().getGreen();
-        Integer blue = dto.getColor().getBlue();
-        Category category = new Category();
-        category.setId(dto.getId());
-        category.setName(dto.getName());
-        category.setDescription(dto.getDescription());
-        category.setColor(new Color(red, green, blue));
-        category.setObsolete(dto.getObsolete());
-        return category;
-    }
-    
-    private Expense createExpense(ExpenseDTO dto, List<Person> persons, List<Category> categories) {
-        Optional<Person> person = persons.stream()
-                .filter(c -> c.getId().equals(dto.getPersonId()))
-                .findFirst();
-        
-        Optional<Category> category = categories.stream()
-                .filter(c -> c.getId().equals(dto.getCategoryId()))
-                .findFirst();
-        
-        Expense expense = new Expense();
-        expense.setId(dto.getId());
-        expense.setDate(dto.getDate());
-        expense.setAmount(dto.getAmount());
-        expense.setPerson(person.orElse(null));
-        expense.setCategory(category.orElse(null));
-        expense.setDescription(dto.getDescription());
-        return expense;
     }
     
     private BackupMetadata createBackupMetadata(BackupDataDTO dto) {
-        BackupMetadata metadata = new BackupMetadata();
+        var metadata = new BackupMetadata();
         metadata.setTime(LocalDateTime.now());
         metadata.setExpenses(dto.getExpenses().size());
         metadata.setCategories(dto.getCategories().size());
@@ -133,47 +108,19 @@ public class BackupService {
         return metadata;
     }
     
-    private void serializeBackupData(BackupMetadata metadata, BackupDataDTO dto) {
-        try (OutputStream sos = backupDataOutbox.createOutputStream(metadata)) {
-            try (ZipOutputStream zos = new ZipOutputStream(sos)) {
-                zos.putNextEntry(new ZipEntry("expenses.xml"));
-                Marshaller marshaller = jaxbContext.createMarshaller();
-                marshaller.marshal(dto, zos);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-    
-    private BackupDataDTO deserializeBackupData(byte[] data) {
-        try (ByteArrayInputStream bis = new ByteArrayInputStream(data)) {
-            try (ZipInputStream zis = new ZipInputStream(bis)) {
-                ZipEntry zipEntry = zis.getNextEntry();
-                if (zipEntry != null && zipEntry.getName().equals("expenses.xml")) {
-                    Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-                    return (BackupDataDTO)unmarshaller.unmarshal(zis);
-                } else {
-                    throw new RuntimeException("Zip archive is not backup.");
-                }
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-    
     private BackupDataDTO loadBackupDataFromDatabase() {
-        BackupDataDTO dto = new BackupDataDTO();
-        List<CategoryDTO> categories = categoryRepository.findAll()
+        var dto = new BackupDataDTO();
+        var categories = categoryRepository.findAll()
                 .stream()
                 .map(categoryMapper::toDTO)
                 .collect(Collectors.toList());
         dto.setCategories(categories);
-        List<PersonDTO> persons = personRepository.findAll()
+        var persons = personRepository.findAll()
                 .stream()
                 .map(personMapper::toDTO)
                 .collect(Collectors.toList());
         dto.setPersons(persons);
-        List<ExpenseDTO> expenses = expenseRepository.findAll()
+        var expenses = expenseRepository.findAll()
                 .stream()
                 .map(expenseMapper::toDTO)
                 .collect(Collectors.toList());
@@ -182,23 +129,20 @@ public class BackupService {
     }
     
     private void storeBackupDataInDatabase(BackupDataDTO dto) {
-        final List<Person> persons = personRepository.saveAll(
-            dto.getPersons().stream()
-                .map(this::createPerson)
-                .collect(Collectors.toList())
-        );
-        final List<Category> categories = categoryRepository.saveAll(
-            dto.getCategories().stream()
-                .map(this::createCategory)
-                .collect(Collectors.toList())
-        );
-        expenseRepository.saveAll(
-            dto.getExpenses().stream()
-                .map(e -> createExpense(e, persons, categories))
-                .collect(Collectors.toList())
-        );
-        BackupMetadata metadata = createBackupMetadata(dto);
-        backupMetadataRepository.saveAndFlush(metadata);
+        var metadata = createBackupMetadata(dto);
+        var persons = dto.getPersons().stream()
+                .map(personMapper::toModel)
+                .collect(Collectors.toList());
+        var categories = dto.getCategories().stream()
+                .map(categoryMapper::toModel)
+                .toList();
+        var expenses = dto.getExpenses().stream()
+                .map(expenseMapper::toModel)
+                .toList();
+        personRepository.saveAll(persons);
+        categoryRepository.saveAll(categories);
+        expenseRepository.saveAll(expenses);
+        backupMetadataRepository.save(metadata);
     }
     
     private void truncateAllTables() {
@@ -206,5 +150,20 @@ public class BackupService {
         categoryRepository.deleteAllInBatch();
         personRepository.deleteAllInBatch();
         backupMetadataRepository.deleteAllInBatch();
+    }
+
+    private void writeBackupToFile(byte[] data) {
+        var file = Paths.get(backupDirectory, formatBackupFileName()).toFile();
+        if (file.exists()) { file.delete(); }
+        else { new File(backupDirectory).mkdirs(); }
+
+        try { Files.write(file.toPath(), data); }
+        catch (IOException e) { throw new RuntimeException(e); }
+    }
+
+    private String formatBackupFileName() {
+        var pattern = "yyyy_MM_dd_HH_mm_ss";
+        var formatter = DateTimeFormatter.ofPattern(pattern);
+        return "backup_" + LocalDateTime.now().format(formatter) + ".zip";
     }
 }

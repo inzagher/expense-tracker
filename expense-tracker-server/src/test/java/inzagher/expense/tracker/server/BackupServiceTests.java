@@ -1,22 +1,18 @@
 package inzagher.expense.tracker.server;
 
-import inzagher.expense.tracker.server.dto.BackupMetadataDTO;
-import inzagher.expense.tracker.server.model.Category;
-import inzagher.expense.tracker.server.model.Person;
 import inzagher.expense.tracker.server.service.BackupService;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.time.LocalDateTime;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")
 @SpringBootTest(classes = ExpenseTrackerServerApp.class)
@@ -24,19 +20,19 @@ public class BackupServiceTests {
     private static final String TEST_DESCRIPTION = "BACKUP TEST";
     
     @Autowired
-    private BackupService backupService;
+    private BackupService service;
     @Autowired
     private TestDataManager manager;
     
     @BeforeEach
     public void beforeEachTest() {
-        Person p1 = manager.storePerson("P1");
-        Person p2 = manager.storePerson("P2");
-        Person p3 = manager.storePerson("P3");
+        var p1 = manager.storePerson("P1");
+        var p2 = manager.storePerson("P2");
+        var p3 = manager.storePerson("P3");
         
-        Category c1 = manager.storeCategory("C1", TEST_DESCRIPTION, 0, 0, 0, false);
-        Category c2 = manager.storeCategory("C2", TEST_DESCRIPTION, 64, 64, 64, false);
-        Category c3 = manager.storeCategory("C3", TEST_DESCRIPTION, 128, 128, 128, false);
+        var c1 = manager.storeCategory("C1", TEST_DESCRIPTION, 0, 0, 0, false);
+        var c2 = manager.storeCategory("C2", TEST_DESCRIPTION, 64, 64, 64, false);
+        var c3 = manager.storeCategory("C3", TEST_DESCRIPTION, 128, 128, 128, false);
         
         manager.storeExpense(2020, 1, 1, p1, c1, 0D, TEST_DESCRIPTION);
         manager.storeExpense(2020, 1, 2, p1, c2, 10D, TEST_DESCRIPTION);
@@ -57,7 +53,7 @@ public class BackupServiceTests {
     
     @Test
     public void lastBackupInfoTest() {
-        Optional<BackupMetadataDTO> last = backupService.getLastBackupInfo();
+        var last = service.findLastMetadataRecord();
         assertTrue(last.isPresent());
         assertEquals(4, last.get().getExpenses());
         assertEquals(3, last.get().getPersons());
@@ -66,24 +62,24 @@ public class BackupServiceTests {
     
     @Test
     public void backupInfoListTest() {
-        List<BackupMetadataDTO> list = backupService.getAllBackupInfo();
+        var list = service.findAllMetadataRecords();
         assertEquals(3, list.size());
     }
     
     @Test
     public void backupDatabaseTest() {
-        BackupMetadataDTO bm = backupService.createDatabaseBackup();
-        assertNotNull(bm);
-        assertEquals(6, bm.getExpenses());
-        assertEquals(3, bm.getPersons());
-        assertEquals(3, bm.getCategories());
+        var metadata = service.createDatabaseBackup();
+        assertNotNull(metadata);
+        assertEquals(6, metadata.getExpenses());
+        assertEquals(3, metadata.getPersons());
+        assertEquals(3, metadata.getCategories());
         assertEquals(4, manager.countBackups());
     }
     
     @Test
     public void restoreDatabaseTest() {
-        byte[] zip = loadTestResource("backup_for_tests.zip");
-        backupService.restoreDatabaseFromBackup(zip);
+        var zip = loadTestResource("backup_for_tests.zip");
+        service.restoreDatabaseFromBackup(zip);
         assertEquals(3, manager.countExpenses());
         assertEquals(2, manager.countCategories());
         assertEquals(1, manager.countPersons());
@@ -91,12 +87,12 @@ public class BackupServiceTests {
     }
     
     private byte[] loadTestResource(String name) {
-        URL url = getClass().getClassLoader().getResource(name);
+        var url = getClass().getClassLoader().getResource(name);
         if (url == null) {
             throw new RuntimeException("Resource url is null");
         }
         try (InputStream is = url.openStream()) {
-            byte[] result = new byte[is.available()];
+            var result = new byte[is.available()];
             is.read(result);
             return result;
         } catch (IOException e) {

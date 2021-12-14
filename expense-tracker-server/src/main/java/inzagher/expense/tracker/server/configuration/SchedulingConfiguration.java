@@ -9,7 +9,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Component
 @Profile("production")
@@ -20,10 +19,8 @@ public class SchedulingConfiguration {
     
     @Scheduled(initialDelay = 15 * 1000, fixedRate = 15 * 60 * 1000)
     public void performDatabaseBackupTask() {
-        Optional<BackupMetadataDTO> metadata = backupService.getLastBackupInfo();
-        LocalDateTime lastBackupTime = metadata.isPresent()
-                ? metadata.get().getTime()
-                : LocalDateTime.MIN;
+        var metadata = backupService.findLastMetadataRecord();
+        var lastBackupTime = metadata.map(BackupMetadataDTO::getCreated).orElse(LocalDateTime.MIN);
         if (lastBackupTime.plusHours(24 * 7).isBefore(LocalDateTime.now())) {
             backupService.createDatabaseBackup();
         }

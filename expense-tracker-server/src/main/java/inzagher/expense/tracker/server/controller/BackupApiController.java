@@ -2,37 +2,34 @@ package inzagher.expense.tracker.server.controller;
 
 import inzagher.expense.tracker.server.dto.BackupMetadataDTO;
 import inzagher.expense.tracker.server.service.BackupService;
-import java.io.IOException;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.List;
+
 @RestController
+@RequiredArgsConstructor
 public class BackupApiController {
-    private final BackupService backupService;
-    
-    @Autowired
-    public BackupApiController(BackupService backupService) {
-        this.backupService = backupService;
-    }
+    private final BackupService service;
     
     @GetMapping(path = "/api/backups")
-    public List<BackupMetadataDTO> list() {
-        return backupService.getAllBackupInfo();
+    public List<BackupMetadataDTO> findAll() {
+        return service.findAllMetadataRecords();
     }
     
-    @GetMapping(path = "/api/backup-database")
+    @GetMapping(path = "/api/backups/create")
     public BackupMetadataDTO backupDatabase() {
-        return backupService.createDatabaseBackup();
+        return service.createDatabaseBackup();
     }
     
-    @PostMapping(path = "/api/restore-database")
+    @PostMapping(path = "/api/backups/restore")
     public void restoreDatabase(@RequestParam MultipartFile file) {
-        try { backupService.restoreDatabaseFromBackup(file.getBytes()); }
+        try { service.restoreDatabaseFromBackup(file.getBytes()); }
         catch (IOException e) { throw new RuntimeException(e); }
     }
 }

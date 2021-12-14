@@ -9,6 +9,7 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface PersonMapper {
     PersonDTO toDTO(Person entity);
+    Person toModel(PersonDTO dto);
     CreatePersonCommand toCreateCommand(PersonDTO dto);
     EditPersonCommand toEditCommand(PersonDTO dto);
 }

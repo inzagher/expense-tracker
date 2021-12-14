@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 @Data
 public class BackupMetadataDTO {
     private Integer id;
-    private LocalDateTime time;
+    private LocalDateTime created;
     private Integer expenses;
     private Integer categories;
     private Integer persons;

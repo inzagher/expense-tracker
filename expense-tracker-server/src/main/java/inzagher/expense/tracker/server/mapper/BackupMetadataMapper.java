@@ -7,4 +7,5 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface BackupMetadataMapper {
     BackupMetadataDTO toDTO(BackupMetadata model);
+    BackupMetadata toModel(BackupMetadataDTO dto);
 }

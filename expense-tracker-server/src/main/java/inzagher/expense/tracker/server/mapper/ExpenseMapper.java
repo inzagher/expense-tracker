@@ -14,6 +14,9 @@ public interface ExpenseMapper {
     @Mapping(source = "category.id", target = "categoryId")
     @Mapping(source = "person.id", target = "personId")
     ExpenseDTO toDTO(Expense model);
+    @Mapping(source = "categoryId", target = "category.id")
+    @Mapping(source = "personId", target = "person.id")
+    Expense toModel(ExpenseDTO dto);
     ExpenseFilter toFilter(ExpenseFilterDTO dto);
     CreateExpenseCommand toCreateCommand(ExpenseDTO dto);
     EditExpenseCommand toEditCommand(ExpenseDTO dto);
