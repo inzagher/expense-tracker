@@ -18,8 +18,8 @@ public class BackupMetadata implements Serializable {
     @Column(nullable = false, updatable = false)
     private Integer id;
 
-    @Column(name="time")
-    private LocalDateTime time;
+    @Column(name="created")
+    private LocalDateTime created;
 
     @Column(name="expenses")
     private Integer expenses;

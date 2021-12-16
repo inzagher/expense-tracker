@@ -101,10 +101,10 @@ public class TestDataManager {
         return personRepository.saveAndFlush(person);
     }
     
-    public BackupMetadata storeBackupMetadata(LocalDateTime time, int expenses,
+    public BackupMetadata storeBackupMetadata(LocalDateTime created, int expenses,
             int persons, int categories) {
         BackupMetadata bm = new BackupMetadata();
-        bm.setTime(time);
+        bm.setCreated(created);
         bm.setExpenses(expenses);
         bm.setPersons(persons);
         bm.setCategories(categories);

@@ -19,9 +19,11 @@ public class SchedulingConfiguration {
     
     @Scheduled(initialDelay = 15 * 1000, fixedRate = 15 * 60 * 1000)
     public void performDatabaseBackupTask() {
-        var metadata = backupService.findLastMetadataRecord();
-        var lastBackupTime = metadata.map(BackupMetadataDTO::getCreated).orElse(LocalDateTime.MIN);
-        if (lastBackupTime.plusHours(24 * 7).isBefore(LocalDateTime.now())) {
+        var nextBackupCreationTime = backupService.findLastMetadataRecord()
+                .map(BackupMetadataDTO::getCreated)
+                .orElse(LocalDateTime.MIN)
+                .plusHours(24 * 7);
+        if (nextBackupCreationTime.isBefore(LocalDateTime.now())) {
             backupService.createDatabaseBackup();
         }
     }

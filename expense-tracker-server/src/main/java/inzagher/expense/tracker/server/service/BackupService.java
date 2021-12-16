@@ -59,7 +59,7 @@ public class BackupService {
     @Transactional
     public Optional<BackupMetadataDTO> findLastMetadataRecord() {
         log.info("Find last backup metadata record");
-        var request = PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, "time"));
+        var request = PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, "created"));
         var backups =  backupMetadataRepository.findAll(request).toList();
         return backups.stream().map(backupMetadataMapper::toDTO).findFirst();
     }
@@ -101,7 +101,7 @@ public class BackupService {
     
     private BackupMetadata createBackupMetadata(BackupDataDTO dto) {
         var metadata = new BackupMetadata();
-        metadata.setTime(LocalDateTime.now());
+        metadata.setCreated(LocalDateTime.now());
         metadata.setExpenses(dto.getExpenses().size());
         metadata.setCategories(dto.getCategories().size());
         metadata.setPersons(dto.getPersons().size());
