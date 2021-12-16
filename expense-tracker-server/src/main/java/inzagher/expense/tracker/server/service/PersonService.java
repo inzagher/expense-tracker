@@ -4,8 +4,8 @@ import inzagher.expense.tracker.server.command.CreatePersonCommand;
 import inzagher.expense.tracker.server.command.EditPersonCommand;
 import inzagher.expense.tracker.server.dto.PersonDTO;
 import inzagher.expense.tracker.server.mapper.PersonMapper;
-import inzagher.expense.tracker.server.model.ExpenseFilter;
 import inzagher.expense.tracker.server.model.Person;
+import inzagher.expense.tracker.server.query.ExpenseQueryFilter;
 import inzagher.expense.tracker.server.repository.ExpenseRepository;
 import inzagher.expense.tracker.server.repository.PersonRepository;
 import lombok.NonNull;
@@ -69,7 +69,7 @@ public class PersonService {
 
     private Boolean isAnyExpensePresent(Integer personId) {
         log.info("Find expenses with person id {}", personId);
-        var filter = new ExpenseFilter();
+        var filter = new ExpenseQueryFilter();
         filter.getPersonIdentifiers().add(personId);
         return expenseRepository.find(filter).size() > 0;
     }

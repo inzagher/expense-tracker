@@ -1,12 +1,14 @@
 package inzagher.expense.tracker.server.controller;
 
 import inzagher.expense.tracker.server.dto.ExpenseDTO;
-import inzagher.expense.tracker.server.dto.ExpenseFilterDTO;
 import inzagher.expense.tracker.server.mapper.ExpenseMapper;
+import inzagher.expense.tracker.server.query.ExpenseQueryFilter;
 import inzagher.expense.tracker.server.service.ExpenseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -16,7 +18,26 @@ public class ExpenseApiController {
     private final ExpenseMapper mapper;
 
     @GetMapping(path = "/api/expenses")
-    public List<ExpenseDTO> find(ExpenseFilterDTO filter) {
+    public List<ExpenseDTO> find(
+            @RequestParam(value = "persons", required = false) List<Integer> persons,
+            @RequestParam(value = "categories", required = false) List<Integer> categories,
+            @RequestParam(value = "date_exact", required = false) LocalDate dateExact,
+            @RequestParam(value = "date_from", required = false) LocalDate dateFrom,
+            @RequestParam(value = "date_to", required = false) LocalDate dateTo,
+            @RequestParam(value = "amount_exact", required = false) BigDecimal amountExact,
+            @RequestParam(value = "amount_from", required = false) BigDecimal amountFrom,
+            @RequestParam(value = "amount_to", required = false) BigDecimal amountTo,
+            @RequestParam(value = "description", required = false) String description) {
+        var filter = new ExpenseQueryFilter();
+        filter.getPersonIdentifiers().addAll(persons);
+        filter.getCategoryIdentifiers().addAll(categories);
+        filter.setDateExact(dateExact);
+        filter.setDateFrom(dateFrom);
+        filter.setDateTo(dateTo);
+        filter.setAmountExact(amountExact);
+        filter.setAmountFrom(amountFrom);
+        filter.setAmountTo(amountTo);
+        filter.setDescriptionLike(description);
         return service.findExpenses(filter);
     }
 

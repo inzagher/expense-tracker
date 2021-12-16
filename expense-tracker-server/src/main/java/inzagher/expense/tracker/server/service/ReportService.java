@@ -3,7 +3,7 @@ package inzagher.expense.tracker.server.service;
 import inzagher.expense.tracker.server.dto.CategoryReportItemDTO;
 import inzagher.expense.tracker.server.dto.YearlyReportItemDTO;
 import inzagher.expense.tracker.server.mapper.CategoryMapper;
-import inzagher.expense.tracker.server.model.ExpenseFilter;
+import inzagher.expense.tracker.server.query.ExpenseQueryFilter;
 import inzagher.expense.tracker.server.repository.CategoryRepository;
 import inzagher.expense.tracker.server.repository.ExpenseRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class ReportService {
         var report = new ArrayList<CategoryReportItemDTO>();
         var categories = categoryRepository.findAll();
         for (var category: categories) {
-            var filter = new ExpenseFilter();
+            var filter = new ExpenseQueryFilter();
             filter.setDateFrom(LocalDate.of(year, month, 1));
             filter.setDateTo(filter.getDateFrom().plusMonths(1).minusDays(1));
             filter.getCategoryIdentifiers().add(category.getId());
@@ -41,7 +41,7 @@ public class ReportService {
     public List<YearlyReportItemDTO> createYearlyReport(int year) {
         var report = new ArrayList<YearlyReportItemDTO>();
         for (int month = 1; month <= 12; ++month) {
-            var filter = new ExpenseFilter();
+            var filter = new ExpenseQueryFilter();
             filter.setDateFrom(LocalDate.of(year, month, 1));
             filter.setDateTo(filter.getDateFrom().plusMonths(1).minusDays(1));
             report.add(new YearlyReportItemDTO(month, expenseRepository.sum(filter)));

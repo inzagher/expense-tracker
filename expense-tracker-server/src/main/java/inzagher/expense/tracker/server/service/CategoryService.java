@@ -5,6 +5,7 @@ import inzagher.expense.tracker.server.command.EditCategoryCommand;
 import inzagher.expense.tracker.server.dto.CategoryDTO;
 import inzagher.expense.tracker.server.mapper.CategoryMapper;
 import inzagher.expense.tracker.server.model.*;
+import inzagher.expense.tracker.server.query.ExpenseQueryFilter;
 import inzagher.expense.tracker.server.repository.CategoryRepository;
 import inzagher.expense.tracker.server.repository.ExpenseRepository;
 import lombok.NonNull;
@@ -68,7 +69,7 @@ public class CategoryService {
 
     private Boolean isAnyExpensePresent(Integer categoryId) {
         log.info("Find expenses with category id {}", categoryId);
-        var filter = new ExpenseFilter();
+        var filter = new ExpenseQueryFilter();
         filter.getCategoryIdentifiers().add(categoryId);
         return expenseRepository.find(filter).size() > 0;
     }

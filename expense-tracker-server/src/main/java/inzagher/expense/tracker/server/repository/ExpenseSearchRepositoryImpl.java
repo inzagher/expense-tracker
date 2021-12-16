@@ -1,7 +1,7 @@
 package inzagher.expense.tracker.server.repository;
 
 import inzagher.expense.tracker.server.model.Expense;
-import inzagher.expense.tracker.server.model.ExpenseFilter;
+import inzagher.expense.tracker.server.query.ExpenseQueryFilter;
 import lombok.NonNull;
 import org.springframework.stereotype.Repository;
 
@@ -20,7 +20,7 @@ public class ExpenseSearchRepositoryImpl implements ExpenseSearchRepository {
     private EntityManager entityManager;
     
     @Override
-    public List<Expense> find(@NonNull ExpenseFilter filter) {
+    public List<Expense> find(@NonNull ExpenseQueryFilter filter) {
         var cb = entityManager.getCriteriaBuilder();
         var criteria = cb.createQuery(Expense.class);
         var expense = criteria.from(Expense.class);
@@ -31,7 +31,7 @@ public class ExpenseSearchRepositoryImpl implements ExpenseSearchRepository {
     }
 
     @Override
-    public BigDecimal sum(@NonNull ExpenseFilter filter) {
+    public BigDecimal sum(@NonNull ExpenseQueryFilter filter) {
         var cb = entityManager.getCriteriaBuilder();
         var criteria = cb.createQuery(BigDecimal.class);
         var expense = criteria.from(Expense.class);
@@ -42,7 +42,7 @@ public class ExpenseSearchRepositoryImpl implements ExpenseSearchRepository {
         return result == null ? BigDecimal.ZERO : result;
     }
     
-    private List<Predicate> createPredicates(CriteriaBuilder cb, Root<Expense> expense, ExpenseFilter filter) {
+    private List<Predicate> createPredicates(CriteriaBuilder cb, Root<Expense> expense, ExpenseQueryFilter filter) {
         var predicates = new ArrayList<Predicate>();
         if (filter.getCategoryIdentifiers() != null && filter.getCategoryIdentifiers().size() > 0) {
             var in = cb.in(expense.get("category").get("id"));

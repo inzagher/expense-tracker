@@ -1,6 +1,6 @@
 package inzagher.expense.tracker.server.dto;
 
-import inzagher.expense.tracker.server.serialization.LocalDateXmlAdapter;
+import inzagher.expense.tracker.server.dto.adapter.LocalDateXmlAdapter;
 import lombok.Data;
 
 import javax.xml.bind.annotation.XmlAccessType;
