@@ -5,6 +5,7 @@ import inzagher.expense.tracker.server.mapper.ExpenseMapper;
 import inzagher.expense.tracker.server.query.ExpenseQueryFilter;
 import inzagher.expense.tracker.server.service.ExpenseService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -21,16 +22,23 @@ public class ExpenseApiController {
     public List<ExpenseDTO> find(
             @RequestParam(value = "persons", required = false) List<Integer> persons,
             @RequestParam(value = "categories", required = false) List<Integer> categories,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             @RequestParam(value = "date_exact", required = false) LocalDate dateExact,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             @RequestParam(value = "date_from", required = false) LocalDate dateFrom,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             @RequestParam(value = "date_to", required = false) LocalDate dateTo,
             @RequestParam(value = "amount_exact", required = false) BigDecimal amountExact,
             @RequestParam(value = "amount_from", required = false) BigDecimal amountFrom,
             @RequestParam(value = "amount_to", required = false) BigDecimal amountTo,
             @RequestParam(value = "description", required = false) String description) {
         var filter = new ExpenseQueryFilter();
-        filter.getPersonIdentifiers().addAll(persons);
-        filter.getCategoryIdentifiers().addAll(categories);
+        if (persons != null) {
+            persons.forEach(filter.getPersonIdentifiers()::add);
+        }
+        if (categories != null) {
+            categories.forEach(filter.getCategoryIdentifiers()::add);
+        }
         filter.setDateExact(dateExact);
         filter.setDateFrom(dateFrom);
         filter.setDateTo(dateTo);
