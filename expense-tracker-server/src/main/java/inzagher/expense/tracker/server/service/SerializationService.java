@@ -24,8 +24,9 @@ public class SerializationService {
                 JAXBContext jaxbContext = createJaxbContext(object.getClass());
                 Marshaller marshaller = jaxbContext.createMarshaller();
                 marshaller.marshal(object, zos);
-                return bos.toByteArray();
+                zos.closeEntry();
             }
+            return bos.toByteArray();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
