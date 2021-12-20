@@ -1,1 +1,11 @@
-<p>layout works!</p>
+<mat-toolbar color="primary">
+    <button mat-icon-button>
+        <mat-icon>menu</mat-icon>
+    </button>
+    <button mat-flat-button color="primary" routerLink="/">
+        <span class="title">Учет расходов</span>
+    </button>
+</mat-toolbar>
+<div class="main-content">
+    <router-outlet></router-outlet>
+</div>
