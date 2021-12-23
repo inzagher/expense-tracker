@@ -15,7 +15,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -24,7 +23,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -113,17 +111,17 @@ public class BackupService {
         var categories = categoryRepository.findAll()
                 .stream()
                 .map(categoryMapper::toDTO)
-                .collect(Collectors.toList());
+                .toList();
         dto.setCategories(categories);
         var persons = personRepository.findAll()
                 .stream()
                 .map(personMapper::toDTO)
-                .collect(Collectors.toList());
+                .toList();
         dto.setPersons(persons);
         var expenses = expenseRepository.findAll()
                 .stream()
                 .map(expenseMapper::toDTO)
-                .collect(Collectors.toList());
+                .toList();
         dto.setExpenses(expenses);
         return dto;
     }
@@ -132,7 +130,7 @@ public class BackupService {
         var metadata = createBackupMetadata(dto);
         var persons = dto.getPersons().stream()
                 .map(personMapper::toModel)
-                .collect(Collectors.toList());
+                .toList();
         var categories = dto.getCategories().stream()
                 .map(categoryMapper::toModel)
                 .toList();
@@ -153,12 +151,16 @@ public class BackupService {
     }
 
     private void writeBackupToFile(byte[] data) {
-        var file = Paths.get(backupDirectory, formatBackupFileName()).toFile();
-        if (file.exists()) { file.delete(); }
-        else { new File(backupDirectory).mkdirs(); }
-
-        try { Files.write(file.toPath(), data); }
-        catch (IOException e) { throw new RuntimeException(e); }
+        try {
+            var backupFilePath = Paths.get(backupDirectory, formatBackupFileName());
+            if (Files.exists(backupFilePath)) {
+                Files.delete(backupFilePath);
+            }
+            Files.createDirectories(Paths.get(backupDirectory));
+            Files.write(backupFilePath, data);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private String formatBackupFileName() {

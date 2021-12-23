@@ -32,6 +32,7 @@ public class SerializationService {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T deserializeZippedData(Class<T> target, byte[] data, String zipEntryName) {
         log.info("Deserialize data from zip archive");
         try (ByteArrayInputStream bis = new ByteArrayInputStream(data)) {
