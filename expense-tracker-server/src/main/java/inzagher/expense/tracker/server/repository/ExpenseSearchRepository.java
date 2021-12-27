@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface ExpenseSearchRepository {
     List<Expense> find(ExpenseQueryFilter filter);
-    BigDecimal sum(ExpenseQueryFilter filter);
+    BigDecimal sumAmount(ExpenseQueryFilter filter);
 }

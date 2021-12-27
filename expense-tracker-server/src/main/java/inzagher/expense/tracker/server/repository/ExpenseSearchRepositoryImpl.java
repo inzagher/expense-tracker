@@ -31,7 +31,7 @@ public class ExpenseSearchRepositoryImpl implements ExpenseSearchRepository {
     }
 
     @Override
-    public BigDecimal sum(@NonNull ExpenseQueryFilter filter) {
+    public BigDecimal sumAmount(@NonNull ExpenseQueryFilter filter) {
         var cb = entityManager.getCriteriaBuilder();
         var criteria = cb.createQuery(BigDecimal.class);
         var expense = criteria.from(Expense.class);

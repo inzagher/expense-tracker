@@ -32,7 +32,7 @@ public class ReportService {
             filter.setDateFrom(LocalDate.of(year, month, 1));
             filter.setDateTo(filter.getDateFrom().plusMonths(1).minusDays(1));
             filter.getCategoryIdentifiers().add(category.getId());
-            report.add(new CategoryReportItemDTO(categoryMapper.toDTO(category), expenseRepository.sum(filter)));
+            report.add(new CategoryReportItemDTO(categoryMapper.toDTO(category), expenseRepository.sumAmount(filter)));
         }
         return report;
     }
@@ -44,7 +44,7 @@ public class ReportService {
             var filter = new ExpenseQueryFilter();
             filter.setDateFrom(LocalDate.of(year, month, 1));
             filter.setDateTo(filter.getDateFrom().plusMonths(1).minusDays(1));
-            report.add(new YearlyReportItemDTO(month, expenseRepository.sum(filter)));
+            report.add(new YearlyReportItemDTO(month, expenseRepository.sumAmount(filter)));
         }
         return report;
     }
