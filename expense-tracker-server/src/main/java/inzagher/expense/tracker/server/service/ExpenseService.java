@@ -3,6 +3,7 @@ package inzagher.expense.tracker.server.service;
 import inzagher.expense.tracker.server.command.CreateExpenseCommand;
 import inzagher.expense.tracker.server.command.EditExpenseCommand;
 import inzagher.expense.tracker.server.dto.ExpenseDTO;
+import inzagher.expense.tracker.server.exception.NotFoundException;
 import inzagher.expense.tracker.server.mapper.ExpenseMapper;
 import inzagher.expense.tracker.server.model.Expense;
 import inzagher.expense.tracker.server.query.ExpenseQueryFilter;
@@ -35,7 +36,7 @@ public class ExpenseService {
         log.info("Find expense with id {}", id);
         return expenseRepository.findById(id)
                 .map(expenseMapper::toDTO)
-                .orElseThrow();
+                .orElseThrow(NotFoundException::new);
     }
 
     @Transactional
@@ -50,7 +51,7 @@ public class ExpenseService {
         log.info("Edit expense. Command: {}", command);
         var entity = expenseRepository
                 .findById(command.getId())
-                .orElseThrow();
+                .orElseThrow(NotFoundException::new);
         entity.edit(command);
         expenseRepository.save(entity);
     }

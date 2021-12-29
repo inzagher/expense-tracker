@@ -4,6 +4,7 @@ import inzagher.expense.tracker.server.command.CreateCategoryCommand;
 import inzagher.expense.tracker.server.command.EditCategoryCommand;
 import inzagher.expense.tracker.server.dto.CategoryDTO;
 import inzagher.expense.tracker.server.exception.ExpenseTrackerException;
+import inzagher.expense.tracker.server.exception.NotFoundException;
 import inzagher.expense.tracker.server.mapper.CategoryMapper;
 import inzagher.expense.tracker.server.model.*;
 import inzagher.expense.tracker.server.query.ExpenseQueryFilter;
@@ -38,7 +39,7 @@ public class CategoryService {
         log.info("Find category with id {}", id);
         return categoryRepository.findById(id)
                 .map(categoryMapper::toDTO)
-                .orElseThrow();
+                .orElseThrow(NotFoundException::new);
     }
 
     @Transactional
@@ -53,7 +54,7 @@ public class CategoryService {
         log.info("Edit category. Command: {}", command);
         var entity = categoryRepository
                 .findById(command.getId())
-                .orElseThrow();
+                .orElseThrow(NotFoundException::new);
         entity.edit(command);
         categoryRepository.save(entity);
     }

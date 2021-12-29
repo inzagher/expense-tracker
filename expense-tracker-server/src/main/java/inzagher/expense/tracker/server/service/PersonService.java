@@ -4,6 +4,7 @@ import inzagher.expense.tracker.server.command.CreatePersonCommand;
 import inzagher.expense.tracker.server.command.EditPersonCommand;
 import inzagher.expense.tracker.server.dto.PersonDTO;
 import inzagher.expense.tracker.server.exception.ExpenseTrackerException;
+import inzagher.expense.tracker.server.exception.NotFoundException;
 import inzagher.expense.tracker.server.mapper.PersonMapper;
 import inzagher.expense.tracker.server.model.Person;
 import inzagher.expense.tracker.server.query.ExpenseQueryFilter;
@@ -38,7 +39,7 @@ public class PersonService {
         log.info("Find person with id {}", id);
         return personRepository.findById(id)
                 .map(personMapper::toDTO)
-                .orElseThrow();
+                .orElseThrow(NotFoundException::new);
     }
 
     @Transactional
@@ -53,7 +54,7 @@ public class PersonService {
         log.info("Edit person. Command: {}", command);
         var entity = personRepository
                 .findById(command.getId())
-                .orElseThrow();
+                .orElseThrow(NotFoundException::new);
         entity.edit(command);
         personRepository.save(entity);
     }
