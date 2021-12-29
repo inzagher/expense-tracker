@@ -44,12 +44,12 @@ public class ExpenseSearchRepositoryImpl implements ExpenseSearchRepository {
     
     private List<Predicate> createPredicates(CriteriaBuilder cb, Root<Expense> expense, ExpenseQueryFilter filter) {
         var predicates = new ArrayList<Predicate>();
-        if (filter.getCategoryIdentifiers() != null && filter.getCategoryIdentifiers().size() > 0) {
+        if (filter.getCategoryIdentifiers() != null && !filter.getCategoryIdentifiers().isEmpty()) {
             var in = cb.in(expense.get("category").get("id"));
             filter.getCategoryIdentifiers().forEach(in::value);
             predicates.add(in);
         }
-        if (filter.getPersonIdentifiers() != null && filter.getPersonIdentifiers().size() > 0) {
+        if (filter.getPersonIdentifiers() != null && !filter.getPersonIdentifiers().isEmpty()) {
             var in = cb.in(expense.get("person").get("id"));
             filter.getPersonIdentifiers().forEach(in::value);
             predicates.add(in);

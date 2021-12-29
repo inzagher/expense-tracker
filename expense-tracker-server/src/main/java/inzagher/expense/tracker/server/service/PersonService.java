@@ -3,6 +3,7 @@ package inzagher.expense.tracker.server.service;
 import inzagher.expense.tracker.server.command.CreatePersonCommand;
 import inzagher.expense.tracker.server.command.EditPersonCommand;
 import inzagher.expense.tracker.server.dto.PersonDTO;
+import inzagher.expense.tracker.server.exception.ExpenseTrackerException;
 import inzagher.expense.tracker.server.mapper.PersonMapper;
 import inzagher.expense.tracker.server.model.Person;
 import inzagher.expense.tracker.server.query.ExpenseQueryFilter;
@@ -62,15 +63,15 @@ public class PersonService {
         log.info("Delete person with id {}", id);
         if (isAnyExpensePresent(id)) {
             var message = String.format("Person with id %d has expenses", id);
-            throw new RuntimeException(message);
+            throw new ExpenseTrackerException(message);
         }
         personRepository.deleteById(id);
     }
 
-    private Boolean isAnyExpensePresent(Integer personId) {
+    private boolean isAnyExpensePresent(Integer personId) {
         log.info("Find expenses with person id {}", personId);
         var filter = new ExpenseQueryFilter();
         filter.getPersonIdentifiers().add(personId);
-        return expenseRepository.find(filter).size() > 0;
+        return !expenseRepository.find(filter).isEmpty();
     }
 }

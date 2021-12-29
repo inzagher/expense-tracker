@@ -22,7 +22,7 @@ public class SchedulingConfiguration {
         var nextBackupCreationTime = backupService.findLastMetadataRecord()
                 .map(BackupMetadataDTO::getCreated)
                 .orElse(LocalDateTime.MIN)
-                .plusHours(24 * 7);
+                .plusHours(24L * 7L);
         if (nextBackupCreationTime.isBefore(LocalDateTime.now())) {
             backupService.createDatabaseBackup();
         }

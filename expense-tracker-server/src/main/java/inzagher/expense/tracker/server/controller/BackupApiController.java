@@ -1,6 +1,7 @@
 package inzagher.expense.tracker.server.controller;
 
 import inzagher.expense.tracker.server.dto.BackupMetadataDTO;
+import inzagher.expense.tracker.server.exception.ExpenseTrackerException;
 import inzagher.expense.tracker.server.service.BackupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +31,6 @@ public class BackupApiController {
     @PostMapping(path = "/api/backups/restore")
     public void restoreDatabase(@RequestParam MultipartFile file) {
         try { service.restoreDatabaseFromBackup(file.getBytes()); }
-        catch (IOException e) { throw new RuntimeException(e); }
+        catch (IOException e) { throw new ExpenseTrackerException("File reading failed", e); }
     }
 }

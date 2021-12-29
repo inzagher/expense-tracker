@@ -1,10 +1,10 @@
 package inzagher.expense.tracker.server.service;
 
+import inzagher.expense.tracker.server.exception.SerializationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import java.io.ByteArrayInputStream;
@@ -21,14 +21,14 @@ public class SerializationService {
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
             try (ZipOutputStream zos = new ZipOutputStream(bos)) {
                 zos.putNextEntry(new ZipEntry(zipEntryName));
-                JAXBContext jaxbContext = createJaxbContext(object.getClass());
+                JAXBContext jaxbContext = JAXBContext.newInstance(object.getClass());
                 Marshaller marshaller = jaxbContext.createMarshaller();
                 marshaller.marshal(object, zos);
                 zos.closeEntry();
             }
             return bos.toByteArray();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new SerializationException("Serialization failed",e);
         }
     }
 
@@ -40,20 +40,15 @@ public class SerializationService {
                 ZipEntry entry;
                 while ((entry = zis.getNextEntry()) != null) {
                     if (entry.getName().equals(zipEntryName)) {
-                        JAXBContext jaxbContext = createJaxbContext(target);
+                        JAXBContext jaxbContext = JAXBContext.newInstance(target);
                         Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
                         return (T)unmarshaller.unmarshal(zis);
                     }
                 }
-                throw new RuntimeException("Zip entry not found.");
+                throw new SerializationException("Zip entry not found.");
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new SerializationException("Deserialization failed", e);
         }
-    }
-
-    private JAXBContext createJaxbContext(Class<?> c) {
-        try { return JAXBContext.newInstance(c); }
-        catch(JAXBException e) { throw new RuntimeException(e); }
     }
 }

@@ -1,6 +1,8 @@
 package inzagher.expense.tracker.server.service;
 
 import inzagher.expense.tracker.server.dto.*;
+import inzagher.expense.tracker.server.exception.ExpenseTrackerException;
+import inzagher.expense.tracker.server.exception.ServiceBusyException;
 import inzagher.expense.tracker.server.mapper.*;
 import inzagher.expense.tracker.server.model.*;
 import inzagher.expense.tracker.server.repository.BackupMetadataRepository;
@@ -76,7 +78,7 @@ public class BackupService {
                 serviceState.set(STATE_IDLE);
             }
         } else {
-            throw new RuntimeException("Backup service is busy");
+            throw new ServiceBusyException("Backup service is busy");
         }
     }
 
@@ -93,7 +95,7 @@ public class BackupService {
                 serviceState.set(STATE_IDLE);
             }
         } else {
-            throw new RuntimeException("Backup service is busy");
+            throw new ServiceBusyException("Backup service is busy");
         }
     }
     
@@ -159,7 +161,7 @@ public class BackupService {
             Files.createDirectories(Paths.get(backupDirectory));
             Files.write(backupFilePath, data);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ExpenseTrackerException("Failed to save backup to file", e);
         }
     }
 

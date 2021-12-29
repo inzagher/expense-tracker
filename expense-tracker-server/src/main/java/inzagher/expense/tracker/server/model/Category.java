@@ -8,7 +8,6 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -33,11 +32,9 @@ public class Category implements Serializable {
     private String name;
 
     @Embedded
-    @AttributeOverrides({
-        @AttributeOverride(name = "red", column = @Column( name = "color_red" )),
-        @AttributeOverride(name = "green", column = @Column( name = "color_green" )),
-        @AttributeOverride(name = "blue", column = @Column( name = "color_blue" ))
-    })
+    @AttributeOverride(name = "red", column = @Column(name = "color_red"))
+    @AttributeOverride(name = "green", column = @Column(name = "color_green"))
+    @AttributeOverride(name = "blue", column = @Column(name = "color_blue"))
     private Color color;
 
     @Column(name="description")

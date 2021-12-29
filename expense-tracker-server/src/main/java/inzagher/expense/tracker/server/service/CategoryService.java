@@ -3,6 +3,7 @@ package inzagher.expense.tracker.server.service;
 import inzagher.expense.tracker.server.command.CreateCategoryCommand;
 import inzagher.expense.tracker.server.command.EditCategoryCommand;
 import inzagher.expense.tracker.server.dto.CategoryDTO;
+import inzagher.expense.tracker.server.exception.ExpenseTrackerException;
 import inzagher.expense.tracker.server.mapper.CategoryMapper;
 import inzagher.expense.tracker.server.model.*;
 import inzagher.expense.tracker.server.query.ExpenseQueryFilter;
@@ -62,15 +63,15 @@ public class CategoryService {
         log.info("Delete category with id {}", id);
         if (isAnyExpensePresent(id)) {
             var message = String.format("Category with id %d has expenses", id);
-            throw new RuntimeException(message);
+            throw new ExpenseTrackerException(message);
         }
         categoryRepository.deleteById(id);
     }
 
-    private Boolean isAnyExpensePresent(Integer categoryId) {
+    private boolean isAnyExpensePresent(Integer categoryId) {
         log.info("Find expenses with category id {}", categoryId);
         var filter = new ExpenseQueryFilter();
         filter.getCategoryIdentifiers().add(categoryId);
-        return expenseRepository.find(filter).size() > 0;
+        return !expenseRepository.find(filter).isEmpty();
     }
 }
