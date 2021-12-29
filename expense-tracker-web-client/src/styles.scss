@@ -1,14 +1,12 @@
 @import '~@angular/material/theming';
 @include mat-core();
 
-$color-primary: mat-palette($mat-indigo, 800);
-$color-accent: mat-palette($mat-pink, A200, A100, A400);
-$color-warn: mat-palette($mat-red);
+$color-primary: mat-palette($mat-gray, 900);
+$color-accent: mat-palette($mat-yellow, A200, A100, A400);
 $app-theme: mat-light-theme((
     color: (
         primary: $color-primary,
-        accent: $color-accent,
-        warn: $color-warn,
+        accent: $color-accent
     )
 ));
 @include angular-material-theme($app-theme);
@@ -16,3 +14,11 @@ $app-theme: mat-light-theme((
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+body.mat-typography p {
+    margin-bottom: 0;
+}
+
+.accent-color {
+    color: mat-color($color-accent) !important;
+}

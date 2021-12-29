@@ -1,0 +1,16 @@
+.category-report {
+    .category-report-item {
+        display: flex;
+        flex-direction: row;
+        margin-bottom: 12px;
+        .category-color {
+            height: 15px;
+            width: 15px;
+            border: solid black 1px;
+            margin-right: 10px;
+        }
+        .amount {
+            margin-left: auto;
+        }
+    }
+}
