@@ -2,16 +2,14 @@ backup:
   directory: target/backups
 spring:
   datasource:
-    driver-class-name: "org.sqlite.JDBC"
-    url: "jdbc:sqlite:target/expenses.db"
-    hikari.data-source-properties.date_class: "text"
+    url: "jdbc:postgresql://localhost:5432/expenses_debug"
+    username: sa
+    password: 12345
   flyway:
     table: "migrations"
-    locations: "classpath:db/migration/{vendor}"
+    locations: "classpath:db/migration"
   jpa:
-    properties:
-      hibernate:
-        dialect: "org.hibernate.dialect.SQLiteDialect"
-        show_sql: true
-        hbm2ddl:
-          auto: none
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: none

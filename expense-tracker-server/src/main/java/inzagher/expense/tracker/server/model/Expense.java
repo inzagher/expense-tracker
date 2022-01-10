@@ -5,6 +5,8 @@ import inzagher.expense.tracker.server.command.EditExpenseCommand;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -30,11 +32,13 @@ public class Expense implements Serializable {
 
     @ManyToOne
     @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @NotFound(action = NotFoundAction.IGNORE)
     @JoinColumn(name = "category_id")
     private Category category;
 
     @ManyToOne
     @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @NotFound(action = NotFoundAction.IGNORE)
     @JoinColumn(name = "person_id")
     private Person person;
 
