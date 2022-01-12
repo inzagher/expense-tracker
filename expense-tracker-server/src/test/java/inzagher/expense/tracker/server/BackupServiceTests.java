@@ -92,9 +92,13 @@ public class BackupServiceTests {
             throw new RuntimeException("Resource url is null");
         }
         try (InputStream is = url.openStream()) {
-            var result = new byte[is.available()];
-            is.read(result);
-            return result;
+            var size = is.available();
+            var result = new byte[size];
+            if (is.read(result) == size) {
+                return result;
+            } else {
+                throw new RuntimeException("Invalid buffer size");
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
