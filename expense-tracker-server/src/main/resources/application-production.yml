@@ -2,7 +2,7 @@ backup:
   directory: backups
 spring:
   datasource:
-    url: "jdbc:postgresql://localhost:5432/expenses"
+    url: "jdbc:postgresql://postgresql-server:5432/expenses"
     username: sa
     password: 12345
   flyway:
