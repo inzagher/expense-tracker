@@ -1,6 +1,8 @@
 package inzagher.expense.tracker.server.service;
 
 import inzagher.expense.tracker.server.dto.*;
+import inzagher.expense.tracker.server.event.BackupCreatedEvent;
+import inzagher.expense.tracker.server.event.BackupRestoredEvent;
 import inzagher.expense.tracker.server.exception.ExpenseTrackerException;
 import inzagher.expense.tracker.server.exception.ServiceBusyException;
 import inzagher.expense.tracker.server.mapper.*;
@@ -12,6 +14,7 @@ import inzagher.expense.tracker.server.repository.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -38,6 +41,7 @@ public class BackupService {
     private static final String ZIP_ENTRY_NAME = "expenses.xml";
 
     private final AtomicInteger serviceState = new AtomicInteger();
+    private final ApplicationEventPublisher eventPublisher;
     private final SerializationService serializationService;
     private final ExpenseRepository expenseRepository;
     private final CategoryRepository categoryRepository;
@@ -73,6 +77,7 @@ public class BackupService {
                 var metadata = createBackupMetadata(data);
                 metadata = backupMetadataRepository.save(metadata);
                 writeBackupToFile(serializationService.serializeAndZip(data, ZIP_ENTRY_NAME));
+                eventPublisher.publishEvent(new BackupCreatedEvent());
                 return backupMetadataMapper.toDTO(metadata);
             } finally {
                 serviceState.set(STATE_IDLE);
@@ -91,6 +96,7 @@ public class BackupService {
                         BackupDataDTO.class, data, ZIP_ENTRY_NAME);
                 truncateAllTables();
                 storeBackupDataInDatabase(dto);
+                eventPublisher.publishEvent(new BackupRestoredEvent());
             } finally {
                 serviceState.set(STATE_IDLE);
             }

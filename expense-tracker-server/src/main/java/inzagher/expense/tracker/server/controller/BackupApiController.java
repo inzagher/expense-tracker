@@ -22,8 +22,8 @@ public class BackupApiController {
     public List<BackupMetadataDTO> findAll() {
         return service.findAllMetadataRecords();
     }
-    
-    @GetMapping(path = "/api/backups/create")
+
+    @PostMapping(path = "/api/backups/create")
     public BackupMetadataDTO backupDatabase() {
         return service.createDatabaseBackup();
     }
