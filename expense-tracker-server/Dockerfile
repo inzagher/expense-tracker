@@ -1,10 +1,20 @@
-FROM maven:3.8.4-openjdk-17 as builder
-COPY . /tmp/
-WORKDIR /tmp
-RUN ["mvn", "clean", "install"]
+FROM maven:3.8.4-openjdk-17 as build
 
-FROM openjdk:17-alpine AS server
-WORKDIR /opt/expense-tracker
-COPY --from=builder /tmp/target/expense-tracker-server-1.0.jar backend.jar
-RUN ["mkdir", "/backups"]
+# Setup environment
+ENV HOME=/home/usr/app
+RUN mkdir -p $HOME
+WORKDIR $HOME
+
+# Download dependencies
+COPY pom.xml $HOME
+RUN mvn dependency:resolve
+
+# Build application
+COPY . $HOME
+RUN mvn clean package -Dmaven.test.skip
+
+# Start application
+FROM openjdk:17-alpine AS deploy
+WORKDIR /opt/expense-tracker-server
+COPY --from=build /home/usr/app/target/expense-tracker-server-1.0.jar backend.jar
 ENTRYPOINT ["java", "-jar", "backend.jar"]

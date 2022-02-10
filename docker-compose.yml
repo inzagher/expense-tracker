@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  frontend:
+    build: ./expense-tracker-web-client
+    image: "inzagher/expense-tracker-web-client"
+    container_name: "expense-tracker-web-client"
+    depends_on:
+      - "backend"
+    ports:
+      - "80:80"
+  backend:
+    build: ./expense-tracker-server
+    image: "inzagher/expense-tracker-server"
+    container_name: "expense-tracker-server"
+    depends_on:
+      - "database"
+    ports:
+      - "8080:8080"
+    environment:
+      - "SPRING_PROFILES_ACTIVE=production"
+  database:
+    container_name: "postgresql-server"
+    image: "postgres:14-alpine"
+    ports:
+      - "5432:5432"
+    environment:
+      - "POSTGRES_USER=sa"
+      - "POSTGRES_PASSWORD=12345"
+      - "POSTGRES_DB=expenses"
