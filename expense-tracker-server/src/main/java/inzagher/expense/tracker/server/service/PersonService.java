@@ -2,12 +2,13 @@ package inzagher.expense.tracker.server.service;
 
 import inzagher.expense.tracker.server.model.command.CreatePersonCommand;
 import inzagher.expense.tracker.server.model.command.EditPersonCommand;
+import inzagher.expense.tracker.server.model.criteria.ExpenseSearchCriteria;
 import inzagher.expense.tracker.server.model.dto.PersonDTO;
 import inzagher.expense.tracker.server.model.entity.PersonEntity;
 import inzagher.expense.tracker.server.model.exception.ExpenseTrackerException;
 import inzagher.expense.tracker.server.model.exception.NotFoundException;
 import inzagher.expense.tracker.server.model.mapper.PersonMapper;
-import inzagher.expense.tracker.server.model.query.ExpenseQueryFilter;
+import inzagher.expense.tracker.server.model.specification.ExpenseSpecification;
 import inzagher.expense.tracker.server.repository.ExpenseRepository;
 import inzagher.expense.tracker.server.repository.PersonRepository;
 import lombok.NonNull;
@@ -62,17 +63,18 @@ public class PersonService {
     @Transactional
     public void deletePersonById(@NonNull Integer id) {
         log.info("Delete person with id {}", id);
-        if (isAnyExpensePresent(id)) {
+        if (isAnyCorrelatedExpensePresent(id)) {
             var message = String.format("Person with id %d has expenses", id);
             throw new ExpenseTrackerException(message);
         }
         personRepository.deleteById(id);
     }
 
-    private boolean isAnyExpensePresent(Integer personId) {
+    private boolean isAnyCorrelatedExpensePresent(Integer personId) {
         log.info("Find expenses with person id {}", personId);
-        var filter = new ExpenseQueryFilter();
-        filter.getPersonIdentifiers().add(personId);
-        return !expenseRepository.find(filter).isEmpty();
+        var criteria = new ExpenseSearchCriteria();
+        var specification = new ExpenseSpecification(criteria);
+        criteria.getPersonIdentifiers().add(personId);
+        return !expenseRepository.findAll(specification).isEmpty();
     }
 }

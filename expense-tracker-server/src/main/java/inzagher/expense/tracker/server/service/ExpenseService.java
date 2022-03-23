@@ -2,11 +2,12 @@ package inzagher.expense.tracker.server.service;
 
 import inzagher.expense.tracker.server.model.command.CreateExpenseCommand;
 import inzagher.expense.tracker.server.model.command.EditExpenseCommand;
+import inzagher.expense.tracker.server.model.criteria.ExpenseSearchCriteria;
 import inzagher.expense.tracker.server.model.dto.ExpenseDTO;
 import inzagher.expense.tracker.server.model.entity.ExpenseEntity;
 import inzagher.expense.tracker.server.model.exception.NotFoundException;
 import inzagher.expense.tracker.server.model.mapper.ExpenseMapper;
-import inzagher.expense.tracker.server.model.query.ExpenseQueryFilter;
+import inzagher.expense.tracker.server.model.specification.ExpenseSpecification;
 import inzagher.expense.tracker.server.repository.ExpenseRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +25,10 @@ public class ExpenseService {
     private final ExpenseMapper expenseMapper;
 
     @Transactional
-    public List<ExpenseDTO> findExpenses(@NonNull ExpenseQueryFilter filter) {
+    public List<ExpenseDTO> findExpenses(@NonNull ExpenseSearchCriteria criteria) {
         log.info("Query expenses with filter");
-        return expenseRepository.find(filter).stream()
+        var specification = new ExpenseSpecification(criteria);
+        return expenseRepository.findAll(specification).stream()
                 .map(expenseMapper::toDTO)
                 .toList();
     }

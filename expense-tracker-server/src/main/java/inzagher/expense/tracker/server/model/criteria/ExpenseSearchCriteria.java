@@ -1,16 +1,17 @@
-package inzagher.expense.tracker.server.model.query;
+package inzagher.expense.tracker.server.model.criteria;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
-public class ExpenseQueryFilter {
+@Data
+@NoArgsConstructor
+public class ExpenseSearchCriteria implements Serializable {
     private final List<Integer> categoryIdentifiers = new ArrayList<>();
     private final List<Integer> personIdentifiers = new ArrayList<>();
     private BigDecimal amountExact;

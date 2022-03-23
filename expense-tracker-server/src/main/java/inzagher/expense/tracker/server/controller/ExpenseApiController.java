@@ -1,8 +1,8 @@
 package inzagher.expense.tracker.server.controller;
 
+import inzagher.expense.tracker.server.model.criteria.ExpenseSearchCriteria;
 import inzagher.expense.tracker.server.model.dto.ExpenseDTO;
 import inzagher.expense.tracker.server.model.mapper.ExpenseMapper;
-import inzagher.expense.tracker.server.model.query.ExpenseQueryFilter;
 import inzagher.expense.tracker.server.service.ExpenseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -32,21 +32,21 @@ public class ExpenseApiController {
             @RequestParam(value = "amount_from", required = false) BigDecimal amountFrom,
             @RequestParam(value = "amount_to", required = false) BigDecimal amountTo,
             @RequestParam(value = "description", required = false) String description) {
-        var filter = new ExpenseQueryFilter();
+        var criteria = new ExpenseSearchCriteria();
         if (persons != null) {
-            persons.forEach(filter.getPersonIdentifiers()::add);
+            persons.forEach(criteria.getPersonIdentifiers()::add);
         }
         if (categories != null) {
-            categories.forEach(filter.getCategoryIdentifiers()::add);
+            categories.forEach(criteria.getCategoryIdentifiers()::add);
         }
-        filter.setDateExact(dateExact);
-        filter.setDateFrom(dateFrom);
-        filter.setDateTo(dateTo);
-        filter.setAmountExact(amountExact);
-        filter.setAmountFrom(amountFrom);
-        filter.setAmountTo(amountTo);
-        filter.setDescriptionLike(description);
-        return service.findExpenses(filter);
+        criteria.setDateExact(dateExact);
+        criteria.setDateFrom(dateFrom);
+        criteria.setDateTo(dateTo);
+        criteria.setAmountExact(amountExact);
+        criteria.setAmountFrom(amountFrom);
+        criteria.setAmountTo(amountTo);
+        criteria.setDescriptionLike(description);
+        return service.findExpenses(criteria);
     }
 
     @GetMapping(path = "/api/expenses/{id}")

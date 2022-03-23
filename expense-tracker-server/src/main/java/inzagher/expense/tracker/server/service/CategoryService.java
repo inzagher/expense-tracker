@@ -2,12 +2,13 @@ package inzagher.expense.tracker.server.service;
 
 import inzagher.expense.tracker.server.model.command.CreateCategoryCommand;
 import inzagher.expense.tracker.server.model.command.EditCategoryCommand;
+import inzagher.expense.tracker.server.model.criteria.ExpenseSearchCriteria;
 import inzagher.expense.tracker.server.model.dto.CategoryDTO;
+import inzagher.expense.tracker.server.model.entity.CategoryEntity;
 import inzagher.expense.tracker.server.model.exception.ExpenseTrackerException;
 import inzagher.expense.tracker.server.model.exception.NotFoundException;
 import inzagher.expense.tracker.server.model.mapper.CategoryMapper;
-import inzagher.expense.tracker.server.model.entity.*;
-import inzagher.expense.tracker.server.model.query.ExpenseQueryFilter;
+import inzagher.expense.tracker.server.model.specification.ExpenseSpecification;
 import inzagher.expense.tracker.server.repository.CategoryRepository;
 import inzagher.expense.tracker.server.repository.ExpenseRepository;
 import lombok.NonNull;
@@ -62,17 +63,18 @@ public class CategoryService {
     @Transactional
     public void deleteCategoryById(@NonNull Integer id) {
         log.info("Delete category with id {}", id);
-        if (isAnyExpensePresent(id)) {
+        if (isAnyCorrelatedExpensePresent(id)) {
             var message = String.format("Category with id %d has expenses", id);
             throw new ExpenseTrackerException(message);
         }
         categoryRepository.deleteById(id);
     }
 
-    private boolean isAnyExpensePresent(Integer categoryId) {
+    private boolean isAnyCorrelatedExpensePresent(Integer categoryId) {
         log.info("Find expenses with category id {}", categoryId);
-        var filter = new ExpenseQueryFilter();
-        filter.getCategoryIdentifiers().add(categoryId);
-        return !expenseRepository.find(filter).isEmpty();
+        var criteria = new ExpenseSearchCriteria();
+        var specification = new ExpenseSpecification(criteria);
+        criteria.getCategoryIdentifiers().add(categoryId);
+        return !expenseRepository.findAll(specification).isEmpty();
     }
 }
