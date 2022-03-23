@@ -1,10 +1,10 @@
 package inzagher.expense.tracker.server;
 
-import inzagher.expense.tracker.server.dto.ExpenseDTO;
-import inzagher.expense.tracker.server.mapper.ExpenseMapper;
-import inzagher.expense.tracker.server.model.Category;
-import inzagher.expense.tracker.server.model.Expense;
-import inzagher.expense.tracker.server.model.Person;
+import inzagher.expense.tracker.server.model.dto.ExpenseDTO;
+import inzagher.expense.tracker.server.model.entity.ExpenseEntity;
+import inzagher.expense.tracker.server.model.entity.PersonEntity;
+import inzagher.expense.tracker.server.model.mapper.ExpenseMapper;
+import inzagher.expense.tracker.server.model.entity.CategoryEntity;
 import inzagher.expense.tracker.server.service.ExpenseService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,10 +28,10 @@ public class ExpenseServiceTests {
     @Autowired
     private ExpenseMapper mapper;
     
-    private Person tom;
-    private Category food;
-    private Category phone;
-    private Expense purchase;
+    private PersonEntity tom;
+    private CategoryEntity food;
+    private CategoryEntity phone;
+    private ExpenseEntity purchase;
     
     @BeforeEach
     public void beforeEachTest() {

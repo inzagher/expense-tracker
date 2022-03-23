@@ -1,12 +1,12 @@
 package inzagher.expense.tracker.server.service;
 
-import inzagher.expense.tracker.server.dto.*;
-import inzagher.expense.tracker.server.event.BackupCreatedEvent;
-import inzagher.expense.tracker.server.event.BackupRestoredEvent;
-import inzagher.expense.tracker.server.exception.ExpenseTrackerException;
-import inzagher.expense.tracker.server.exception.ServiceBusyException;
-import inzagher.expense.tracker.server.mapper.*;
-import inzagher.expense.tracker.server.model.*;
+import inzagher.expense.tracker.server.model.dto.*;
+import inzagher.expense.tracker.server.model.event.BackupCreatedEvent;
+import inzagher.expense.tracker.server.model.event.BackupRestoredEvent;
+import inzagher.expense.tracker.server.model.exception.ExpenseTrackerException;
+import inzagher.expense.tracker.server.model.exception.ServiceBusyException;
+import inzagher.expense.tracker.server.model.mapper.*;
+import inzagher.expense.tracker.server.model.entity.*;
 import inzagher.expense.tracker.server.repository.BackupMetadataRepository;
 import inzagher.expense.tracker.server.repository.CategoryRepository;
 import inzagher.expense.tracker.server.repository.ExpenseRepository;
@@ -105,8 +105,8 @@ public class BackupService {
         }
     }
     
-    private BackupMetadata createBackupMetadata(BackupDataDTO dto) {
-        var metadata = new BackupMetadata();
+    private BackupMetadataEntity createBackupMetadata(BackupDataDTO dto) {
+        var metadata = new BackupMetadataEntity();
         metadata.setCreated(LocalDateTime.now());
         metadata.setExpenses(dto.getExpenses().size());
         metadata.setCategories(dto.getCategories().size());

@@ -1,9 +1,9 @@
 package inzagher.expense.tracker.server.configuration;
 
-import inzagher.expense.tracker.server.mapper.BackupMetadataMapper;
-import inzagher.expense.tracker.server.mapper.CategoryMapper;
-import inzagher.expense.tracker.server.mapper.ExpenseMapper;
-import inzagher.expense.tracker.server.mapper.PersonMapper;
+import inzagher.expense.tracker.server.model.mapper.BackupMetadataMapper;
+import inzagher.expense.tracker.server.model.mapper.CategoryMapper;
+import inzagher.expense.tracker.server.model.mapper.ExpenseMapper;
+import inzagher.expense.tracker.server.model.mapper.PersonMapper;
 import org.mapstruct.factory.Mappers;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

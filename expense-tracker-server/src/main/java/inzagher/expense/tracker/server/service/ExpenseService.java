@@ -1,12 +1,12 @@
 package inzagher.expense.tracker.server.service;
 
-import inzagher.expense.tracker.server.command.CreateExpenseCommand;
-import inzagher.expense.tracker.server.command.EditExpenseCommand;
-import inzagher.expense.tracker.server.dto.ExpenseDTO;
-import inzagher.expense.tracker.server.exception.NotFoundException;
-import inzagher.expense.tracker.server.mapper.ExpenseMapper;
-import inzagher.expense.tracker.server.model.Expense;
-import inzagher.expense.tracker.server.query.ExpenseQueryFilter;
+import inzagher.expense.tracker.server.model.command.CreateExpenseCommand;
+import inzagher.expense.tracker.server.model.command.EditExpenseCommand;
+import inzagher.expense.tracker.server.model.dto.ExpenseDTO;
+import inzagher.expense.tracker.server.model.entity.ExpenseEntity;
+import inzagher.expense.tracker.server.model.exception.NotFoundException;
+import inzagher.expense.tracker.server.model.mapper.ExpenseMapper;
+import inzagher.expense.tracker.server.model.query.ExpenseQueryFilter;
 import inzagher.expense.tracker.server.repository.ExpenseRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +42,7 @@ public class ExpenseService {
     @Transactional
     public Integer createExpense(@NonNull CreateExpenseCommand command) {
         log.info("Create expense. Command: {}", command);
-        var entity = new Expense(command);
+        var entity = new ExpenseEntity(command);
         return expenseRepository.save(entity).getId();
     }
 

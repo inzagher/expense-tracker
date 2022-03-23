@@ -1,7 +1,7 @@
 package inzagher.expense.tracker.server.controller;
 
-import inzagher.expense.tracker.server.dto.BackupMetadataDTO;
-import inzagher.expense.tracker.server.exception.ExpenseTrackerException;
+import inzagher.expense.tracker.server.model.dto.BackupMetadataDTO;
+import inzagher.expense.tracker.server.model.exception.ExpenseTrackerException;
 import inzagher.expense.tracker.server.service.BackupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

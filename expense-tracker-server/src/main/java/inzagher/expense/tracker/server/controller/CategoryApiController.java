@@ -1,7 +1,7 @@
 package inzagher.expense.tracker.server.controller;
 
-import inzagher.expense.tracker.server.dto.CategoryDTO;
-import inzagher.expense.tracker.server.mapper.CategoryMapper;
+import inzagher.expense.tracker.server.model.dto.CategoryDTO;
+import inzagher.expense.tracker.server.model.mapper.CategoryMapper;
 import inzagher.expense.tracker.server.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

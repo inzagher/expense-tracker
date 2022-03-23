@@ -1,13 +1,13 @@
 package inzagher.expense.tracker.server.service;
 
-import inzagher.expense.tracker.server.command.CreatePersonCommand;
-import inzagher.expense.tracker.server.command.EditPersonCommand;
-import inzagher.expense.tracker.server.dto.PersonDTO;
-import inzagher.expense.tracker.server.exception.ExpenseTrackerException;
-import inzagher.expense.tracker.server.exception.NotFoundException;
-import inzagher.expense.tracker.server.mapper.PersonMapper;
-import inzagher.expense.tracker.server.model.Person;
-import inzagher.expense.tracker.server.query.ExpenseQueryFilter;
+import inzagher.expense.tracker.server.model.command.CreatePersonCommand;
+import inzagher.expense.tracker.server.model.command.EditPersonCommand;
+import inzagher.expense.tracker.server.model.dto.PersonDTO;
+import inzagher.expense.tracker.server.model.entity.PersonEntity;
+import inzagher.expense.tracker.server.model.exception.ExpenseTrackerException;
+import inzagher.expense.tracker.server.model.exception.NotFoundException;
+import inzagher.expense.tracker.server.model.mapper.PersonMapper;
+import inzagher.expense.tracker.server.model.query.ExpenseQueryFilter;
 import inzagher.expense.tracker.server.repository.ExpenseRepository;
 import inzagher.expense.tracker.server.repository.PersonRepository;
 import lombok.NonNull;
@@ -45,7 +45,7 @@ public class PersonService {
     @Transactional
     public Integer createPerson(@NonNull CreatePersonCommand command) {
         log.info("Create person. Command: {}", command);
-        var entity = new Person(command);
+        var entity = new PersonEntity(command);
         return personRepository.save(entity).getId();
     }
 

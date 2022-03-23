@@ -1,8 +1,8 @@
 package inzagher.expense.tracker.server.controller;
 
-import inzagher.expense.tracker.server.dto.ExpenseDTO;
-import inzagher.expense.tracker.server.mapper.ExpenseMapper;
-import inzagher.expense.tracker.server.query.ExpenseQueryFilter;
+import inzagher.expense.tracker.server.model.dto.ExpenseDTO;
+import inzagher.expense.tracker.server.model.mapper.ExpenseMapper;
+import inzagher.expense.tracker.server.model.query.ExpenseQueryFilter;
 import inzagher.expense.tracker.server.service.ExpenseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;

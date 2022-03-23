@@ -1,6 +1,6 @@
 package inzagher.expense.tracker.server;
 
-import inzagher.expense.tracker.server.dto.BackupDataDTO;
+import inzagher.expense.tracker.server.model.dto.BackupDataDTO;
 import inzagher.expense.tracker.server.service.SerializationService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
 package inzagher.expense.tracker.server.repository;
 
-import inzagher.expense.tracker.server.model.Expense;
-import inzagher.expense.tracker.server.query.ExpenseQueryFilter;
+import inzagher.expense.tracker.server.model.entity.ExpenseEntity;
+import inzagher.expense.tracker.server.model.query.ExpenseQueryFilter;
 import lombok.NonNull;
 import org.springframework.stereotype.Repository;
 
@@ -20,10 +20,10 @@ public class ExpenseSearchRepositoryImpl implements ExpenseSearchRepository {
     private EntityManager entityManager;
     
     @Override
-    public List<Expense> find(@NonNull ExpenseQueryFilter filter) {
+    public List<ExpenseEntity> find(@NonNull ExpenseQueryFilter filter) {
         var cb = entityManager.getCriteriaBuilder();
-        var criteria = cb.createQuery(Expense.class);
-        var expense = criteria.from(Expense.class);
+        var criteria = cb.createQuery(ExpenseEntity.class);
+        var expense = criteria.from(ExpenseEntity.class);
         var predicates = createPredicates(cb, expense, filter);
         criteria.where(predicates.toArray(Predicate[]::new));
         criteria.select(expense);
@@ -34,7 +34,7 @@ public class ExpenseSearchRepositoryImpl implements ExpenseSearchRepository {
     public BigDecimal sumAmount(@NonNull ExpenseQueryFilter filter) {
         var cb = entityManager.getCriteriaBuilder();
         var criteria = cb.createQuery(BigDecimal.class);
-        var expense = criteria.from(Expense.class);
+        var expense = criteria.from(ExpenseEntity.class);
         var predicates = createPredicates(cb, expense, filter);
         criteria.where(predicates.toArray(Predicate[]::new));
         criteria.select(cb.sum(expense.get("amount")));
@@ -42,7 +42,7 @@ public class ExpenseSearchRepositoryImpl implements ExpenseSearchRepository {
         return result == null ? BigDecimal.ZERO : result;
     }
     
-    private List<Predicate> createPredicates(CriteriaBuilder cb, Root<Expense> expense, ExpenseQueryFilter filter) {
+    private List<Predicate> createPredicates(CriteriaBuilder cb, Root<ExpenseEntity> expense, ExpenseQueryFilter filter) {
         var predicates = new ArrayList<Predicate>();
         if (filter.getCategoryIdentifiers() != null && !filter.getCategoryIdentifiers().isEmpty()) {
             var in = cb.in(expense.get("category").get("id"));

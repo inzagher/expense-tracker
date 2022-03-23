@@ -1,9 +1,9 @@
 package inzagher.expense.tracker.server.repository;
 
-import inzagher.expense.tracker.server.model.Category;
+import inzagher.expense.tracker.server.model.entity.CategoryEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CategoryRepository extends JpaRepository<Category, Integer> {
+public interface CategoryRepository extends JpaRepository<CategoryEntity, Integer> {
 }

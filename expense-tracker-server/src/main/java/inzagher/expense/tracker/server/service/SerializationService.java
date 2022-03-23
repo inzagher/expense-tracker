@@ -1,6 +1,6 @@
 package inzagher.expense.tracker.server.service;
 
-import inzagher.expense.tracker.server.exception.SerializationException;
+import inzagher.expense.tracker.server.model.exception.SerializationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

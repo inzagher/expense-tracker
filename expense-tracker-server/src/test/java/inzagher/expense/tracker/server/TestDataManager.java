@@ -1,10 +1,7 @@
 package inzagher.expense.tracker.server;
 
-import inzagher.expense.tracker.server.model.BackupMetadata;
-import inzagher.expense.tracker.server.model.Category;
-import inzagher.expense.tracker.server.model.Color;
-import inzagher.expense.tracker.server.model.Expense;
-import inzagher.expense.tracker.server.model.Person;
+import inzagher.expense.tracker.server.model.entity.*;
+import inzagher.expense.tracker.server.model.entity.CategoryEntity;
 import inzagher.expense.tracker.server.repository.BackupMetadataRepository;
 import inzagher.expense.tracker.server.repository.CategoryRepository;
 import inzagher.expense.tracker.server.repository.ExpenseRepository;
@@ -61,21 +58,21 @@ public class TestDataManager {
         backupMetadataRepository.deleteAllInBatch();
     }
     
-    public Optional<Expense> findExpenseById(Integer id) {
+    public Optional<ExpenseEntity> findExpenseById(Integer id) {
         return expenseRepository.findById(id);
     }
     
-    public Optional<Category> findCategoryById(Integer id) {
+    public Optional<CategoryEntity> findCategoryById(Integer id) {
         return categoryRepository.findById(id);
     }
     
-    public Optional<Person> findPersonById(Integer id) {
+    public Optional<PersonEntity> findPersonById(Integer id) {
         return personRepository.findById(id);
     }
     
-    public Expense storeExpense(int year, int month, int day, Person person,
-            Category category, Double amount, String description) {
-        Expense expense = new Expense();
+    public ExpenseEntity storeExpense(int year, int month, int day, PersonEntity person,
+                                      CategoryEntity category, Double amount, String description) {
+        ExpenseEntity expense = new ExpenseEntity();
         expense.setDate(LocalDate.of(year, month, day));
         expense.setAmount(BigDecimal.valueOf(amount));
         expense.setPerson(person);
@@ -84,26 +81,26 @@ public class TestDataManager {
         return expenseRepository.saveAndFlush(expense);
     }
     
-    public Category storeCategory(String name, String description,
-            int r, int g, int b, Boolean obsolete
+    public CategoryEntity storeCategory(String name, String description,
+                                        int r, int g, int b, Boolean obsolete
     ) {
-        Category category = new Category();
+        CategoryEntity category = new CategoryEntity();
         category.setName(name);
         category.setDescription(description);
-        category.setColor(new Color(r, g, b));
+        category.setColor(new ColorEntity(r, g, b));
         category.setObsolete(obsolete);
         return categoryRepository.saveAndFlush(category);
     }
     
-    public Person storePerson(String name) {
-        Person person = new Person();
+    public PersonEntity storePerson(String name) {
+        PersonEntity person = new PersonEntity();
         person.setName(name);
         return personRepository.saveAndFlush(person);
     }
     
-    public BackupMetadata storeBackupMetadata(LocalDateTime created, int expenses,
-            int persons, int categories) {
-        BackupMetadata bm = new BackupMetadata();
+    public BackupMetadataEntity storeBackupMetadata(LocalDateTime created, int expenses,
+                                                    int persons, int categories) {
+        BackupMetadataEntity bm = new BackupMetadataEntity();
         bm.setCreated(created);
         bm.setExpenses(expenses);
         bm.setPersons(persons);

@@ -1,7 +1,6 @@
 package inzagher.expense.tracker.server.listener;
 
-import inzagher.expense.tracker.server.event.AbstractApplicationEvent;
-import lombok.Getter;
+import inzagher.expense.tracker.server.model.event.AbstractApplicationEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;

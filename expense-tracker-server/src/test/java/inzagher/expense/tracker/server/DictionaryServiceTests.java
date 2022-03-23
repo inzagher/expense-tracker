@@ -1,7 +1,7 @@
 package inzagher.expense.tracker.server;
 
-import inzagher.expense.tracker.server.model.Category;
-import inzagher.expense.tracker.server.model.Person;
+import inzagher.expense.tracker.server.model.entity.CategoryEntity;
+import inzagher.expense.tracker.server.model.entity.PersonEntity;
 import inzagher.expense.tracker.server.service.DictionaryService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,8 +20,8 @@ public class DictionaryServiceTests {
     @Autowired
     private TestDataManager manager;
 
-    private Category phone;
-    private Person eric;
+    private CategoryEntity phone;
+    private PersonEntity eric;
 
     @BeforeEach
     public void beforeEachTest() {

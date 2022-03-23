@@ -1,13 +1,13 @@
 package inzagher.expense.tracker.server.service;
 
-import inzagher.expense.tracker.server.command.CreateCategoryCommand;
-import inzagher.expense.tracker.server.command.EditCategoryCommand;
-import inzagher.expense.tracker.server.dto.CategoryDTO;
-import inzagher.expense.tracker.server.exception.ExpenseTrackerException;
-import inzagher.expense.tracker.server.exception.NotFoundException;
-import inzagher.expense.tracker.server.mapper.CategoryMapper;
-import inzagher.expense.tracker.server.model.*;
-import inzagher.expense.tracker.server.query.ExpenseQueryFilter;
+import inzagher.expense.tracker.server.model.command.CreateCategoryCommand;
+import inzagher.expense.tracker.server.model.command.EditCategoryCommand;
+import inzagher.expense.tracker.server.model.dto.CategoryDTO;
+import inzagher.expense.tracker.server.model.exception.ExpenseTrackerException;
+import inzagher.expense.tracker.server.model.exception.NotFoundException;
+import inzagher.expense.tracker.server.model.mapper.CategoryMapper;
+import inzagher.expense.tracker.server.model.entity.*;
+import inzagher.expense.tracker.server.model.query.ExpenseQueryFilter;
 import inzagher.expense.tracker.server.repository.CategoryRepository;
 import inzagher.expense.tracker.server.repository.ExpenseRepository;
 import lombok.NonNull;
@@ -45,7 +45,7 @@ public class CategoryService {
     @Transactional
     public Integer createCategory(@NonNull CreateCategoryCommand command) {
         log.info("Create category. Command: {}", command);
-        var entity = new Category(command);
+        var entity = new CategoryEntity(command);
         return categoryRepository.save(entity).getId();
     }
 

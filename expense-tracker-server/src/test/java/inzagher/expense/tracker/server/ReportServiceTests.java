@@ -1,9 +1,9 @@
 package inzagher.expense.tracker.server;
 
-import inzagher.expense.tracker.server.dto.CategoryReportItemDTO;
-import inzagher.expense.tracker.server.dto.YearlyReportItemDTO;
-import inzagher.expense.tracker.server.model.Category;
-import inzagher.expense.tracker.server.model.Person;
+import inzagher.expense.tracker.server.model.dto.CategoryReportItemDTO;
+import inzagher.expense.tracker.server.model.dto.YearlyReportItemDTO;
+import inzagher.expense.tracker.server.model.entity.CategoryEntity;
+import inzagher.expense.tracker.server.model.entity.PersonEntity;
 import inzagher.expense.tracker.server.service.ReportService;
 import java.math.BigDecimal;
 import java.util.List;
@@ -25,12 +25,12 @@ public class ReportServiceTests {
     @Autowired
     private TestDataManager manager;
     
-    private Category phone;
-    private Category rent;
-    private Category food;
+    private CategoryEntity phone;
+    private CategoryEntity rent;
+    private CategoryEntity food;
     
-    private Person bob;
-    private Person alice;
+    private PersonEntity bob;
+    private PersonEntity alice;
     
     @BeforeEach
     public void beforeEachTest() {
@@ -130,7 +130,7 @@ public class ReportServiceTests {
     
     private void assertMonthlyCategoryReportItem(Double expectedAmount,
             List<CategoryReportItemDTO> report,
-            Category category) {
+            CategoryEntity category) {
         BigDecimal actualAmount = report.stream()
                 .filter(item -> item.getCategory().getId().equals(category.getId()))
                 .findFirst().orElseThrow(() -> new RuntimeException("CATEGORY NOT FOUND"))

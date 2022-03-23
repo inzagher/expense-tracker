@@ -1,6 +1,6 @@
 package inzagher.expense.tracker.server.configuration;
 
-import inzagher.expense.tracker.server.dto.BackupMetadataDTO;
+import inzagher.expense.tracker.server.model.dto.BackupMetadataDTO;
 import inzagher.expense.tracker.server.service.BackupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;

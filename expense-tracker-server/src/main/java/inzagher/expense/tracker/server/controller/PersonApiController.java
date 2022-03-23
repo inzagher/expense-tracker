@@ -1,7 +1,7 @@
 package inzagher.expense.tracker.server.controller;
 
-import inzagher.expense.tracker.server.dto.PersonDTO;
-import inzagher.expense.tracker.server.mapper.PersonMapper;
+import inzagher.expense.tracker.server.model.dto.PersonDTO;
+import inzagher.expense.tracker.server.model.mapper.PersonMapper;
 import inzagher.expense.tracker.server.service.PersonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

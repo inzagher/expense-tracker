@@ -7,7 +7,7 @@ import java.util.List;
 
 @Repository
 public interface ExpenseDescriptionRepository {
-    @Query("SELECT e.description FROM Expense e " +
+    @Query("SELECT e.description FROM ExpenseEntity e " +
            "WHERE UPPER(e.description) LIKE UPPER(:pattern || '%')" +
            "GROUP BY e.description HAVING COUNT(*) >= :minCount")
     List<String> findDescriptionsByPattern(String pattern, long minCount);
