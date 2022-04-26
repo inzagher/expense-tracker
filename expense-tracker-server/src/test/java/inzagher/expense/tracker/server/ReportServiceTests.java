@@ -17,7 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("test")
 @SpringBootTest(classes = ExpenseTrackerServerApp.class)
-public class ReportServiceTests {
+class ReportServiceTests {
     private static final String TEST_DESCRIPTION = "REPORT TEST";
     
     @Autowired
@@ -33,7 +33,7 @@ public class ReportServiceTests {
     private PersonEntity alice;
     
     @BeforeEach
-    public void beforeEachTest() {
+    void beforeEachTest() {
         phone = manager.storeCategory("PHONE", "MONTHLY PHONE BILL", 0, 0, 0, false);
         rent = manager.storeCategory("RENT", "MONTHLY RENT BILL", 128, 128, 128, false);
         food = manager.storeCategory("FOOD", "DAILY FOOD PURCHASE", 255, 255, 255, false);
@@ -67,7 +67,7 @@ public class ReportServiceTests {
     }
     
     @AfterEach
-    public void afterEachTest() {
+    void afterEachTest() {
         manager.truncateAllTables();
         phone = null;
         rent = null;
@@ -77,7 +77,7 @@ public class ReportServiceTests {
     }
     
     @Test
-    public void monthlyCategoryReportTest() {
+    void monthlyCategoryReportTest() {
         List<CategoryReportItemDTO> jan = reportService.createCategoryReport(2020, 1);
         assertEquals(3, jan.size());
         assertMonthlyCategoryReportItem(500.00D, jan, rent);
@@ -98,7 +98,7 @@ public class ReportServiceTests {
     }
     
     @Test
-    public void yearlyReportTest() {
+    void yearlyReportTest() {
         List<YearlyReportItemDTO> r2020 = reportService.createYearlyReport(2020);
         assertEquals(12, r2020.size());
         assertYearlyReportItem(1123.32D, r2020, 1);

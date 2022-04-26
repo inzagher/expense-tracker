@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")
 @SpringBootTest(classes = ExpenseTrackerServerApp.class)
-public class BackupServiceTests {
+class BackupServiceTests {
     private static final String TEST_DESCRIPTION = "BACKUP TEST";
     
     @Autowired
@@ -52,7 +52,7 @@ public class BackupServiceTests {
     }
     
     @Test
-    public void lastBackupInfoTest() {
+    void lastBackupInfoTest() {
         var last = service.findLastMetadataRecord();
         assertTrue(last.isPresent());
         assertEquals(4, last.get().getExpenses());
@@ -61,13 +61,13 @@ public class BackupServiceTests {
     }
     
     @Test
-    public void backupInfoListTest() {
+    void backupInfoListTest() {
         var list = service.findAllMetadataRecords();
         assertEquals(3, list.size());
     }
     
     @Test
-    public void backupDatabaseTest() {
+    void backupDatabaseTest() {
         var metadata = service.createDatabaseBackup();
         assertNotNull(metadata);
         assertEquals(6, metadata.getExpenses());
@@ -77,7 +77,7 @@ public class BackupServiceTests {
     }
     
     @Test
-    public void restoreDatabaseTest() {
+    void restoreDatabaseTest() {
         var zip = loadTestResource("backup_for_tests.zip");
         service.restoreDatabaseFromBackup(zip);
         assertEquals(3, manager.countExpenses());

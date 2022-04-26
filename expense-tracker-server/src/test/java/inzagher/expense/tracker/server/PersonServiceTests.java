@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")
 @SpringBootTest(classes = ExpenseTrackerServerApp.class)
-public class PersonServiceTests {
+class PersonServiceTests {
     @Autowired
     private PersonService service;
     @Autowired
@@ -53,19 +53,19 @@ public class PersonServiceTests {
     }
     
     @Test
-    public void personListTest() {
+    void personListTest() {
         assertEquals(2, service.findAllPersons().size());
     }
     
     @Test
-    public void personLoadingTest() {
+    void personLoadingTest() {
         var person = service.getPersonById(bob.getId());
         assertEquals(bob.getId(), person.getId());
         assertEquals("BOB", person.getName());
     }
     
     @Test
-    public void personCreationTest() {
+    void personCreationTest() {
         var command = new CreatePersonCommand("ALICE");
         var id = service.createPerson(command);
         assertEquals(3L, manager.countPersons());
@@ -73,7 +73,7 @@ public class PersonServiceTests {
     }
     
     @Test
-    public void personEditingTest() {
+    void personEditingTest() {
         var command = new EditPersonCommand(stan.getId(), "STANLEY");
         service.editPerson(command);
         assertEquals(2L, manager.countPersons());
@@ -81,13 +81,13 @@ public class PersonServiceTests {
     }
     
     @Test
-    public void personDeletionTest() {
+    void personDeletionTest() {
         service.deletePersonById(bob.getId());
         assertEquals(1L, manager.countPersons());
     }
     
     @Test
-    public void dependentPersonDeletionTest() {
+    void dependentPersonDeletionTest() {
         Executable deletion = () -> service.deletePersonById(stan.getId());
         assertThrows(RuntimeException.class, deletion);
         assertEquals(2L, manager.countPersons());

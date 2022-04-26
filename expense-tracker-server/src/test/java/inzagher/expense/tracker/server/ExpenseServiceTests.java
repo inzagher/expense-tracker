@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")
 @SpringBootTest(classes = ExpenseTrackerServerApp.class)
-public class ExpenseServiceTests {
+class ExpenseServiceTests {
     @Autowired
     private ExpenseService service;
     @Autowired
@@ -54,14 +54,14 @@ public class ExpenseServiceTests {
     }
     
     @Test
-    public void expenseLoadingTest() {
+    void expenseLoadingTest() {
         var entity = service.getExpenseById(purchase.getId());
         assertEquals(purchase.getId(), entity.getId());
         assertAmountEquals(BigDecimal.valueOf(12.10D), entity.getAmount());
     }
     
     @Test
-    public void expenseCreationTest() {
+    void expenseCreationTest() {
         ExpenseDTO expense = new ExpenseDTO();
         expense.setDate(LocalDate.now());
         expense.setPersonId(tom.getId());
@@ -79,7 +79,7 @@ public class ExpenseServiceTests {
     }
     
     @Test
-    public void expenseEditingTest() {
+    void expenseEditingTest() {
         ExpenseDTO expense = mapper.toDTO(purchase);
         expense.setAmount(BigDecimal.valueOf(90.00D));
         expense.setCategoryId(phone.getId());
@@ -95,7 +95,7 @@ public class ExpenseServiceTests {
     }
     
     @Test
-    public void expenseDeletionTest() {
+    void expenseDeletionTest() {
         service.deleteExpenseById(purchase.getId());
         assertEquals(0L, manager.countExpenses());
         assertEquals(2L, manager.countCategories());

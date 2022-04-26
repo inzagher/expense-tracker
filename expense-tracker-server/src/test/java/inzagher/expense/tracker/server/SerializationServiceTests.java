@@ -13,14 +13,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ActiveProfiles("test")
 @SpringBootTest(classes = ExpenseTrackerServerApp.class)
-public class SerializationServiceTests {
+class SerializationServiceTests {
     private final static String ENTRY_NAME = "test.xml";
 
     @Autowired
     private SerializationService service;
 
     @Test
-    public void serializeThenDeserialize() {
+    void serializeThenDeserialize() {
         var dto = new BackupDataDTO();
         dto.setCategories(new ArrayList<>());
         dto.setPersons(new ArrayList<>());

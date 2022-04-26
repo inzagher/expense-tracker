@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")
 @SpringBootTest(classes = ExpenseTrackerServerApp.class)
-public class CategoryServiceTests {
+class CategoryServiceTests {
     @Autowired
     private CategoryService service;
     @Autowired
@@ -53,19 +53,19 @@ public class CategoryServiceTests {
     }
     
     @Test
-    public void categoryListTest() {
+    void categoryListTest() {
         assertEquals(2, service.findAllCategories().size());
     }
     
     @Test
-    public void categoryLoadingTest() {
+    void categoryLoadingTest() {
         var category = service.getCategoryById(rent.getId());
         assertEquals(rent.getId(), category.getId());
         assertEquals("RENT", category.getName());
     }
     
     @Test
-    public void categoryCreationTest() {
+    void categoryCreationTest() {
         CategoryDTO education = new CategoryDTO();
         education.setName("EDUCATION");
         education.setDescription("YEARLY EDUCATION BILL");
@@ -80,7 +80,7 @@ public class CategoryServiceTests {
     }
     
     @Test
-    public void categoryEditingTest() {
+    void categoryEditingTest() {
         var category = mapper.toDTO(phone);
         category.setColor(new ColorDTO(16, 16, 16));
         var command = mapper.toEditCommand(category);
@@ -94,13 +94,13 @@ public class CategoryServiceTests {
     }
     
     @Test
-    public void categoryDeletionTest() {
+    void categoryDeletionTest() {
         service.deleteCategoryById(rent.getId());
         assertEquals(1L, manager.countCategories());
     }
     
     @Test
-    public void dependentCategoryDeletionTest() {
+    void dependentCategoryDeletionTest() {
         Executable deletion = () -> service.deleteCategoryById(phone.getId());
         assertThrows(RuntimeException.class, deletion);
         assertEquals(2L, manager.countCategories());

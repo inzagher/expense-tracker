@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")
 @SpringBootTest(classes = ExpenseTrackerServerApp.class)
-public class DictionaryServiceTests {
+class DictionaryServiceTests {
     @Autowired
     private DictionaryService service;
     @Autowired
@@ -37,7 +37,7 @@ public class DictionaryServiceTests {
     }
 
     @Test
-    public void expenseDescriptionsTest() {
+    void expenseDescriptionsTest() {
         storeExpenseWithDescription("Test111");
         storeExpenseWithDescription("Test222");
         storeExpenseWithDescription("Test222");
