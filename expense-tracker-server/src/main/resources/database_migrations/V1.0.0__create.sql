@@ -5,13 +5,11 @@ create table backups (
     expenses integer,
     persons integer
 );
-alter table backups owner to sa;
 
 create table persons (
     id bigserial primary key,
     name varchar(255)
 );
-alter table persons owner to sa;
 
 create table categories (
     id bigserial primary key,
@@ -22,7 +20,6 @@ create table categories (
     description varchar(255),
     obsolete boolean
 );
-alter table categories owner to sa;
 
 create table expenses (
     id bigserial primary key,
@@ -32,7 +29,7 @@ create table expenses (
     person_id integer,
     description varchar(255)
 );
-alter table expenses owner to sa;
+
 alter table expenses add constraint expenses_person_id_fk foreign key (person_id) references persons(id);
 alter table expenses add constraint expenses_category_id_fk foreign key (category_id) references categories(id);
 create index expenses_date_idx on expenses(date);

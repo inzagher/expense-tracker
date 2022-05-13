@@ -1,15 +1,13 @@
-backup:
-  directory: target/backups
+backup.directory: ${BACKUP_DIRECTORY_PATH:target/backups}
 spring:
   datasource:
-    url: "jdbc:postgresql://localhost:5432/expenses_debug"
-    username: sa
-    password: 12345
+    url: "jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_NAME:expenses}"
+    username: ${DATABASE_USERNAME:sa}
+    password: ${DATABASE_PASSWORD:12345}
   flyway:
     table: "migrations"
-    locations: "classpath:db/migration"
+    locations: "classpath:database_migrations"
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate.ddl-auto: none
     show-sql: true
-    hibernate:
-      ddl-auto: none

@@ -11,9 +11,9 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 
 @Component
-@Profile("production")
 @EnableScheduling
 @RequiredArgsConstructor
+@Profile("scheduling-enabled")
 public class SchedulingConfiguration {
     private final BackupService backupService;
     

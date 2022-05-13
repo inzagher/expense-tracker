@@ -18,9 +18,15 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - "SPRING_PROFILES_ACTIVE=production"
+      - "SPRING_PROFILES_ACTIVE=default,scheduling-enabled"
+      - "DATABASE_HOST=expense-tracker-database"
+      - "DATABASE_PORT=5432"
+      - "DATABASE_NAME=expenses"
+      - "DATABASE_USERNAME=sa"
+      - "DATABASE_PASSWORD=12345"
+      - "BACKUP_DIRECTORY_PATH=backups"
   database:
-    container_name: "postgresql-server"
+    container_name: "expense-tracker-database"
     image: "postgres:14-alpine"
     ports:
       - "5432:5432"

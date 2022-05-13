@@ -2,12 +2,8 @@ spring:
   datasource:
     driver-class-name: "org.h2.Driver"
     url: "jdbc:h2:mem:test_db;DB_CLOSE_DELAY=-1;MODE=PostgreSQL;"
-  flyway:
-    enabled: false
-  jpa:
-    properties:
-      hibernate:
-        dialect: "org.hibernate.dialect.H2Dialect"
-        show_sql: true
-        hbm2ddl:
-          auto: create-drop
+  flyway.enabled: false
+  jpa.properties.hibernate:
+    dialect: "org.hibernate.dialect.H2Dialect"
+    hbm2ddl.auto: create-drop
+    show_sql: true
