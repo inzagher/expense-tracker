@@ -1,10 +1,7 @@
 package inzagher.expense.tracker.server.service;
 
-import inzagher.expense.tracker.server.model.command.CreatePersonCommand;
-import inzagher.expense.tracker.server.model.command.EditPersonCommand;
 import inzagher.expense.tracker.server.model.criteria.ExpenseSearchCriteria;
 import inzagher.expense.tracker.server.model.dto.PersonDTO;
-import inzagher.expense.tracker.server.model.entity.PersonEntity;
 import inzagher.expense.tracker.server.model.exception.ExpenseTrackerException;
 import inzagher.expense.tracker.server.model.exception.NotFoundException;
 import inzagher.expense.tracker.server.model.mapper.PersonMapper;
@@ -36,7 +33,7 @@ public class PersonService {
     }
 
     @Transactional
-    public PersonDTO getPersonById(@NonNull Integer id) {
+    public PersonDTO getPersonById(@NonNull Long id) {
         log.info("Find person with id {}", id);
         return personRepository.findById(id)
                 .map(personMapper::toDTO)
@@ -44,24 +41,24 @@ public class PersonService {
     }
 
     @Transactional
-    public Integer createPerson(@NonNull CreatePersonCommand command) {
-        log.info("Create person. Command: {}", command);
-        var entity = new PersonEntity(command);
+    public Long createPerson(@NonNull PersonDTO dto) {
+        log.info("Create person. Data: {}", dto);
+        var entity = personMapper.toEntity(dto);
         return personRepository.save(entity).getId();
     }
 
     @Transactional
-    public void editPerson(@NonNull EditPersonCommand command) {
-        log.info("Edit person. Command: {}", command);
+    public void editPerson(@NonNull PersonDTO dto) {
+        log.info("Edit person. Data: {}", dto);
         var entity = personRepository
-                .findById(command.getId())
+                .findById(dto.getId())
                 .orElseThrow(NotFoundException::new);
-        entity.edit(command);
+        personMapper.mergeToExistingEntity(entity, dto);
         personRepository.save(entity);
     }
 
     @Transactional
-    public void deletePersonById(@NonNull Integer id) {
+    public void deletePersonById(@NonNull Long id) {
         log.info("Delete person with id {}", id);
         if (isAnyCorrelatedExpensePresent(id)) {
             var message = String.format("Person with id %d has expenses", id);
@@ -70,7 +67,7 @@ public class PersonService {
         personRepository.deleteById(id);
     }
 
-    private boolean isAnyCorrelatedExpensePresent(Integer personId) {
+    private boolean isAnyCorrelatedExpensePresent(Long personId) {
         log.info("Find expenses with person id {}", personId);
         var criteria = new ExpenseSearchCriteria();
         var specification = new ExpenseSpecification(criteria);

@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface BackupMetadataRepository extends JpaRepository<BackupMetadataEntity, Integer> {
+public interface BackupMetadataRepository extends JpaRepository<BackupMetadataEntity, Long> {
 }

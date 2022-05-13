@@ -1,12 +1,16 @@
 package inzagher.expense.tracker.server.service;
 
-import inzagher.expense.tracker.server.model.dto.*;
+import inzagher.expense.tracker.server.model.dto.BackupMetadataDTO;
+import inzagher.expense.tracker.server.model.dto.backup.BackupXmlDataDTO;
+import inzagher.expense.tracker.server.model.entity.BackupMetadataEntity;
 import inzagher.expense.tracker.server.model.event.BackupCreatedEvent;
 import inzagher.expense.tracker.server.model.event.BackupRestoredEvent;
 import inzagher.expense.tracker.server.model.exception.ExpenseTrackerException;
 import inzagher.expense.tracker.server.model.exception.ServiceBusyException;
-import inzagher.expense.tracker.server.model.mapper.*;
-import inzagher.expense.tracker.server.model.entity.*;
+import inzagher.expense.tracker.server.model.mapper.BackupMetadataMapper;
+import inzagher.expense.tracker.server.model.mapper.CategoryMapper;
+import inzagher.expense.tracker.server.model.mapper.ExpenseMapper;
+import inzagher.expense.tracker.server.model.mapper.PersonMapper;
 import inzagher.expense.tracker.server.repository.BackupMetadataRepository;
 import inzagher.expense.tracker.server.repository.CategoryRepository;
 import inzagher.expense.tracker.server.repository.ExpenseRepository;
@@ -93,7 +97,7 @@ public class BackupService {
         if (serviceState.compareAndSet(STATE_IDLE, STATE_BUSY)) {
             try {
                 var dto = serializationService.deserializeZippedData(
-                        BackupDataDTO.class, data, ZIP_ENTRY_NAME);
+                        BackupXmlDataDTO.class, data, ZIP_ENTRY_NAME);
                 truncateAllTables();
                 storeBackupDataInDatabase(dto);
                 eventPublisher.publishEvent(new BackupRestoredEvent());
@@ -105,7 +109,7 @@ public class BackupService {
         }
     }
     
-    private BackupMetadataEntity createBackupMetadata(BackupDataDTO dto) {
+    private BackupMetadataEntity createBackupMetadata(BackupXmlDataDTO dto) {
         var metadata = new BackupMetadataEntity();
         metadata.setCreated(LocalDateTime.now());
         metadata.setExpenses(dto.getExpenses().size());
@@ -114,36 +118,33 @@ public class BackupService {
         return metadata;
     }
     
-    private BackupDataDTO loadBackupDataFromDatabase() {
-        var dto = new BackupDataDTO();
-        var categories = categoryRepository.findAll()
-                .stream()
-                .map(categoryMapper::toDTO)
+    private BackupXmlDataDTO loadBackupDataFromDatabase() {
+        var dto = new BackupXmlDataDTO();
+        var categories = categoryRepository.findAll().stream()
+                .map(categoryMapper::toXmlDTO)
                 .toList();
         dto.setCategories(categories);
-        var persons = personRepository.findAll()
-                .stream()
-                .map(personMapper::toDTO)
+        var persons = personRepository.findAll().stream()
+                .map(personMapper::toXmlDTO)
                 .toList();
         dto.setPersons(persons);
-        var expenses = expenseRepository.findAll()
-                .stream()
-                .map(expenseMapper::toDTO)
+        var expenses = expenseRepository.findAll().stream()
+                .map(expenseMapper::toXmlDTO)
                 .toList();
         dto.setExpenses(expenses);
         return dto;
     }
     
-    private void storeBackupDataInDatabase(BackupDataDTO dto) {
+    private void storeBackupDataInDatabase(BackupXmlDataDTO dto) {
         var metadata = createBackupMetadata(dto);
         var persons = dto.getPersons().stream()
-                .map(personMapper::toModel)
+                .map(personMapper::toEntity)
                 .toList();
         var categories = dto.getCategories().stream()
-                .map(categoryMapper::toModel)
+                .map(categoryMapper::toEntity)
                 .toList();
         var expenses = dto.getExpenses().stream()
-                .map(expenseMapper::toModel)
+                .map(expenseMapper::toEntity)
                 .toList();
         personRepository.saveAll(persons);
         categoryRepository.saveAll(categories);

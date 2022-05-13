@@ -1,15 +1,13 @@
 package inzagher.expense.tracker.server.model.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlType;
+import lombok.NoArgsConstructor;
 
 @Data
-@XmlType
-@XmlAccessorType(XmlAccessType.FIELD)
+@NoArgsConstructor
+@AllArgsConstructor
 public class PersonDTO {
-    private Integer id;
+    private Long id;
     private String name;
 }

@@ -13,13 +13,13 @@ import java.util.Optional;
 
 @Repository
 public interface ExpenseRepository extends
-        JpaRepository<ExpenseEntity, Integer>,
+        JpaRepository<ExpenseEntity, Long>,
         JpaSpecificationExecutor<ExpenseEntity> {
 
     @Query("SELECT SUM(e.amount) FROM ExpenseEntity e " +
            "WHERE e.category.id = :categoryId " +
            "AND e.date >= :from AND e.date < :to")
-    Optional<BigDecimal> getTotalAmountForCategory(Integer categoryId, LocalDate from, LocalDate to);
+    Optional<BigDecimal> getTotalAmountForCategory(Long categoryId, LocalDate from, LocalDate to);
 
     @Query("SELECT SUM(e.amount) FROM ExpenseEntity e " +
            "WHERE e.date >= :from AND e.date < :to")

@@ -1,4 +1,4 @@
-package inzagher.expense.tracker.server.model.dto.adapter;
+package inzagher.expense.tracker.server.util;
 
 import java.time.LocalDate;
 import javax.xml.bind.annotation.adapters.XmlAdapter;

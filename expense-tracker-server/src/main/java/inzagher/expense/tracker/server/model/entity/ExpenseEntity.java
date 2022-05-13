@@ -1,7 +1,5 @@
 package inzagher.expense.tracker.server.model.entity;
 
-import inzagher.expense.tracker.server.model.command.CreateExpenseCommand;
-import inzagher.expense.tracker.server.model.command.EditExpenseCommand;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,7 +23,7 @@ public class ExpenseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, updatable = false)
-    private Integer id;
+    private Long id;
 
     @Column(name="date")
     private LocalDate date;
@@ -47,24 +45,4 @@ public class ExpenseEntity implements Serializable {
 
     @Column(name="description")
     private String description;
-
-    public ExpenseEntity(CreateExpenseCommand command) {
-        date = command.getDate();
-        category = new CategoryEntity();
-        category.setId(command.getCategoryId());
-        person = new PersonEntity();
-        person.setId(command.getPersonId());
-        amount = command.getAmount();
-        description = command.getDescription();
-    }
-
-    public void edit(EditExpenseCommand command) {
-        date = command.getDate();
-        category = new CategoryEntity();
-        category.setId(command.getCategoryId());
-        person = new PersonEntity();
-        person.setId(command.getPersonId());
-        amount = command.getAmount();
-        description = command.getDescription();
-    }
 }

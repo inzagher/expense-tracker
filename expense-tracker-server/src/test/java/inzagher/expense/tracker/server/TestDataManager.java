@@ -1,18 +1,18 @@
 package inzagher.expense.tracker.server;
 
 import inzagher.expense.tracker.server.model.entity.*;
-import inzagher.expense.tracker.server.model.entity.CategoryEntity;
 import inzagher.expense.tracker.server.repository.BackupMetadataRepository;
 import inzagher.expense.tracker.server.repository.CategoryRepository;
 import inzagher.expense.tracker.server.repository.ExpenseRepository;
 import inzagher.expense.tracker.server.repository.PersonRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @Transactional
@@ -58,15 +58,15 @@ public class TestDataManager {
         backupMetadataRepository.deleteAllInBatch();
     }
     
-    public Optional<ExpenseEntity> findExpenseById(Integer id) {
+    public Optional<ExpenseEntity> findExpenseById(Long id) {
         return expenseRepository.findById(id);
     }
     
-    public Optional<CategoryEntity> findCategoryById(Integer id) {
+    public Optional<CategoryEntity> findCategoryById(Long id) {
         return categoryRepository.findById(id);
     }
     
-    public Optional<PersonEntity> findPersonById(Integer id) {
+    public Optional<PersonEntity> findPersonById(Long id) {
         return personRepository.findById(id);
     }
     

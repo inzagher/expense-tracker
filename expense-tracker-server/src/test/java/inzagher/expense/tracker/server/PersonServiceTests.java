@@ -1,7 +1,6 @@
 package inzagher.expense.tracker.server;
 
-import inzagher.expense.tracker.server.model.command.CreatePersonCommand;
-import inzagher.expense.tracker.server.model.command.EditPersonCommand;
+import inzagher.expense.tracker.server.model.dto.PersonDTO;
 import inzagher.expense.tracker.server.model.entity.CategoryEntity;
 import inzagher.expense.tracker.server.model.entity.ExpenseEntity;
 import inzagher.expense.tracker.server.model.entity.PersonEntity;
@@ -66,18 +65,18 @@ class PersonServiceTests {
     
     @Test
     void personCreationTest() {
-        var command = new CreatePersonCommand("ALICE");
-        var id = service.createPerson(command);
+        var dto = new PersonDTO(null, "ALICE");
+        var id = service.createPerson(dto);
         assertEquals(3L, manager.countPersons());
         assertStoredPersonData(id, "ALICE");
     }
     
     @Test
     void personEditingTest() {
-        var command = new EditPersonCommand(stan.getId(), "STANLEY");
-        service.editPerson(command);
+        var dto = new PersonDTO(stan.getId(), "STANLEY");
+        service.editPerson(dto);
         assertEquals(2L, manager.countPersons());
-        assertStoredPersonData(command.getId(), "STANLEY");
+        assertStoredPersonData(dto.getId(), "STANLEY");
     }
     
     @Test
@@ -96,7 +95,7 @@ class PersonServiceTests {
         assertNotNull(expense.orElseThrow().getPerson());
     }
 
-    public void assertStoredPersonData(Integer id, String expectedName) {
+    public void assertStoredPersonData(Long id, String expectedName) {
         var entity = manager.findPersonById(id);
         assertTrue(entity.isPresent());
         assertEquals(expectedName, entity.get().getName());

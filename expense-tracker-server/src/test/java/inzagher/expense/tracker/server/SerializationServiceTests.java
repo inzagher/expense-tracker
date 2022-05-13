@@ -1,6 +1,6 @@
 package inzagher.expense.tracker.server;
 
-import inzagher.expense.tracker.server.model.dto.BackupDataDTO;
+import inzagher.expense.tracker.server.model.dto.backup.BackupXmlDataDTO;
 import inzagher.expense.tracker.server.service.SerializationService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +21,12 @@ class SerializationServiceTests {
 
     @Test
     void serializeThenDeserialize() {
-        var dto = new BackupDataDTO();
+        var dto = new BackupXmlDataDTO();
         dto.setCategories(new ArrayList<>());
         dto.setPersons(new ArrayList<>());
         dto.setExpenses(new ArrayList<>());
         var bytes = service.serializeAndZip(dto, ENTRY_NAME);
-        var serialized = service.deserializeZippedData(BackupDataDTO.class, bytes, ENTRY_NAME);
+        var serialized = service.deserializeZippedData(BackupXmlDataDTO.class, bytes, ENTRY_NAME);
         assertEquals(dto, serialized);
     }
 }

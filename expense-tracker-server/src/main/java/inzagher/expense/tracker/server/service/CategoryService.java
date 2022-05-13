@@ -1,10 +1,7 @@
 package inzagher.expense.tracker.server.service;
 
-import inzagher.expense.tracker.server.model.command.CreateCategoryCommand;
-import inzagher.expense.tracker.server.model.command.EditCategoryCommand;
 import inzagher.expense.tracker.server.model.criteria.ExpenseSearchCriteria;
 import inzagher.expense.tracker.server.model.dto.CategoryDTO;
-import inzagher.expense.tracker.server.model.entity.CategoryEntity;
 import inzagher.expense.tracker.server.model.exception.ExpenseTrackerException;
 import inzagher.expense.tracker.server.model.exception.NotFoundException;
 import inzagher.expense.tracker.server.model.mapper.CategoryMapper;
@@ -36,7 +33,7 @@ public class CategoryService {
     }
 
     @Transactional
-    public CategoryDTO getCategoryById(@NonNull Integer id) {
+    public CategoryDTO getCategoryById(@NonNull Long id) {
         log.info("Find category with id {}", id);
         return categoryRepository.findById(id)
                 .map(categoryMapper::toDTO)
@@ -44,24 +41,24 @@ public class CategoryService {
     }
 
     @Transactional
-    public Integer createCategory(@NonNull CreateCategoryCommand command) {
-        log.info("Create category. Command: {}", command);
-        var entity = new CategoryEntity(command);
+    public Long createCategory(@NonNull CategoryDTO dto) {
+        log.info("Create category. Data: {}", dto);
+        var entity = categoryMapper.toEntity(dto);
         return categoryRepository.save(entity).getId();
     }
 
     @Transactional
-    public void editCategory(@NonNull EditCategoryCommand command) {
-        log.info("Edit category. Command: {}", command);
+    public void editCategory(@NonNull CategoryDTO dto) {
+        log.info("Edit category. Data: {}", dto);
         var entity = categoryRepository
-                .findById(command.getId())
+                .findById(dto.getId())
                 .orElseThrow(NotFoundException::new);
-        entity.edit(command);
+        categoryMapper.mergeToExistingEntity(entity, dto);
         categoryRepository.save(entity);
     }
 
     @Transactional
-    public void deleteCategoryById(@NonNull Integer id) {
+    public void deleteCategoryById(@NonNull Long id) {
         log.info("Delete category with id {}", id);
         if (isAnyCorrelatedExpensePresent(id)) {
             var message = String.format("Category with id %d has expenses", id);
@@ -70,7 +67,7 @@ public class CategoryService {
         categoryRepository.deleteById(id);
     }
 
-    private boolean isAnyCorrelatedExpensePresent(Integer categoryId) {
+    private boolean isAnyCorrelatedExpensePresent(Long categoryId) {
         log.info("Find expenses with category id {}", categoryId);
         var criteria = new ExpenseSearchCriteria();
         var specification = new ExpenseSpecification(criteria);

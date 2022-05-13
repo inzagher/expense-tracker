@@ -1,7 +1,7 @@
 package inzagher.expense.tracker.server.service;
 
-import inzagher.expense.tracker.server.model.dto.CategoryReportItemDTO;
-import inzagher.expense.tracker.server.model.dto.YearlyReportItemDTO;
+import inzagher.expense.tracker.server.model.dto.report.CategoryReportItemDTO;
+import inzagher.expense.tracker.server.model.dto.report.YearlyReportItemDTO;
 import inzagher.expense.tracker.server.model.mapper.CategoryMapper;
 import inzagher.expense.tracker.server.repository.CategoryRepository;
 import inzagher.expense.tracker.server.repository.ExpenseRepository;

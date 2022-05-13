@@ -20,8 +20,8 @@ public class ExpenseApiController {
 
     @GetMapping(path = "/api/expenses")
     public List<ExpenseDTO> find(
-            @RequestParam(value = "persons", required = false) List<Integer> persons,
-            @RequestParam(value = "categories", required = false) List<Integer> categories,
+            @RequestParam(value = "persons", required = false) List<Long> persons,
+            @RequestParam(value = "categories", required = false) List<Long> categories,
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             @RequestParam(value = "date_exact", required = false) LocalDate dateExact,
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
@@ -50,22 +50,22 @@ public class ExpenseApiController {
     }
 
     @GetMapping(path = "/api/expenses/{id}")
-    public ExpenseDTO getById(@PathVariable Integer id) {
+    public ExpenseDTO getById(@PathVariable Long id) {
         return service.getExpenseById(id);
     }
 
     @PostMapping(path = "/api/expenses")
-    public void create(@RequestBody ExpenseDTO expense) {
-        service.createExpense(mapper.toCreateCommand(expense));
+    public void create(@RequestBody ExpenseDTO dto) {
+        service.createExpense(dto);
     }
 
     @PutMapping(path = "/api/expenses")
-    public void edit(@RequestBody ExpenseDTO expense) {
-        service.editExpense(mapper.toEditCommand(expense));
+    public void edit(@RequestBody ExpenseDTO dto) {
+        service.editExpense(dto);
     }
     
     @DeleteMapping(path = "/api/expenses/{id}")
-    public void deleteById(@PathVariable Integer id) {
+    public void deleteById(@PathVariable Long id) {
         service.deleteExpenseById(id);
     }
 }

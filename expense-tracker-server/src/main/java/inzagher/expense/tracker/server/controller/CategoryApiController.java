@@ -20,22 +20,22 @@ public class CategoryApiController {
     }
 
     @GetMapping(path = "/api/categories/{id}")
-    public CategoryDTO getById(@PathVariable Integer id) {
+    public CategoryDTO getById(@PathVariable Long id) {
         return service.getCategoryById(id);
     }
 
     @PostMapping(path = "/api/categories")
-    public void create(@RequestBody CategoryDTO category) {
-        service.createCategory(mapper.toCreateCommand(category));
+    public void create(@RequestBody CategoryDTO dto) {
+        service.createCategory(dto);
     }
 
     @PutMapping(path = "/api/categories")
-    public void edit(@RequestBody CategoryDTO category) {
-        service.editCategory(mapper.toEditCommand(category));
+    public void edit(@RequestBody CategoryDTO dto) {
+        service.editCategory(dto);
     }
 
     @DeleteMapping(path = "/api/categories/{id}")
-    public void deleteById(@PathVariable Integer id) {
+    public void deleteById(@PathVariable Long id) {
         service.deleteCategoryById(id);
     }
 }

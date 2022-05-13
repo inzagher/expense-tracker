@@ -20,22 +20,22 @@ public class PersonApiController {
     }
     
     @GetMapping(path = "/api/persons/{id}")
-    public PersonDTO getById(@PathVariable Integer id) {
+    public PersonDTO getById(@PathVariable Long id) {
         return service.getPersonById(id);
     }
 
     @PostMapping(path = "/api/persons")
-    public void create(@RequestBody PersonDTO person) {
-        service.createPerson(mapper.toCreateCommand(person));
+    public void create(@RequestBody PersonDTO dto) {
+        service.createPerson(dto);
     }
 
     @PutMapping(path = "/api/persons")
-    public void edit(@RequestBody PersonDTO person) {
-        service.editPerson(mapper.toEditCommand(person));
+    public void edit(@RequestBody PersonDTO dto) {
+        service.editPerson(dto);
     }
     
     @DeleteMapping(path = "/api/persons/{id}")
-    public void deleteById(@PathVariable Integer id) {
+    public void deleteById(@PathVariable Long id) {
         service.deletePersonById(id);
     }
 }

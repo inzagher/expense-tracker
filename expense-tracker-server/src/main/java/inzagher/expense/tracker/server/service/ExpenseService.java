@@ -1,10 +1,7 @@
 package inzagher.expense.tracker.server.service;
 
-import inzagher.expense.tracker.server.model.command.CreateExpenseCommand;
-import inzagher.expense.tracker.server.model.command.EditExpenseCommand;
 import inzagher.expense.tracker.server.model.criteria.ExpenseSearchCriteria;
 import inzagher.expense.tracker.server.model.dto.ExpenseDTO;
-import inzagher.expense.tracker.server.model.entity.ExpenseEntity;
 import inzagher.expense.tracker.server.model.exception.NotFoundException;
 import inzagher.expense.tracker.server.model.mapper.ExpenseMapper;
 import inzagher.expense.tracker.server.model.specification.ExpenseSpecification;
@@ -34,7 +31,7 @@ public class ExpenseService {
     }
 
     @Transactional
-    public ExpenseDTO getExpenseById(@NonNull Integer id) {
+    public ExpenseDTO getExpenseById(@NonNull Long id) {
         log.info("Find expense with id {}", id);
         return expenseRepository.findById(id)
                 .map(expenseMapper::toDTO)
@@ -42,24 +39,24 @@ public class ExpenseService {
     }
 
     @Transactional
-    public Integer createExpense(@NonNull CreateExpenseCommand command) {
-        log.info("Create expense. Command: {}", command);
-        var entity = new ExpenseEntity(command);
+    public Long createExpense(@NonNull ExpenseDTO dto) {
+        log.info("Create expense. Data: {}", dto);
+        var entity = expenseMapper.toEntity(dto);
         return expenseRepository.save(entity).getId();
     }
 
     @Transactional
-    public void editExpense(@NonNull EditExpenseCommand command) {
-        log.info("Edit expense. Command: {}", command);
+    public void editExpense(@NonNull ExpenseDTO dto) {
+        log.info("Edit expense. Data: {}", dto);
         var entity = expenseRepository
-                .findById(command.getId())
+                .findById(dto.getId())
                 .orElseThrow(NotFoundException::new);
-        entity.edit(command);
+        expenseMapper.mergeToExistingEntity(entity, dto);
         expenseRepository.save(entity);
     }
 
     @Transactional
-    public void deleteExpenseById(@NonNull Integer id) {
+    public void deleteExpenseById(@NonNull Long id) {
         log.info("Delete expense with id {}", id);
         expenseRepository.deleteById(id);
     }

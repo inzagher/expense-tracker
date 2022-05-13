@@ -1,6 +1,8 @@
 package inzagher.expense.tracker.server;
 
+import inzagher.expense.tracker.server.model.dto.CategoryDTO;
 import inzagher.expense.tracker.server.model.dto.ExpenseDTO;
+import inzagher.expense.tracker.server.model.dto.PersonDTO;
 import inzagher.expense.tracker.server.model.entity.ExpenseEntity;
 import inzagher.expense.tracker.server.model.entity.PersonEntity;
 import inzagher.expense.tracker.server.model.mapper.ExpenseMapper;
@@ -62,13 +64,17 @@ class ExpenseServiceTests {
     
     @Test
     void expenseCreationTest() {
+        CategoryDTO category =  new CategoryDTO();
+        category.setId(food.getId());
+        PersonDTO person =  new PersonDTO();
+        person.setId(tom.getId());
         ExpenseDTO expense = new ExpenseDTO();
         expense.setDate(LocalDate.now());
-        expense.setPersonId(tom.getId());
-        expense.setCategoryId(food.getId());
+        expense.setPerson(person);
+        expense.setCategory(category);
         expense.setAmount(BigDecimal.valueOf(51.20D));
         expense.setDescription("ANOTHER FOOD PURCHASE");
-        var id = service.createExpense(mapper.toCreateCommand(expense));
+        var id = service.createExpense(expense);
         assertNotNull(id);
         assertEquals(2L, manager.countExpenses());
         assertEquals(2L, manager.countCategories());
@@ -80,10 +86,12 @@ class ExpenseServiceTests {
     
     @Test
     void expenseEditingTest() {
+        CategoryDTO category = new CategoryDTO();
+        category.setId(phone.getId());
         ExpenseDTO expense = mapper.toDTO(purchase);
         expense.setAmount(BigDecimal.valueOf(90.00D));
-        expense.setCategoryId(phone.getId());
-        service.editExpense(mapper.toEditCommand(expense));
+        expense.setCategory(category);
+        service.editExpense(expense);
         assertEquals(1L, manager.countExpenses());
         assertEquals(2L, manager.countCategories());
         assertEquals(1L, manager.countPersons());

@@ -16,7 +16,7 @@ public class BackupMetadataEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, updatable = false)
-    private Integer id;
+    private Long id;
 
     @Column(name="created")
     private LocalDateTime created;

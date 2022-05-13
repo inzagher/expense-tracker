@@ -12,8 +12,8 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class ExpenseSearchCriteria implements Serializable {
-    private final List<Integer> categoryIdentifiers = new ArrayList<>();
-    private final List<Integer> personIdentifiers = new ArrayList<>();
+    private final List<Long> categoryIdentifiers = new ArrayList<>();
+    private final List<Long> personIdentifiers = new ArrayList<>();
     private BigDecimal amountExact;
     private BigDecimal amountFrom;
     private BigDecimal amountTo;

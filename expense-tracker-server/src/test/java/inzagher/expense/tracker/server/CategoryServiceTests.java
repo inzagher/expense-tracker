@@ -3,9 +3,9 @@ package inzagher.expense.tracker.server;
 import inzagher.expense.tracker.server.model.dto.CategoryDTO;
 import inzagher.expense.tracker.server.model.dto.ColorDTO;
 import inzagher.expense.tracker.server.model.entity.CategoryEntity;
-import inzagher.expense.tracker.server.model.mapper.CategoryMapper;
 import inzagher.expense.tracker.server.model.entity.ExpenseEntity;
 import inzagher.expense.tracker.server.model.entity.PersonEntity;
+import inzagher.expense.tracker.server.model.mapper.CategoryMapper;
 import inzagher.expense.tracker.server.service.CategoryService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -71,8 +71,7 @@ class CategoryServiceTests {
         education.setDescription("YEARLY EDUCATION BILL");
         education.setColor(new ColorDTO(30, 30, 30));
         education.setObsolete(false);
-        var command = mapper.toCreateCommand(education);
-        var id = service.createCategory(command);
+        var id = service.createCategory(education);
         assertEquals(3L, manager.countCategories());
         var entity = manager.findCategoryById(id);
         assertTrue(entity.isPresent());
@@ -83,8 +82,7 @@ class CategoryServiceTests {
     void categoryEditingTest() {
         var category = mapper.toDTO(phone);
         category.setColor(new ColorDTO(16, 16, 16));
-        var command = mapper.toEditCommand(category);
-        service.editCategory(command);
+        service.editCategory(category);
         assertEquals(2L, manager.countCategories());
         var entity = manager.findCategoryById(phone.getId());
         assertTrue(entity.isPresent());
