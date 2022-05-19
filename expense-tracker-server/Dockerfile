@@ -1,4 +1,4 @@
-FROM maven:3.8.4-openjdk-17 as build
+FROM maven:3.8.5-openjdk-18 as build
 
 # Setup environment
 ENV HOME=/home/usr/app
@@ -14,7 +14,7 @@ COPY . $HOME
 RUN mvn clean package -Dmaven.test.skip
 
 # Start application
-FROM openjdk:17-alpine AS deploy
+FROM openjdk:18-alpine AS deploy
 WORKDIR /opt/expense-tracker-server
 COPY --from=build /home/usr/app/target/expense-tracker-server-1.0.jar backend.jar
-ENTRYPOINT ["java", "-jar", "backend.jar"]
+ENTRYPOINT ["java", "-jar", "backend.jar", "--enable-preview"]
