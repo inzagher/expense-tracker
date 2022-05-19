@@ -17,4 +17,4 @@ RUN mvn clean package -Dmaven.test.skip
 FROM openjdk:18-alpine AS deploy
 WORKDIR /opt/expense-tracker-server
 COPY --from=build /home/usr/app/target/expense-tracker-server-1.0.jar backend.jar
-ENTRYPOINT ["java", "-jar", "backend.jar", "--enable-preview"]
+ENTRYPOINT ["java", "--enable-preview", "-jar", "backend.jar"]
