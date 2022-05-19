@@ -134,7 +134,7 @@ class ReportServiceTests {
         BigDecimal actualAmount = report.stream()
                 .filter(item -> item.getCategory().getId().equals(category.getId()))
                 .findFirst().orElseThrow(() -> new RuntimeException("CATEGORY NOT FOUND"))
-                .getAmount();
+                .getTotal();
         boolean areEqual = BigDecimal.valueOf(expectedAmount).compareTo(actualAmount) == 0;
         assertTrue(areEqual, "AMOUNT MISMATCH FOR CATEGORY: " + category.getName());
     }

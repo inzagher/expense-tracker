@@ -12,5 +12,5 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class CategoryReportItemDTO {
     private CategoryDTO category;
-    private BigDecimal amount;
+    private BigDecimal total;
 }

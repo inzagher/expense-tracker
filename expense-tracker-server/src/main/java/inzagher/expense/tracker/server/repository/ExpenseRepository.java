@@ -6,24 +6,24 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface ExpenseRepository extends
         JpaRepository<ExpenseEntity, Long>,
         JpaSpecificationExecutor<ExpenseEntity> {
 
-    @Query("SELECT SUM(e.amount) FROM ExpenseEntity e " +
-           "WHERE e.category.id = :categoryId " +
-           "AND e.date >= :from AND e.date < :to")
-    Optional<BigDecimal> getTotalAmountForCategory(Long categoryId, LocalDate from, LocalDate to);
+    @Query("SELECT c.id, SUM(e.amount) " +
+           "FROM ExpenseEntity e RIGHT JOIN e.category c " +
+           "WHERE e.date >= :from AND e.date < :to " +
+           "GROUP BY c.id ORDER BY c.id")
+    List<Object[]> getCategoryReport(LocalDate from, LocalDate to);
 
-    @Query("SELECT SUM(e.amount) FROM ExpenseEntity e " +
-           "WHERE e.date >= :from AND e.date < :to")
-    Optional<BigDecimal> getTotalAmount(LocalDate from, LocalDate to);
+    @Query("SELECT extract(month from e.date), SUM(e.amount) " +
+           "FROM ExpenseEntity e WHERE e.date >= :yearStart AND e.date < :yearEnd " +
+           "GROUP BY extract(month from e.date)")
+    List<Object[]> getYearlyReport(LocalDate yearStart, LocalDate yearEnd);
 
     @Query("SELECT e.description FROM ExpenseEntity e " +
            "WHERE UPPER(e.description) LIKE UPPER(:pattern || '%')" +

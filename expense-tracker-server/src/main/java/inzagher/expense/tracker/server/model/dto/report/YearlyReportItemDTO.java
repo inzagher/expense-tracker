@@ -10,6 +10,6 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class YearlyReportItemDTO {
-    private int month;
+    private Integer month;
     private BigDecimal amount;
 }
