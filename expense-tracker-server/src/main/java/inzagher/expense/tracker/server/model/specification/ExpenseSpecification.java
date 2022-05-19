@@ -5,6 +5,7 @@ import inzagher.expense.tracker.server.model.entity.ExpenseEntity;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.util.CollectionUtils;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -18,39 +19,39 @@ public class ExpenseSpecification implements Specification<ExpenseEntity> {
 
     @Override
     public Predicate toPredicate(@NonNull Root<ExpenseEntity> expense,
-                                 @NonNull CriteriaQuery<?> criteria,
+                                 @NonNull CriteriaQuery<?> query,
                                  @NonNull CriteriaBuilder builder) {
         var predicates = new ArrayList<Predicate>();
-        if (this.criteria.getCategoryIdentifiers() != null && !this.criteria.getCategoryIdentifiers().isEmpty()) {
+        if (!CollectionUtils.isEmpty(criteria.getCategoryIdentifiers())) {
             var in = builder.in(expense.get("category").get("id"));
-            this.criteria.getCategoryIdentifiers().forEach(in::value);
+            criteria.getCategoryIdentifiers().forEach(in::value);
             predicates.add(in);
         }
-        if (this.criteria.getPersonIdentifiers() != null && !this.criteria.getPersonIdentifiers().isEmpty()) {
+        if (!CollectionUtils.isEmpty(criteria.getPersonIdentifiers())) {
             var in = builder.in(expense.get("person").get("id"));
-            this.criteria.getPersonIdentifiers().forEach(in::value);
+            criteria.getPersonIdentifiers().forEach(in::value);
             predicates.add(in);
         }
-        if (this.criteria.getDateExact() != null) {
-            predicates.add(builder.equal(expense.get("date"), this.criteria.getDateExact()));
+        if (criteria.getDateExact() != null) {
+            predicates.add(builder.equal(expense.get("date"), criteria.getDateExact()));
         }
-        if (this.criteria.getDateFrom() != null) {
-            predicates.add(builder.greaterThanOrEqualTo(expense.get("date"), this.criteria.getDateFrom()));
+        if (criteria.getDateFrom() != null) {
+            predicates.add(builder.greaterThanOrEqualTo(expense.get("date"), criteria.getDateFrom()));
         }
-        if (this.criteria.getDateTo() != null) {
-            predicates.add(builder.lessThanOrEqualTo(expense.get("date"), this.criteria.getDateTo()));
+        if (criteria.getDateTo() != null) {
+            predicates.add(builder.lessThanOrEqualTo(expense.get("date"), criteria.getDateTo()));
         }
-        if (this.criteria.getAmountExact() != null) {
-            predicates.add(builder.equal(expense.get("amount"), this.criteria.getAmountExact()));
+        if (criteria.getAmountExact() != null) {
+            predicates.add(builder.equal(expense.get("amount"), criteria.getAmountExact()));
         }
-        if (this.criteria.getAmountFrom() != null) {
-            predicates.add(builder.greaterThanOrEqualTo(expense.get("amount"), this.criteria.getAmountFrom()));
+        if (criteria.getAmountFrom() != null) {
+            predicates.add(builder.greaterThanOrEqualTo(expense.get("amount"), criteria.getAmountFrom()));
         }
-        if (this.criteria.getAmountTo() != null) {
-            predicates.add(builder.lessThanOrEqualTo(expense.get("amount"), this.criteria.getAmountTo()));
+        if (criteria.getAmountTo() != null) {
+            predicates.add(builder.lessThanOrEqualTo(expense.get("amount"), criteria.getAmountTo()));
         }
-        if (this.criteria.getDescriptionLike() != null) {
-            predicates.add(builder.equal(expense.get("description"), this.criteria.getDescriptionLike()));
+        if (criteria.getDescriptionLike() != null) {
+            predicates.add(builder.equal(expense.get("description"), criteria.getDescriptionLike()));
         }
         return builder.and(predicates.toArray(Predicate[]::new));
     }
