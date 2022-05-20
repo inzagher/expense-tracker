@@ -19,6 +19,7 @@
         <flyway.version>8.0.2</flyway.version>
         <lombok.version>1.18.20</lombok.version>
         <mapstruct.version>1.4.2.Final</mapstruct.version>
+        <spring-doc.version>1.5.10</spring-doc.version>
     </properties>
     <dependencies>
         <dependency>
@@ -37,6 +38,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${spring-doc.version}</version>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>

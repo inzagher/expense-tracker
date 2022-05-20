@@ -2,8 +2,9 @@ package inzagher.expense.tracker.server.controller;
 
 import inzagher.expense.tracker.server.model.criteria.ExpenseSearchCriteria;
 import inzagher.expense.tracker.server.model.dto.ExpenseDTO;
-import inzagher.expense.tracker.server.model.mapper.ExpenseMapper;
 import inzagher.expense.tracker.server.service.ExpenseService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
@@ -14,11 +15,12 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "Expense operations")
 public class ExpenseApiController {
     private final ExpenseService service;
-    private final ExpenseMapper mapper;
 
     @GetMapping(path = "/api/expenses")
+    @Operation(summary = "Find expenses")
     public List<ExpenseDTO> find(
             @RequestParam(value = "persons", required = false) List<Long> persons,
             @RequestParam(value = "categories", required = false) List<Long> categories,
@@ -50,21 +52,25 @@ public class ExpenseApiController {
     }
 
     @GetMapping(path = "/api/expenses/{id}")
+    @Operation(summary = "Get expense by id")
     public ExpenseDTO getById(@PathVariable Long id) {
         return service.getExpenseById(id);
     }
 
     @PostMapping(path = "/api/expenses")
+    @Operation(summary = "Create expense")
     public void create(@RequestBody ExpenseDTO dto) {
         service.createExpense(dto);
     }
 
     @PutMapping(path = "/api/expenses")
+    @Operation(summary = "Edit expense")
     public void edit(@RequestBody ExpenseDTO dto) {
         service.editExpense(dto);
     }
     
     @DeleteMapping(path = "/api/expenses/{id}")
+    @Operation(summary = "Delete expense by id")
     public void deleteById(@PathVariable Long id) {
         service.deleteExpenseById(id);
     }
