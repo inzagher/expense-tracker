@@ -82,7 +82,7 @@ class CategoryServiceTests {
     void categoryEditingTest() {
         var category = mapper.toDTO(phone);
         category.setColor(new ColorDTO(16, 16, 16));
-        service.editCategory(category);
+        service.editCategory(phone.getId(), category);
         assertEquals(2L, manager.countCategories());
         var entity = manager.findCategoryById(phone.getId());
         assertTrue(entity.isPresent());

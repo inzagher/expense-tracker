@@ -91,7 +91,7 @@ class ExpenseServiceTests {
         ExpenseDTO expense = mapper.toDTO(purchase);
         expense.setAmount(BigDecimal.valueOf(90.00D));
         expense.setCategory(category);
-        service.editExpense(expense);
+        service.editExpense(purchase.getId(), expense);
         assertEquals(1L, manager.countExpenses());
         assertEquals(2L, manager.countCategories());
         assertEquals(1L, manager.countPersons());

@@ -63,10 +63,11 @@ public class ExpenseApiController {
         service.createExpense(dto);
     }
 
-    @PutMapping(path = "/api/expenses")
+    @PutMapping(path = "/api/expenses/{id}")
     @Operation(summary = "Edit expense")
-    public void edit(@RequestBody ExpenseDTO dto) {
-        service.editExpense(dto);
+    public void edit(@PathVariable Long id,
+                     @RequestBody ExpenseDTO dto) {
+        service.editExpense(id, dto);
     }
     
     @DeleteMapping(path = "/api/expenses/{id}")

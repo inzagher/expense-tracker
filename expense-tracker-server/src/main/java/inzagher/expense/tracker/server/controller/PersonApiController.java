@@ -33,10 +33,11 @@ public class PersonApiController {
         service.createPerson(dto);
     }
 
-    @PutMapping(path = "/api/persons")
+    @PutMapping(path = "/api/persons/{id}")
     @Operation(summary = "Edit person")
-    public void edit(@RequestBody PersonDTO dto) {
-        service.editPerson(dto);
+    public void edit(@PathVariable Long id,
+                     @RequestBody PersonDTO dto) {
+        service.editPerson(id, dto);
     }
     
     @DeleteMapping(path = "/api/persons/{id}")

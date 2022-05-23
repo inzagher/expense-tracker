@@ -74,7 +74,7 @@ class PersonServiceTests {
     @Test
     void personEditingTest() {
         var dto = new PersonDTO(stan.getId(), "STANLEY");
-        service.editPerson(dto);
+        service.editPerson(stan.getId(), dto);
         assertEquals(2L, manager.countPersons());
         assertStoredPersonData(dto.getId(), "STANLEY");
     }

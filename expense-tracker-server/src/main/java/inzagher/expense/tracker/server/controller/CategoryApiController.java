@@ -33,10 +33,11 @@ public class CategoryApiController {
         service.createCategory(dto);
     }
 
-    @PutMapping(path = "/api/categories")
+    @PutMapping(path = "/api/categories/{id}")
     @Operation(summary = "Edit category")
-    public void edit(@RequestBody CategoryDTO dto) {
-        service.editCategory(dto);
+    public void edit(@PathVariable Long id,
+                     @RequestBody CategoryDTO dto) {
+        service.editCategory(id, dto);
     }
 
     @DeleteMapping(path = "/api/categories/{id}")

@@ -48,11 +48,9 @@ public class PersonService {
     }
 
     @Transactional
-    public void editPerson(@NonNull PersonDTO dto) {
-        log.info("Edit person. Data: {}", dto);
-        var entity = personRepository
-                .findById(dto.getId())
-                .orElseThrow(NotFoundException::new);
+    public void editPerson(@NonNull Long id, @NonNull PersonDTO dto) {
+        log.info("Edit person. Id: {}. Data: {}", id, dto);
+        var entity = personRepository.getById(id);
         personMapper.mergeToExistingEntity(entity, dto);
         personRepository.save(entity);
     }
