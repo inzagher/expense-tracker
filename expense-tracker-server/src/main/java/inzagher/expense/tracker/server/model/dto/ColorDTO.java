@@ -17,10 +17,10 @@ public class ColorDTO {
     private Integer red;
 
     @Schema(description = "Green (0-255)")
-    @JsonProperty(value = "red")
+    @JsonProperty(value = "green")
     private Integer green;
 
     @Schema(description = "Blue (0-255)")
-    @JsonProperty(value = "red")
+    @JsonProperty(value = "blue")
     private Integer blue;
 }
