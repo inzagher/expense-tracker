@@ -141,7 +141,7 @@ class ReportServiceTests {
     
     private void assertYearlyReportItem(Double expectedAmount,
             List<YearlyReportItemDTO> report, int month) {
-        BigDecimal actualAmount = report.get(month - 1).getAmount();
+        BigDecimal actualAmount = report.get(month - 1).getTotal();
         boolean areEqual = BigDecimal.valueOf(expectedAmount).compareTo(actualAmount) == 0;
         assertTrue(areEqual, "AMOUNT MISMATCH FOR MONTH: " + month);
     }

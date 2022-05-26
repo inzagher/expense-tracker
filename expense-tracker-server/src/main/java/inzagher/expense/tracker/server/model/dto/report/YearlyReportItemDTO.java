@@ -19,6 +19,6 @@ public class YearlyReportItemDTO {
     private Integer month;
 
     @Schema(description = "Total monthly expenses")
-    @JsonProperty(value = "amount")
-    private BigDecimal amount;
+    @JsonProperty(value = "total")
+    private BigDecimal total;
 }
