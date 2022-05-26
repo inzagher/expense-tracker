@@ -1,8 +1,15 @@
-<h2>Категории</h2>
+<h2>Отчет по категориям</h2>
 <div class="category-report">
     <div class="category-report-item" *ngFor="let item of categoryReport">
         <div class="category-color" [style.background-color] = "item.category?.color | color"></div>
         <p class="category-name">{{ item.category?.name }}</p>
-        <p class="amount">{{ item.amount }}</p>
+        <p class="total">{{ item.total }}</p>
+    </div>
+</div>
+<h2>Годовой отчет</h2>
+<div class="yearly-report">
+    <div class="yearly-report-item" *ngFor="let item of yearlyReport">
+        <p class="month-name">{{ item.month }}</p>
+        <p class="total">{{ item.total }}</p>
     </div>
 </div>

@@ -1,4 +1,4 @@
 export interface YearlyReportItemDTO {
     month: number | null;
-    amount: number | null;
+    total: number | null;
 }
