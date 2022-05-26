@@ -5,13 +5,10 @@ ENV HOME=/home/usr/app
 RUN mkdir -p $HOME
 WORKDIR $HOME
 
-# Download dependencies
-COPY pom.xml $HOME
-RUN mvn dependency:resolve
-
 # Build application
-COPY . $HOME
-RUN mvn clean package -Dmaven.test.skip
+COPY pom.xml $HOME
+COPY src $HOME/src
+RUN --mount=type=cache,target=/root/.m2 mvn clean package -Dmaven.test.skip
 
 # Start application
 FROM openjdk:18-alpine AS deploy
