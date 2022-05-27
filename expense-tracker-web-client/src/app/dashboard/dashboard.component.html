@@ -1,15 +1,27 @@
-<h2>Отчет по категориям</h2>
-<div class="category-report">
-    <div class="category-report-item" *ngFor="let item of categoryReport">
-        <div class="category-color" [style.background-color] = "item.category?.color | color"></div>
-        <p class="category-name">{{ item.category?.name }}</p>
-        <p class="total">{{ item.total }}</p>
+<div *ngIf="!!categoryReport && categoryReport.length > 0">
+    <h2>Отчет по категориям</h2>
+    <div class="report-block" >
+        <div class="report-item" *ngFor="let item of categoryReport">
+            <div class="category-color" [style.background-color] = "item.category?.color | color"></div>
+            <p class="category-name">{{ item.category?.name }}</p>
+            <p class="total">{{ item.total }}</p>
+        </div>
+        <div class="report-item">
+            <p class="month-name">Итого</p>
+            <p class="total">{{ calculateTotalMonthyExpense() }}</p>
+        </div>
     </div>
 </div>
-<h2>Годовой отчет</h2>
-<div class="yearly-report">
-    <div class="yearly-report-item" *ngFor="let item of yearlyReport">
-        <p class="month-name">{{ item.month }}</p>
-        <p class="total">{{ item.total }}</p>
+<div *ngIf="!!yearlyReport&& yearlyReport.length > 0">
+    <h2>Годовой отчет</h2>
+    <div class="report-block">
+        <div class="report-item" *ngFor="let item of yearlyReport">
+            <p class="month-name">{{ item.month | month }}</p>
+            <p class="total">{{ item.total }}</p>
+        </div>
+        <div class="report-item">
+            <p class="month-name">Итого</p>
+            <p class="total">{{ calculateTotalYearlyExpense() }}</p>
+        </div>
     </div>
 </div>

@@ -1,8 +1,9 @@
-.category-report {
-    .category-report-item {
+.report-block {
+    .report-item {
         display: flex;
         flex-direction: row;
         margin-bottom: 12px;
+        max-width: 250px;
         .category-color {
             height: 15px;
             width: 40px;

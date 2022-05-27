@@ -30,6 +30,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
         }
     }
 
+    calculateTotalMonthyExpense(): number {
+        return this.categoryReport
+            ?.filter(item => !!item)
+            ?.map(item => item.total)
+            ?.reduce(this.add, 0) ?? 0;
+    }
+
+    calculateTotalYearlyExpense(): number {
+        return this.yearlyReport
+            ?.filter(item => !!item)
+            ?.map(item => item.total)
+            ?.reduce(this.add, 0) ?? 0;
+    }
+
     private onBusEvent(event: ApplicationEvent) {
         if (event instanceof BackupRestoredEvent) {
             this.reload();
@@ -45,5 +59,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.reportService.getYearlyReport(year).subscribe(
             (items) => this.yearlyReport = items
         );
+    }
+
+    private add(sum: number | null, next: number | null): number {
+        return (sum ?? 0) + (next ?? 0);
     }
 }
