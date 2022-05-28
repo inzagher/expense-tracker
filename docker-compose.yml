@@ -17,6 +17,8 @@ services:
       - "database"
     ports:
       - "8080:8080"
+    volumes:
+      - "backup-data:/opt/expense-tracker-server/backups"
     environment:
       - "SPRING_PROFILES_ACTIVE=default,scheduling-enabled"
       - "DATABASE_HOST=expense-tracker-database"
@@ -31,11 +33,15 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - "expense-tracker-database:/var/lib/postgresql/data"
+      - "postgresql-data:/var/lib/postgresql/data"
     environment:
       - "POSTGRES_USER=sa"
       - "POSTGRES_PASSWORD=12345"
       - "POSTGRES_DB=expenses"
 volumes:
-  expense-tracker-database:
-    external: true
+  postgresql-data:
+    name: "expense-tracker-database"
+    external: false
+  backup-data:
+    name: "expense-tracker-backups"
+    external: false
