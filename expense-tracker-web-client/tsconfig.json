@@ -26,6 +26,7 @@
             "@shared/*": ["src/app/shared/*"],
             "@layout/*": ["src/app/layout/*"],
             "@dashboard/*": ["src/app/dashboard/*"],
+            "@expenses/*": ["src/app/expenses/*"],
             "@env/*": ["src/environments/*"]
         }
     },
