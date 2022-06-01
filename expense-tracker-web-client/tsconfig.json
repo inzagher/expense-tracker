@@ -27,6 +27,9 @@
             "@layout/*": ["src/app/layout/*"],
             "@dashboard/*": ["src/app/dashboard/*"],
             "@expenses/*": ["src/app/expenses/*"],
+            "@categories/*": ["src/app/categories/*"],
+            "@persons/*": ["src/app/persons/*"],
+            "@backups/*": ["src/app/backups/*"],
             "@env/*": ["src/environments/*"]
         }
     },
