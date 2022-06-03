@@ -1,17 +1,40 @@
-.report-block {
+.report-container {
+    background-color: #eeeeee;
+    border-radius: 2px;
+    margin-bottom: 20px;
+    padding: 10px;
+    .report-title {
+        font-weight: normal;
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
     .report-item {
+        background-color: white;
+        height: 50px;
+        margin-bottom: 10px;
         display: flex;
         flex-direction: row;
-        margin-bottom: 12px;
-        max-width: 250px;
-        .category-color {
-            height: 15px;
-            width: 40px;
-            border: solid black 1px;
-            margin-right: 10px;
+        align-items: center;
+        .item-icon {
+            height: 28px;
+            width: 28px;
+            border: solid black 2px;
+            margin: auto 10px;
         }
-        .total {
+        .item-label {
+            font-size: 16px;
+            margin: auto 10px;
+        }
+        .total-amount, .total-label {
+            margin: auto 10px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .total-amount {
             margin-left: auto;
         }
+    }
+    &:last-child {
+        margin-bottom: 0px;
     }
 }
