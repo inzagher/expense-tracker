@@ -1,0 +1,33 @@
+.form-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    .bottom-toolbar {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        margin-top: auto;
+        .button-delimiter {
+            width: 10px;
+        }
+        .mat-raised-button {
+            border-radius: 0;
+            flex: 1 1 auto;
+        }
+    }
+    mat-form-field {
+        width: 100%;
+    }
+}
+.category-option {
+    display: flex;
+    flex-direction: row;
+    .color-icon {
+        height: 16px;
+        width: 16px;
+        border: solid black 2px;
+        margin: auto 10px;
+        margin-left: auto;
+    }
+}

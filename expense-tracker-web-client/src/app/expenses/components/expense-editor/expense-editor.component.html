@@ -1,1 +1,46 @@
-<p>expense-editor works!</p>
+<form [formGroup]="form" class="form-container">
+    <mat-form-field appearance="standard">
+        <mat-label>Дата</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="date">
+        <mat-hint>DD.MM.YYYY</mat-hint>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="standard">
+        <mat-label>Владелец</mat-label>
+        <mat-select formControlName="person">
+            <mat-option *ngFor="let p of persons" [value]="p.id">
+                {{ p.name }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="standard">
+        <mat-label>Категория</mat-label>
+        <mat-select formControlName="category">
+            <mat-option *ngFor="let c of categories" [value]="c.id">
+                <div class="category-option">
+                    <span>{{ c.name }}</span>
+                    <div class="color-icon" [style.background-color] = "c.color | color"></div>
+                </div>
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="standard">
+        <mat-label>Величина</mat-label>
+        <input matInput type="number" formControlName="amount">
+    </mat-form-field>
+
+    <mat-form-field appearance="standard">
+        <mat-label>Описание</mat-label>
+        <input matInput formControlName="description">
+    </mat-form-field>
+
+    <div class="bottom-toolbar">
+        <button mat-raised-button color="primary" (click)="submit()">Сохранить</button>
+        <div class="button-delimiter"></div>
+        <button mat-raised-button color="primary" (click)="cancel()">Отмена</button>
+    </div>
+</form>
