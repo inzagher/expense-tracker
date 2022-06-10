@@ -1,5 +1,6 @@
 export * from "./backup.service"
 export * from "./category.service"
+export * from "./dictionary.service"
 export * from "./event-bus.service"
 export * from "./expense.service"
 export * from "./person.service"
