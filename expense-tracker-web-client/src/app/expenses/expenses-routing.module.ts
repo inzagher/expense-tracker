@@ -4,9 +4,9 @@ import { ExpenseEditorComponent, ExpensesComponent, MonthlyExpensesComponent } f
 
 const routes: Routes = [
     { path: '', component: ExpensesComponent },
-    { path: 'monthly/{year}/{month}', component: MonthlyExpensesComponent },
-    { path: ':id', component: ExpenseEditorComponent },
+    { path: 'monthly/:year/:month', component: MonthlyExpensesComponent },
     { path: 'create', component: ExpenseEditorComponent },
+    { path: ':id', component: ExpenseEditorComponent }
 ];
 
 @NgModule({
