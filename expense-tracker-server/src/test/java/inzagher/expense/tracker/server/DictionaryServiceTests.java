@@ -44,7 +44,7 @@ class DictionaryServiceTests {
         storeExpenseWithDescription("Test333");
         storeExpenseWithDescription("Test333");
         storeExpenseWithDescription("Test333");
-        findOptionsAndAssert("test", 2, "Test222", "Test333");
+        findOptionsAndAssert("test", 2, "Test333", "Test222");
     }
 
     private void storeExpenseWithDescription(String description) {

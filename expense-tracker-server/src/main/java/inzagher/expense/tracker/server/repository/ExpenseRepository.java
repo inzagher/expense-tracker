@@ -27,6 +27,6 @@ public interface ExpenseRepository extends
 
     @Query("SELECT e.description FROM ExpenseEntity e " +
            "WHERE UPPER(e.description) LIKE UPPER(:pattern || '%')" +
-           "GROUP BY e.description HAVING COUNT(*) >= :minCount")
+           "GROUP BY e.description HAVING COUNT(*) >= :minCount ORDER BY COUNT(*) DESC")
     List<String> findDescriptionsByPattern(String pattern, long minCount);
 }
