@@ -16,7 +16,7 @@ import java.util.List;
 public class DictionaryApiController {
     private final DictionaryService service;
 
-    @GetMapping("/api/expenses/descriptions")
+    @GetMapping("/api/dictionaries/descriptions")
     @Operation(summary = "Expense description autocomplete")
     public List<String> findExpenseDescriptions(
             @RequestParam String pattern,

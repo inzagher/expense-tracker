@@ -8,7 +8,7 @@ export class DictionaryService {
     }
 
     findDescriptions(pattern: string, minCount: number): Observable<string[]> {
-        let url = '/api/expenses/descriptions';
+        let url = '/api/dictionaries/descriptions';
         let params: any = { pattern, minCount };
         return this.http.get<string[]>(url, { params: params });
     }
