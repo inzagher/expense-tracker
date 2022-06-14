@@ -1,4 +1,4 @@
-import { ApplicationEvent } from "@core/events";
+import { BusEvent } from "@core/events";
 
-export class BackupRestoredEvent extends ApplicationEvent {
+export class BackupRestoredEvent extends BusEvent {
 }

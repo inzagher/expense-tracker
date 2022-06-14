@@ -2,15 +2,15 @@ import { Injectable } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { RxStomp, RxStompConfig } from '@stomp/rx-stomp';
 import { IMessage } from '@stomp/stompjs';
-import { EventBus } from '@core/services';
-import { ApplicationEvent, BackupCreatedEvent, BackupRestoredEvent } from '@core/events';
+import { Bus } from '@core/services';
+import { BusEvent, BackupCreatedEvent, BackupRestoredEvent } from '@core/events';
 
 @Injectable({ providedIn: 'root' })
 export class WebSocketListener {
     private stomp: RxStomp | null = null;
     private subscription: Subscription | null = null;
 
-    constructor(private bus: EventBus) {
+    constructor(private bus: Bus) {
     }
 
     connect(): void {
@@ -53,7 +53,7 @@ export class WebSocketListener {
         return `${protocol}://${host}/notifications/websocket`;
     }
 
-    private deserialize(data: string): ApplicationEvent | null {
+    private deserialize(data: string): BusEvent | null {
         switch(data) {
             case 'BackupCreatedEvent': return new BackupCreatedEvent();
             case 'BackupRestoredEvent': return new BackupRestoredEvent();

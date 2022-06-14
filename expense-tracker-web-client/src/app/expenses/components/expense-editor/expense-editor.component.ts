@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { ChangeTitleCommand } from '@core/commands';
 import { CategoryDTO, ExpenseDTO, PersonDTO } from '@core/dto';
-import { CategoryService, DictionaryService, ExpenseService, PersonService } from '@core/services';
+import { Bus, CategoryService, DictionaryService, ExpenseService, PersonService } from '@core/services';
 import { concatMap, switchMap, defer, merge, Observable, of, tap, toArray, debounceTime, filter } from 'rxjs';
 
 @Component({
@@ -17,7 +18,8 @@ export class ExpenseEditorComponent implements OnInit {
     categories: CategoryDTO[] | null = null;
     descriptions$: Observable<string[]> | null = null;
 
-    constructor(private route: ActivatedRoute,
+    constructor(private bus: Bus,
+                private route: ActivatedRoute,
                 private formBuilder: FormBuilder,
                 private dictionaryService: DictionaryService,
                 private expenseService: ExpenseService,
@@ -39,6 +41,9 @@ export class ExpenseEditorComponent implements OnInit {
             next: (expense) => this.onExpenseLoaded(expense),
             error: (error) => this.onDataLoadingError(error)
         });
+
+        let title = id == null ? "Новый расход" : "Редактирование расхода";
+        this.bus.publish(new ChangeTitleCommand(title));
 
         let descriptionControl = this.form.get("description");
         if (descriptionControl) {

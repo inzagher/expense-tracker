@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeTitleCommand } from '@core/commands';
 import { CategoryReportItemDTO, YearlyReportItemDTO } from '@core/dto';
-import { ApplicationEvent, BackupRestoredEvent } from '@core/events';
-import { EventBus, ReportService } from '@core/services';
+import { BackupRestoredEvent } from '@core/events';
+import { BusMessage, Bus, ReportService } from '@core/services';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -16,11 +17,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private today: Date = new Date;
     private subscription: Subscription | null = null;
 
-    constructor(private bus: EventBus,
+    constructor(private bus: Bus,
                 private reportService: ReportService) { }
 
     ngOnInit(): void {
-        this.subscription = this.bus.events$.subscribe(e => this.onBusEvent(e));
+        this.subscription = this.bus.messages$.subscribe(m => this.onBusMessage(m));
+        this.bus.publish(new ChangeTitleCommand("Учет расходов"));
         this.reload();
     }
 
@@ -44,8 +46,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
             ?.reduce(this.add, 0) ?? 0;
     }
 
-    private onBusEvent(event: ApplicationEvent) {
-        if (event instanceof BackupRestoredEvent) {
+    private onBusMessage(message: BusMessage) {
+        if (message instanceof BackupRestoredEvent) {
             this.reload();
         }
     }

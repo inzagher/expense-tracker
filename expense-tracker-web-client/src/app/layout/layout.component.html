@@ -3,7 +3,7 @@
         <mat-icon>menu</mat-icon>
     </button>
     <button mat-flat-button color="primary" routerLink="/">
-        <span class="title">Учет расходов</span>
+        <span class="title">{{ title$ | async }}</span>
     </button>
 </mat-toolbar>
 <div class="main-content">
