@@ -4,8 +4,8 @@ import { PersonsComponent, PersonEditorComponent } from '@persons/components';
 
 const routes: Routes = [
     { path: '', component: PersonsComponent },
-    { path: ':id', component: PersonEditorComponent },
-    { path: 'create', component: PersonEditorComponent }
+    { path: 'create', component: PersonEditorComponent },
+    { path: ':id', component: PersonEditorComponent }
 ];
 
 @NgModule({
