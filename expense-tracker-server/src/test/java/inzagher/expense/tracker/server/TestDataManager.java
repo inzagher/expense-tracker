@@ -99,9 +99,10 @@ public class TestDataManager {
     }
     
     public BackupMetadataEntity storeBackupMetadata(LocalDateTime created, int expenses,
-                                                    int persons, int categories) {
+                                                    int persons, int categories, String fileName) {
         BackupMetadataEntity bm = new BackupMetadataEntity();
         bm.setCreated(created);
+        bm.setFileName(fileName);
         bm.setExpenses(expenses);
         bm.setPersons(persons);
         bm.setCategories(categories);

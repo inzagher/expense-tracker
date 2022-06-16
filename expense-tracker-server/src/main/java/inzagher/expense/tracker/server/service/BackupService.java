@@ -6,6 +6,7 @@ import inzagher.expense.tracker.server.model.entity.BackupMetadataEntity;
 import inzagher.expense.tracker.server.model.event.BackupCreatedEvent;
 import inzagher.expense.tracker.server.model.event.BackupRestoredEvent;
 import inzagher.expense.tracker.server.model.exception.ExpenseTrackerException;
+import inzagher.expense.tracker.server.model.exception.NotFoundException;
 import inzagher.expense.tracker.server.model.exception.ServiceBusyException;
 import inzagher.expense.tracker.server.model.mapper.BackupMetadataMapper;
 import inzagher.expense.tracker.server.model.mapper.CategoryMapper;
@@ -15,6 +16,7 @@ import inzagher.expense.tracker.server.repository.BackupMetadataRepository;
 import inzagher.expense.tracker.server.repository.CategoryRepository;
 import inzagher.expense.tracker.server.repository.ExpenseRepository;
 import inzagher.expense.tracker.server.repository.PersonRepository;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +26,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -65,6 +69,14 @@ public class BackupService {
     }
 
     @Transactional
+    public BackupMetadataDTO getMetadataRecordById(@NonNull Long id) {
+        log.info("Find backup metadata record with id {}", id);
+        return backupMetadataRepository.findById(id)
+                .map(backupMetadataMapper::toDTO)
+                .orElseThrow(NotFoundException::new);
+    }
+
+    @Transactional
     public Optional<BackupMetadataDTO> findLastMetadataRecord() {
         log.info("Find last backup metadata record");
         var request = PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, "created"));
@@ -73,14 +85,29 @@ public class BackupService {
     }
 
     @Transactional
+    public FileInputStream downloadBackupFile(@NonNull Long id) {
+        log.info("Download backup file with id {}", id);
+        try {
+            var metadata = backupMetadataRepository.getById(id);
+            var path = Paths.get(backupDirectory, metadata.getFileName());
+            return new FileInputStream(path.toString());
+        } catch (FileNotFoundException e) {
+            throw new ExpenseTrackerException("Backup file not found", "FILE_NOT_FOUND", e);
+        }
+    }
+
+    @Transactional
     public BackupMetadataDTO createDatabaseBackup() {
         log.info("Create database backup");
         if (serviceState.compareAndSet(STATE_IDLE, STATE_BUSY)) {
             try {
+                var fileName = formatBackupFileName();
                 var data = loadBackupDataFromDatabase();
                 var metadata = createBackupMetadata(data);
+                var zip = serializationService.serializeAndZip(data, ZIP_ENTRY_NAME);
+                writeBackupToFile(fileName, zip);
+                metadata.setFileName(fileName);
                 metadata = backupMetadataRepository.save(metadata);
-                writeBackupToFile(serializationService.serializeAndZip(data, ZIP_ENTRY_NAME));
                 eventPublisher.publishEvent(new BackupCreatedEvent());
                 return backupMetadataMapper.toDTO(metadata);
             } finally {
@@ -136,7 +163,6 @@ public class BackupService {
     }
     
     private void storeBackupDataInDatabase(BackupXmlDataDTO dto) {
-        var metadata = createBackupMetadata(dto);
         var persons = dto.getPersons().stream()
                 .map(personMapper::toEntity)
                 .toList();
@@ -149,19 +175,17 @@ public class BackupService {
         personRepository.saveAll(persons);
         categoryRepository.saveAll(categories);
         expenseRepository.saveAll(expenses);
-        backupMetadataRepository.save(metadata);
     }
     
     private void truncateAllTables() {
         expenseRepository.deleteAllInBatch();
         categoryRepository.deleteAllInBatch();
         personRepository.deleteAllInBatch();
-        backupMetadataRepository.deleteAllInBatch();
     }
 
-    private void writeBackupToFile(byte[] data) {
+    private void writeBackupToFile(String fileName, byte[] data) {
         try {
-            var backupFilePath = Paths.get(backupDirectory, formatBackupFileName());
+            var backupFilePath = Paths.get(backupDirectory, fileName);
             if (Files.exists(backupFilePath)) {
                 Files.delete(backupFilePath);
             }

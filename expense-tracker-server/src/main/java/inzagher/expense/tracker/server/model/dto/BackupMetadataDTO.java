@@ -18,6 +18,10 @@ public class BackupMetadataDTO {
     @JsonProperty(value = "created")
     private LocalDateTime created;
 
+    @Schema(description = "Backup file name")
+    @JsonProperty(value = "fileName")
+    private String fileName;
+
     @Schema(description = "Expense count")
     @JsonProperty(value = "expenses")
     private Integer expenses;

@@ -21,6 +21,9 @@ public class BackupMetadataEntity implements Serializable {
     @Column(name="created")
     private LocalDateTime created;
 
+    @Column(name="file_name")
+    private String fileName;
+
     @Column(name="expenses")
     private Integer expenses;
 

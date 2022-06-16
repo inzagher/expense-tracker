@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(classes = ExpenseTrackerServerApp.class)
 class BackupServiceTests {
     private static final String TEST_DESCRIPTION = "BACKUP TEST";
+    private static final String TEST_FILE_NAME = "backup.zip";
     
     @Autowired
     private BackupService service;
@@ -41,9 +42,9 @@ class BackupServiceTests {
         manager.storeExpense(2020, 4, 5, p2, c1, 40D, TEST_DESCRIPTION);
         manager.storeExpense(2020, 5, 6, p3, c1, 50D, TEST_DESCRIPTION);
         
-        manager.storeBackupMetadata(LocalDateTime.now().minusDays(3), 0, 1, 1);
-        manager.storeBackupMetadata(LocalDateTime.now().minusDays(2), 2, 1, 1);
-        manager.storeBackupMetadata(LocalDateTime.now().minusDays(1), 4, 3, 2);
+        manager.storeBackupMetadata(LocalDateTime.now().minusDays(3), 0, 1, 1, TEST_FILE_NAME);
+        manager.storeBackupMetadata(LocalDateTime.now().minusDays(2), 2, 1, 1, TEST_FILE_NAME);
+        manager.storeBackupMetadata(LocalDateTime.now().minusDays(1), 4, 3, 2, TEST_FILE_NAME);
     }
     
     @AfterEach
@@ -55,6 +56,7 @@ class BackupServiceTests {
     void lastBackupInfoTest() {
         var last = service.findLastMetadataRecord();
         assertTrue(last.isPresent());
+        assertNotNull(last.get().getFileName());
         assertEquals(4, last.get().getExpenses());
         assertEquals(3, last.get().getPersons());
         assertEquals(2, last.get().getCategories());
@@ -70,6 +72,7 @@ class BackupServiceTests {
     void backupDatabaseTest() {
         var metadata = service.createDatabaseBackup();
         assertNotNull(metadata);
+        assertNotNull(metadata.getFileName());
         assertEquals(6, metadata.getExpenses());
         assertEquals(3, metadata.getPersons());
         assertEquals(3, metadata.getCategories());
@@ -83,7 +86,7 @@ class BackupServiceTests {
         assertEquals(3, manager.countExpenses());
         assertEquals(2, manager.countCategories());
         assertEquals(1, manager.countPersons());
-        assertEquals(1, manager.countBackups());
+        assertEquals(3, manager.countBackups());
     }
     
     private byte[] loadTestResource(String name) {

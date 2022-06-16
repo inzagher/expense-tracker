@@ -6,10 +6,11 @@ import inzagher.expense.tracker.server.service.BackupService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -25,6 +26,28 @@ public class BackupApiController {
     @Operation(summary = "Find all created backups")
     public List<BackupMetadataDTO> findAll() {
         return service.findAllMetadataRecords();
+    }
+
+    @GetMapping(path = "/api/backups/download/{id}")
+    @Operation(summary = "Download backup file")
+    public ResponseEntity<InputStreamResource> download(@PathVariable Long id) {
+        try {
+            var metadata = service.getMetadataRecordById(id);
+            var stream = service.downloadBackupFile(id);
+            var contentDisposition = "attachment; filename=" + metadata.getFileName();
+            var cacheControl = "no-cache, no-store, must-revalidate";
+            HttpHeaders header = new HttpHeaders();
+            header.add(HttpHeaders.CONTENT_DISPOSITION, contentDisposition);
+            header.add("Cache-Control", cacheControl);
+            header.add("Pragma", "no-cache");
+            header.add("Expires", "0");
+            return ResponseEntity.ok().headers(header)
+                    .contentLength(stream.available())
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .body(new InputStreamResource(stream));
+        } catch (IOException e) {
+            throw new ExpenseTrackerException("File reading failed", e);
+        }
     }
 
     @PostMapping(path = "/api/backups/create")

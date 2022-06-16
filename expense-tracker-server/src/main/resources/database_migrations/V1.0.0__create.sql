@@ -1,5 +1,6 @@
 create table backups (
     id bigserial primary key,
+    file_name varchar(32),
     created timestamp,
     categories integer,
     expenses integer,
