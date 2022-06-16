@@ -1,10 +1,18 @@
 <mat-toolbar color="primary">
-    <button mat-icon-button>
+    <button mat-icon-button [matMenuTriggerFor]="menu">
         <mat-icon>menu</mat-icon>
     </button>
     <button mat-flat-button color="primary" routerLink="/">
         <span class="title">{{ title$ | async }}</span>
     </button>
+    <mat-menu #menu="matMenu">
+        <button mat-menu-item routerLink="/expenses/dashboard">Главная</button>
+        <button mat-menu-item routerLink="/expenses/list/monthly">Расходы за месяц</button>
+        <button mat-menu-item routerLink="/expenses/list/search">Поиск расходов</button>
+        <button mat-menu-item routerLink="/categories/list">Категории</button>
+        <button mat-menu-item routerLink="/persons/list">Пользователи</button>
+        <button mat-menu-item routerLink="/backups">Резервное копирование</button>
+    </mat-menu>
 </mat-toolbar>
 <div class="main-content">
     <router-outlet></router-outlet>

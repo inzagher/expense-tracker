@@ -3,9 +3,9 @@ import { RouterModule, Routes } from '@angular/router';
 import { CategoriesComponent, CategoryEditorComponent } from '@categories/components';
 
 const routes: Routes = [
-    { path: '', component: CategoriesComponent },
-    { path: ':id', component: CategoryEditorComponent },
-    { path: 'create', component: CategoryEditorComponent }
+    { path: 'list', component: CategoriesComponent },
+    { path: 'editor/:id', component: CategoryEditorComponent },
+    { path: 'editor', component: CategoryEditorComponent }
 ];
 
 @NgModule({

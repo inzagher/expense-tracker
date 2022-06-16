@@ -3,9 +3,9 @@ import { RouterModule, Routes } from '@angular/router';
 import { PersonsComponent, PersonEditorComponent } from '@persons/components';
 
 const routes: Routes = [
-    { path: '', component: PersonsComponent },
-    { path: 'create', component: PersonEditorComponent },
-    { path: ':id', component: PersonEditorComponent }
+    { path: 'list', component: PersonsComponent },
+    { path: 'editor/:id', component: PersonEditorComponent },
+    { path: 'editor', component: PersonEditorComponent }
 ];
 
 @NgModule({

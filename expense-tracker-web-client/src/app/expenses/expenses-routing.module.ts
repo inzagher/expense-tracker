@@ -3,10 +3,11 @@ import { RouterModule, Routes } from '@angular/router';
 import { ExpenseEditorComponent, ExpensesComponent, MonthlyExpensesComponent } from '@expenses/components';
 
 const routes: Routes = [
-    { path: '', component: ExpensesComponent },
-    { path: 'monthly/:year/:month', component: MonthlyExpensesComponent },
-    { path: 'create', component: ExpenseEditorComponent },
-    { path: ':id', component: ExpenseEditorComponent }
+    { path: 'list/search', component: ExpensesComponent },
+    { path: 'list/monthly/:year/:month', component: MonthlyExpensesComponent },
+    { path: 'list/monthly', component: MonthlyExpensesComponent },
+    { path: 'editor/:id', component: ExpenseEditorComponent },
+    { path: 'editor', component: ExpenseEditorComponent },
 ];
 
 @NgModule({
