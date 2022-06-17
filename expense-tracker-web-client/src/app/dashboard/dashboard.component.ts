@@ -3,6 +3,7 @@ import { ChangeTitleCommand } from '@core/commands';
 import { CategoryReportItemDTO, YearlyReportItemDTO } from '@core/dto';
 import { BackupRestoredEvent } from '@core/events';
 import { BusMessage, Bus, ReportService } from '@core/services';
+import { MathUtils } from '@core/utils';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -33,17 +34,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     calculateTotalMonthyExpense(): number {
-        return this.categoryReport
-            ?.filter(item => !!item)
-            ?.map(item => item.total)
-            ?.reduce(this.add, 0) ?? 0;
+        return this.categoryReport ? MathUtils.sum(this.categoryReport, i => i.total as number) : 0;
     }
 
     calculateTotalYearlyExpense(): number {
-        return this.yearlyReport
-            ?.filter(item => !!item)
-            ?.map(item => item.total)
-            ?.reduce(this.add, 0) ?? 0;
+        return this.yearlyReport ? MathUtils.sum(this.yearlyReport, i => i.total as number) : 0;
     }
 
     private onBusMessage(message: BusMessage) {
@@ -61,9 +56,5 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.reportService.getYearlyReport(year).subscribe(
             (items) => this.yearlyReport = items
         );
-    }
-
-    private add(sum: number | null, next: number | null): number {
-        return (sum ?? 0) + (next ?? 0);
     }
 }
