@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { formatDate } from '@angular/common';
+import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ChangeTitleCommand } from '@core/commands';
 import { ExpenseDTO } from '@core/dto';
@@ -17,7 +18,8 @@ export class MonthlyExpensesComponent implements OnInit {
 
     constructor(private bus: Bus,
                 private route: ActivatedRoute,
-                private expenseService: ExpenseService) { }
+                private expenseService: ExpenseService,
+                @Inject(LOCALE_ID) private locale: string) { }
 
     ngOnInit(): void {
         let date = new Date();
@@ -32,8 +34,8 @@ export class MonthlyExpensesComponent implements OnInit {
             return;
         }
 
-        let start = this.createUTCDate(this.year, this.month - 1, 1).toISOString();
-        let end = this.createUTCDate(this.year, this.month, 0).toISOString();
+        let start = this.toLocalDate(this.createUTCDate(this.year, this.month - 1, 1));
+        let end = this.toLocalDate(this.createUTCDate(this.year, this.month, 0));
         this.expenseService.findAll({ dateFrom: start, dateTo: end }).subscribe({
             next: (list) => { this.applyLoadedExpenses(list); },
             error: (error) => { console.error(error); }
@@ -91,6 +93,10 @@ export class MonthlyExpensesComponent implements OnInit {
     private isSameMonthReport(report: DailyReportItem[], year: number, month: number): boolean {
         return report.some(dri => dri.date.getMonth() === (month - 1)
                                && dri.date.getFullYear() == year);
+    }
+
+    private toLocalDate(date: Date): string {
+        return formatDate(date, 'YYYY-MM-dd', this.locale);
     }
 }
 
