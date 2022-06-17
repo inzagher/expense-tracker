@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ChangeTitleCommand } from '@core/commands';
 import { PersonDTO } from '@core/dto';
 import { Bus, PersonService } from '@core/services';
+import { DialogService } from '@core/services/dialog.service';
 import { BehaviorSubject, Observable, switchMap } from 'rxjs';
 
 @Component({
@@ -16,6 +17,7 @@ export class PersonsComponent implements OnInit, OnDestroy {
 
     constructor(private bus: Bus,
                 private router: Router,
+                private dialogService: DialogService,
                 private personService: PersonService) { }
 
     ngOnInit(): void {
@@ -40,7 +42,10 @@ export class PersonsComponent implements OnInit, OnDestroy {
     }
 
     delete(person: PersonDTO): void {
-        this.personService.deleteById(person.id!).subscribe({
+        let caption = 'Внимание!';
+        let question = 'Вы действительно хотите удалить пользователя?';
+        let request$ = this.personService.deleteById(person.id as number);
+        this.dialogService.confirmAndExecute(caption, question, request$).subscribe({
             next: () => { this.refresh(); },
             error: (error) => { console.log(error); }
         });
