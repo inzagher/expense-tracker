@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { ChangeTitleCommand } from "@core/commands";
 import { CategoryDTO } from "@core/dto";
@@ -11,7 +11,7 @@ import { Observable, BehaviorSubject, switchMap } from "rxjs";
     templateUrl: './categories.component.html',
     styleUrls: ['./categories.component.scss']
 })
-export class CategoriesComponent implements OnInit {
+export class CategoriesComponent implements OnInit, OnDestroy {
     public categories$: Observable<CategoryDTO[]> | null = null;
     private update: BehaviorSubject<void> = new BehaviorSubject<void>(void 0);
 
