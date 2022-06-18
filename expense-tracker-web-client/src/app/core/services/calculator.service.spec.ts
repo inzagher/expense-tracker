@@ -1,4 +1,5 @@
-import { CalculatorService } from "./calculator.service";
+import {} from 'jasmine';
+import { CalculatorService } from "@core/services";
 
 describe('Calculator', () => {
     let service = new CalculatorService();

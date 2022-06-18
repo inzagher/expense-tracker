@@ -95,8 +95,8 @@ export class CalculatorService {
         let processedExpression: string = expression as string;
         let allOperationSymbols: string[] = Array.from(this.operationSymbolMap.keys());
         let selectedOperationSymbols: string[] = Array.from(this.operationSymbolMap.entries())
-            .filter(pair => selectedOperations.includes(pair[1] as MathOperationType))
-            .map(pair => pair[0] as string);
+            .filter(pair => selectedOperations.includes(pair[1]))
+            .map(pair => pair[0]);
 
         while (this.indexOfAny(processedExpression, selectedOperationSymbols) !== -1) {
             let actionIndex: number = this.indexOfAny(processedExpression, selectedOperationSymbols);
