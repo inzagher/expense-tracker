@@ -15,7 +15,7 @@ export class BackupService {
 
     backupDatabase(): Observable<BackupMetadataDTO> {
         let url = '/api/backups/create';
-        return this.http.get<BackupMetadataDTO>(url);
+        return this.http.post<BackupMetadataDTO>(url, {});
     }
 
     restoreDatabase(backup: Blob): Observable<void> {

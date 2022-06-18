@@ -1,1 +1,9 @@
-<p>backups works!</p>
+<div class="actions">
+    <button mat-raised-button color="primary" (click)="backupDatabase()">Резервная копия</button>
+    <button mat-raised-button color="primary" (click)='fileUpload.click()'>Восстановление</button>
+    <input id="fileUpload" type="file" accept="application/zip" #fileUpload
+           [hidden]="true" (change)="restoreDatabase($event)">
+</div>
+<div class="list-item" *ngFor="let metadata of backups$ | async">
+    <p>{{ metadata.created | date:'dd.MM.yyyy HH:mm:ss' }}</p>
+</div>
