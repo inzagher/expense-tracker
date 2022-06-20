@@ -3,12 +3,11 @@ package inzagher.expense.tracker.server.controller;
 import inzagher.expense.tracker.server.model.dto.BackupMetadataDTO;
 import inzagher.expense.tracker.server.model.exception.ExpenseTrackerException;
 import inzagher.expense.tracker.server.service.BackupService;
+import inzagher.expense.tracker.server.util.ControllerUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,17 +33,7 @@ public class BackupApiController {
         try {
             var metadata = service.getMetadataRecordById(id);
             var stream = service.downloadBackupFile(id);
-            var contentDisposition = "attachment; filename=" + metadata.getFileName();
-            var cacheControl = "no-cache, no-store, must-revalidate";
-            HttpHeaders header = new HttpHeaders();
-            header.add(HttpHeaders.CONTENT_DISPOSITION, contentDisposition);
-            header.add("Cache-Control", cacheControl);
-            header.add("Pragma", "no-cache");
-            header.add("Expires", "0");
-            return ResponseEntity.ok().headers(header)
-                    .contentLength(stream.available())
-                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                    .body(new InputStreamResource(stream));
+            return ControllerUtils.createFileResponse(stream, metadata.getFileName());
         } catch (IOException e) {
             throw new ExpenseTrackerException("File reading failed", e);
         }
