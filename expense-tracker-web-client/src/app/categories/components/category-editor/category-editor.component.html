@@ -1,1 +1,17 @@
-<p>category-editor works!</p>
+<form [formGroup]="form" class="form-container">
+    <mat-form-field appearance="standard">
+        <mat-label>Название</mat-label>
+        <input matInput formControlName="name">
+    </mat-form-field>
+
+    <mat-form-field appearance="standard">
+        <mat-label>Описание</mat-label>
+        <input matInput formControlName="description">
+    </mat-form-field>
+
+    <div class="bottom-toolbar">
+        <button mat-raised-button color="primary" (click)="submit()">Сохранить</button>
+        <div class="button-delimiter"></div>
+        <button mat-raised-button color="primary" (click)="cancel()">Отмена</button>
+    </div>
+</form>
