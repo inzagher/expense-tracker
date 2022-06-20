@@ -17,10 +17,6 @@ export class BackupsComponent implements OnInit, OnDestroy {
                 private dialogService: DialogService,
                 private backupService: BackupService) { }
 
-    public get backupColumns(): string[] {
-        return ['time', 'expenses', 'categories', 'persons'];
-    }
-
     ngOnInit(): void {
         this.backups$ = this.update.pipe(switchMap(() => this.backupService.findAll()));
         this.bus.publish(new ChangeTitleCommand("Резервное копирование"));
