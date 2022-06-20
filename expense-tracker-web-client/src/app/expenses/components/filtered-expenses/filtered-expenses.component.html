@@ -1,1 +1,74 @@
-<p>expenses works!</p>
+<form [formGroup]="form" class="form-container">
+    <mat-form-field appearance="standard">
+        <mat-label>Начало периода</mat-label>
+        <input matInput [matDatepicker]="dateFromPicker" formControlName="dateFrom">
+        <mat-hint>ДД.ММ.ГГГГ</mat-hint>
+        <mat-datepicker-toggle matSuffix [for]="dateFromPicker"></mat-datepicker-toggle>
+        <mat-datepicker #dateFromPicker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="standard">
+        <mat-label>Окончание периода</mat-label>
+        <input matInput [matDatepicker]="datePickerTo" formControlName="dateTo">
+        <mat-hint>ДД.ММ.ГГГГ</mat-hint>
+        <mat-datepicker-toggle matSuffix [for]="datePickerTo"></mat-datepicker-toggle>
+        <mat-datepicker #datePickerTo></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="standard">
+        <mat-label>Категории</mat-label>
+        <mat-select formControlName="categories">
+            <mat-option *ngFor="let c of categories$ | async" [value]="c.id">
+                <div class="category-option">
+                    <span>{{ c.name }}</span>
+                    <div class="color-icon" [style.background-color] = "c.color | color"></div>
+                </div>
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="standard">
+        <mat-label>Пользователи</mat-label>
+        <mat-select formControlName="persons">
+            <mat-option *ngFor="let p of persons$ | async" [value]="p.id">
+                {{ p.name }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="standard">
+        <mat-label>Сумма от</mat-label>
+        <input matInput formControlName="amountFrom">
+    </mat-form-field>
+
+    <mat-form-field appearance="standard">
+        <mat-label>Сумма до</mat-label>
+        <input matInput formControlName="amountTo">
+    </mat-form-field>
+
+    <mat-form-field appearance="standard">
+        <mat-label>Описание</mat-label>
+        <input matInput formControlName="description">
+    </mat-form-field>
+
+    <div class="bottom-toolbar">
+        <button mat-raised-button color="primary" (click)="submit()">Поиск</button>
+        <div class="button-delimiter"></div>
+        <button mat-raised-button color="primary" (click)="reset()">Сброс</button>
+    </div>
+</form>
+<div class="empty-search-result-container" *ngIf="empty$ | async">
+    <p>Ничего не найдено</p>
+</div>
+<div class="search-error-container" *ngIf="error$ | async">
+    <p>Ошибка поиска</p>
+</div>
+<div class="search-result-container">
+    <div class="expense-item" *ngFor="let expense of expenses$ | async">
+        <div>{{ expense.category?.color | color }}</div>
+        <p>{{ expense.date | date:'dd.MM.yyyy HH:mm:ss' }}</p>
+        <p>{{ expense.person?.name }}</p>
+        <p>{{ expense.amount }}</p>
+        <p>{{ expense.description }}</p>
+    </div>
+</div>
