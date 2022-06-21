@@ -5,14 +5,16 @@ import inzagher.expense.tracker.server.model.dto.ExpenseDTO;
 import inzagher.expense.tracker.server.service.ExpenseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,7 +24,7 @@ public class ExpenseApiController {
 
     @GetMapping(path = "/api/expenses")
     @Operation(summary = "Find expenses")
-    public List<ExpenseDTO> find(
+    public Page<ExpenseDTO> find(
             @RequestParam(value = "persons[]", required = false) Long[] persons,
             @RequestParam(value = "categories[]", required = false) Long[] categories,
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
@@ -34,7 +36,8 @@ public class ExpenseApiController {
             @RequestParam(value = "amountExact", required = false) BigDecimal amountExact,
             @RequestParam(value = "amountFrom", required = false) BigDecimal amountFrom,
             @RequestParam(value = "amountTo", required = false) BigDecimal amountTo,
-            @RequestParam(value = "description", required = false) String description) {
+            @RequestParam(value = "description", required = false) String description,
+            @NonNull final Pageable pageable) {
         var criteria = new ExpenseSearchCriteria();
         if (persons != null) {
             Arrays.asList(persons).forEach(criteria.getPersonIdentifiers()::add);
@@ -49,7 +52,7 @@ public class ExpenseApiController {
         criteria.setAmountFrom(amountFrom);
         criteria.setAmountTo(amountTo);
         criteria.setDescriptionLike(description);
-        return service.findExpenses(criteria);
+        return service.findExpenses(criteria, pageable);
     }
 
     @GetMapping(path = "/api/expenses/{id}")

@@ -9,10 +9,10 @@ import inzagher.expense.tracker.server.repository.ExpenseRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Slf4j
 @Service
@@ -22,12 +22,12 @@ public class ExpenseService {
     private final ExpenseMapper expenseMapper;
 
     @Transactional
-    public List<ExpenseDTO> findExpenses(@NonNull ExpenseSearchCriteria criteria) {
+    public Page<ExpenseDTO> findExpenses(@NonNull ExpenseSearchCriteria criteria,
+                                         @NonNull Pageable pageable) {
         log.info("Query expenses with filter");
         var specification = new ExpenseSpecification(criteria);
-        return expenseRepository.findAll(specification).stream()
-                .map(expenseMapper::toDTO)
-                .toList();
+        return expenseRepository.findAll(specification, pageable)
+                .map(expenseMapper::toDTO);
     }
 
     @Transactional
