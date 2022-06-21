@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { ChangeTitleCommand } from "@core/commands";
 import { PersonDTO } from "@core/dto";
@@ -13,11 +13,11 @@ import { of } from "rxjs";
 })
 export class PersonEditorComponent implements OnInit {
     id: number | null = null;
-    form: FormGroup = new FormGroup({});
+    form: UntypedFormGroup = new UntypedFormGroup({});
 
     constructor(private bus: Bus,
                 private route: ActivatedRoute,
-                private formBuilder: FormBuilder,
+                private formBuilder: UntypedFormBuilder,
                 private personService: PersonService) { }
 
     ngOnInit(): void {

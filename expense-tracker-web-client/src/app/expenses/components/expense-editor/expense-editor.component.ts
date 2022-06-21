@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ChangeTitleCommand } from '@core/commands';
 import { CategoryDTO, ExpenseDTO, PersonDTO } from '@core/dto';
@@ -13,14 +13,14 @@ import { concatMap, switchMap, defer, merge, Observable, of, tap, toArray, debou
 })
 export class ExpenseEditorComponent implements OnInit {
     id: number | null = null;
-    form: FormGroup = new FormGroup({});
+    form: UntypedFormGroup = new UntypedFormGroup({});
     persons: PersonDTO[] | null = null;
     categories: CategoryDTO[] | null = null;
     descriptions$: Observable<string[]> | null = null;
 
     constructor(private bus: Bus,
                 private route: ActivatedRoute,
-                private formBuilder: FormBuilder,
+                private formBuilder: UntypedFormBuilder,
                 private dictionaryService: DictionaryService,
                 private expenseService: ExpenseService,
                 private personService: PersonService,

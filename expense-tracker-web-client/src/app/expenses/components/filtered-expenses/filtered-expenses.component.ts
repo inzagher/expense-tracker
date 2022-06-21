@@ -1,6 +1,6 @@
 import { formatDate } from "@angular/common";
 import { Component, Inject, LOCALE_ID, OnInit } from "@angular/core";
-import { FormGroup, FormBuilder } from "@angular/forms";
+import { UntypedFormGroup, UntypedFormBuilder } from "@angular/forms";
 import { ChangeTitleCommand } from "@core/commands";
 import { CategoryDTO, ExpenseDTO, ExpenseFilterDTO, PageableDTO, PersonDTO } from "@core/dto";
 import { Bus, CategoryService, ExpenseService, PersonService } from "@core/services";
@@ -18,10 +18,10 @@ export class FilteredExpensesComponent implements OnInit {
     expenses: ExpenseDTO[] = [];
     persons$: Observable<PersonDTO[]> | null = null;
     categories$: Observable<CategoryDTO[]> | null = null;
-    form: FormGroup = new FormGroup({});
+    form: UntypedFormGroup = new UntypedFormGroup({});
 
     constructor(private bus: Bus,
-                private formBuilder: FormBuilder,
+                private formBuilder: UntypedFormBuilder,
                 private personService: PersonService,
                 private categoryService: CategoryService,
                 private expenseService: ExpenseService,
