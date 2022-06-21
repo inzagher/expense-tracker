@@ -1,6 +1,5 @@
 export * from "./backup.service"
 export * from "./bus.service"
-export * from "./calculator.service.spec"
 export * from "./calculator.service"
 export * from "./category.service"
 export * from "./dialog.service"

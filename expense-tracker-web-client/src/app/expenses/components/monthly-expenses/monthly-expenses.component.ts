@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ChangeTitleCommand } from '@core/commands';
 import { ExpenseDTO } from '@core/dto';
 import { Bus, ExpenseService } from '@core/services';
-import { MathUtils } from '@core/utils';
+import { DateUtils, MathUtils } from '@core/utils';
 
 @Component({
     selector: 'monthly-expenses',
@@ -34,10 +34,10 @@ export class MonthlyExpensesComponent implements OnInit {
             return;
         }
 
-        let start = this.toLocalDate(this.createUTCDate(this.year, this.month - 1, 1));
-        let end = this.toLocalDate(this.createUTCDate(this.year, this.month, 0));
-        this.expenseService.findAll({ dateFrom: start, dateTo: end }).subscribe({
-            next: (list) => { this.applyLoadedExpenses(list); },
+        let start = this.toLocalDate(DateUtils.createUTCDate(this.year, this.month - 1, 1));
+        let end = this.toLocalDate(DateUtils.createUTCDate(this.year, this.month, 0));
+        this.expenseService.findAll({ dateFrom: start, dateTo: end }, {}).subscribe({
+            next: (page) => { this.applyLoadedExpenses(page.content); },
             error: (error) => { console.error(error); }
         });
     }
@@ -52,7 +52,7 @@ export class MonthlyExpensesComponent implements OnInit {
         }
 
         let day = 1;
-        let date = this.createUTCDate(this.year, this.month - 1, day);
+        let date = DateUtils.createUTCDate(this.year, this.month - 1, day);
 
         while (date.getMonth() == this.month - 1) {
             let dailyExpenses = expenses.filter(e => this.isSameDayExpense(e, date));
@@ -65,7 +65,7 @@ export class MonthlyExpensesComponent implements OnInit {
             } else {
                 this.report.push(new DailyReportItem(date, dailyExpenses, totalAmount));
             }
-            date = this.createUTCDate(this.year, this.month - 1, ++day);
+            date = DateUtils.createUTCDate(this.year, this.month - 1, ++day);
         }
     }
 
@@ -80,10 +80,6 @@ export class MonthlyExpensesComponent implements OnInit {
 
     private parseDateFromString(input: string): Date {
         return new Date(Date.parse(input));
-    }
-
-    private createUTCDate(y: number, m: number, d: number): Date {
-        return new Date(Date.UTC(y, m, d, 0, 0, 0));
     }
 
     private isSameDayExpense(expense: ExpenseDTO, date: Date): boolean {

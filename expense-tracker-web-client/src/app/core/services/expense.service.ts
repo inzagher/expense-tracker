@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { ExpenseDTO, ExpenseFilterDTO } from "@core/dto";
+import { ExpenseDTO, ExpenseFilterDTO, Page, PageableDTO } from "@core/dto";
 import { Observable } from "rxjs";
 
 @Injectable({ providedIn: 'root' })
@@ -8,10 +8,10 @@ export class ExpenseService {
     constructor(private http: HttpClient) {
     }
 
-    findAll(filter: ExpenseFilterDTO): Observable<ExpenseDTO[]> {
+    findAll(filter: ExpenseFilterDTO, pageable: PageableDTO): Observable<Page<ExpenseDTO>> {
         let url = `/api/expenses`;
-        let params = filter as any;
-        return this.http.get<ExpenseDTO[]>(url, { params });
+        let params = { ...filter, ...pageable }  as any;
+        return this.http.get<Page<ExpenseDTO>>(url, { params });
     }
 
     getById(id: number): Observable<ExpenseDTO> {
