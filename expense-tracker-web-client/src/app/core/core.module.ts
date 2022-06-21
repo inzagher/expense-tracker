@@ -18,7 +18,7 @@ import { ConfirmationDialogComponent } from '@core/dialogs';
         HttpClientModule
     ],
     providers: [
-        { provide: LOCALE_ID, useValue: "ru-RU" },
+        { provide: LOCALE_ID, useValue: "en-US" },
         { provide: MAT_DATE_LOCALE, useValue: 'ru-RU' },
         { provide: MAT_DATE_FORMATS, useValue: DateFormattingUtils.getDateFormatSettings() },
         { provide: DateAdapter, useClass: CustomDateAdapter, deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS] }

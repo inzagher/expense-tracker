@@ -14,7 +14,7 @@ export class CustomDateAdapter extends MomentDateAdapter {
             if (month.endsWith('.')) {
                 month = month.substr(0, month.length - 1);
             }
-            if (this.dateLocale === 'ru-RU') {
+            if (this.dateLocale === 'en-US') {
                 month = month.substr(0, 3);
             }
             return day + '.' + month + '.' + year;
