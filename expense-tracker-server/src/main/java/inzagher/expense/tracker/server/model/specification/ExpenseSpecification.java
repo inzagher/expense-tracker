@@ -52,7 +52,7 @@ public class ExpenseSpecification implements Specification<ExpenseEntity> {
         }
         if (criteria.getDescriptionLike() != null) {
             var pattern = "%" + criteria.getDescriptionLike() + "%";
-            predicates.add(builder.equal(expense.get("description"), pattern));
+            predicates.add(builder.like(expense.get("description"), pattern));
         }
         return builder.and(predicates.toArray(Predicate[]::new));
     }
