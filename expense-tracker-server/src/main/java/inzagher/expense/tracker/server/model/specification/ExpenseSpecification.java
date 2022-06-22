@@ -51,7 +51,8 @@ public class ExpenseSpecification implements Specification<ExpenseEntity> {
             predicates.add(builder.lessThanOrEqualTo(expense.get("amount"), criteria.getAmountTo()));
         }
         if (criteria.getDescriptionLike() != null) {
-            predicates.add(builder.equal(expense.get("description"), criteria.getDescriptionLike()));
+            var pattern = "%" + criteria.getDescriptionLike() + "%";
+            predicates.add(builder.equal(expense.get("description"), pattern));
         }
         return builder.and(predicates.toArray(Predicate[]::new));
     }

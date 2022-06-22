@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Arrays;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,8 +25,8 @@ public class ExpenseApiController {
     @GetMapping(path = "/api/expenses")
     @Operation(summary = "Find expenses")
     public Page<ExpenseDTO> find(
-            @RequestParam(value = "persons[]", required = false) Long[] persons,
-            @RequestParam(value = "categories[]", required = false) Long[] categories,
+            @RequestParam(value = "person", required = false) List<Long> persons,
+            @RequestParam(value = "category", required = false) List<Long> categories,
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             @RequestParam(value = "dateExact", required = false) LocalDate dateExact,
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
@@ -40,10 +40,10 @@ public class ExpenseApiController {
             @NonNull final Pageable pageable) {
         var criteria = new ExpenseSearchCriteria();
         if (persons != null) {
-            Arrays.asList(persons).forEach(criteria.getPersonIdentifiers()::add);
+            persons.forEach(criteria.getPersonIdentifiers()::add);
         }
         if (categories != null) {
-            Arrays.asList(categories).forEach(criteria.getCategoryIdentifiers()::add);
+            categories.forEach(criteria.getCategoryIdentifiers()::add);
         }
         criteria.setDateExact(dateExact);
         criteria.setDateFrom(dateFrom);
