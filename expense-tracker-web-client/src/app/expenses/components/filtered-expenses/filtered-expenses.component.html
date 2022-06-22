@@ -17,7 +17,7 @@
 
     <mat-form-field appearance="standard">
         <mat-label>Категории</mat-label>
-        <mat-select formControlName="categories">
+        <mat-select formControlName="categories" multiple>
             <mat-option *ngFor="let c of categories$ | async" [value]="c.id">
                 <div class="category-option">
                     <span>{{ c.name }}</span>
@@ -29,7 +29,7 @@
 
     <mat-form-field appearance="standard">
         <mat-label>Пользователи</mat-label>
-        <mat-select formControlName="persons">
+        <mat-select formControlName="persons" multiple>
             <mat-option *ngFor="let p of persons$ | async" [value]="p.id">
                 {{ p.name }}
             </mat-option>
@@ -38,17 +38,22 @@
 
     <mat-form-field appearance="standard">
         <mat-label>Сумма от</mat-label>
-        <input matInput formControlName="amountFrom">
+        <input matInput formControlName="amountFrom" type="number">
     </mat-form-field>
 
     <mat-form-field appearance="standard">
         <mat-label>Сумма до</mat-label>
-        <input matInput formControlName="amountTo">
+        <input matInput formControlName="amountTo" type="number">
     </mat-form-field>
 
     <mat-form-field appearance="standard">
         <mat-label>Описание</mat-label>
-        <input matInput formControlName="description">
+        <input matInput formControlName="description" [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let option of descriptions$ | async" [value]="option">
+              {{ option }}
+            </mat-option>
+        </mat-autocomplete>
     </mat-form-field>
 
     <div class="action-toolbar">

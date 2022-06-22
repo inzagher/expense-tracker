@@ -3,7 +3,7 @@
 }
 .main-content {
     padding: 15px;
-    height: calc(100% - 30px - 56px);
+    min-height: calc(100% - 30px - 56px);
 }
 .mat-toolbar.mat-toolbar-single-row {
     padding: 0 7px;

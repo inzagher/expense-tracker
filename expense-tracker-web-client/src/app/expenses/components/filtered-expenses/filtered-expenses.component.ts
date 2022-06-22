@@ -1,11 +1,12 @@
 import { formatDate } from "@angular/common";
-import { Component, Inject, LOCALE_ID, OnInit } from "@angular/core";
+import { Component, OnInit, Inject, LOCALE_ID } from "@angular/core";
 import { UntypedFormGroup, UntypedFormBuilder } from "@angular/forms";
 import { ChangeTitleCommand } from "@core/commands";
-import { CategoryDTO, ExpenseDTO, ExpenseFilterDTO, PageableDTO, PersonDTO } from "@core/dto";
-import { Bus, CategoryService, ExpenseService, PersonService } from "@core/services";
+import { ExpenseDTO, PersonDTO, CategoryDTO, ExpenseFilterDTO, PageableDTO } from "@core/dto";
+import { Bus, PersonService, CategoryService, ExpenseService, DictionaryService } from "@core/services";
 import { DateUtils } from "@core/utils";
-import { catchError, finalize, map, Observable, of, tap } from "rxjs";
+import { Observable, debounceTime, filter, switchMap, map, tap, catchError, of, finalize } from "rxjs";
+
 
 @Component({
     selector: 'filtered-expenses',
@@ -18,6 +19,7 @@ export class FilteredExpensesComponent implements OnInit {
     expenses: ExpenseDTO[] = [];
     persons$: Observable<PersonDTO[]> | null = null;
     categories$: Observable<CategoryDTO[]> | null = null;
+    descriptions$: Observable<string[]> | null = null;
     form: UntypedFormGroup = new UntypedFormGroup({});
 
     constructor(private bus: Bus,
@@ -25,6 +27,7 @@ export class FilteredExpensesComponent implements OnInit {
                 private personService: PersonService,
                 private categoryService: CategoryService,
                 private expenseService: ExpenseService,
+                private dictionaryService: DictionaryService,
                 @Inject(LOCALE_ID) private locale: string) { }
 
     ngOnInit(): void {
@@ -39,6 +42,16 @@ export class FilteredExpensesComponent implements OnInit {
         this.categories$ = this.categoryService.findAll();
         this.persons$ = this.personService.findAll();
         this.createSearchRequest().subscribe();
+
+        let descriptionControl = this.form.get("description");
+        if (descriptionControl) {
+            this.descriptions$ = descriptionControl.valueChanges.pipe(
+                debounceTime(100),
+                filter(value => typeof(value) === 'string'),
+                filter(value => (value as string).length > 2),
+                switchMap((value) => this.dictionaryService.findDescriptions(value, 2))
+            );
+        }
     }
 
     submit(): void {
@@ -54,9 +67,9 @@ export class FilteredExpensesComponent implements OnInit {
 
     private createSearchRequest(): Observable<ExpenseDTO[]> {
         this.loading = true;
-        let filter = this.createExpenseFilter();
+        let criteria = this.createExpenseFilter();
         let pageable = this.createPagingParams();
-        return this.expenseService.findAll(filter, pageable).pipe(
+        return this.expenseService.findAll(criteria, pageable).pipe(
             map((page) => page.content),
             tap((expenses) => { this.expenses = expenses; }),
             catchError((error) => { this.error = error; return of([]); }),
@@ -65,17 +78,29 @@ export class FilteredExpensesComponent implements OnInit {
     }
 
     private createExpenseFilter(): ExpenseFilterDTO {
-        let filter: ExpenseFilterDTO = {};
+        let criteria: ExpenseFilterDTO = {};
         if (this.form.get("dateFrom")?.value) {
-            filter.dateFrom = this.toLocalDate(this.form.get("dateFrom")?.value);
+            criteria.dateFrom = this.toLocalDate(this.form.get("dateFrom")?.value);
         }
         if (this.form.get("dateTo")?.value) {
-            filter.dateTo = this.toLocalDate(this.form.get("dateTo")?.value);
+            criteria.dateTo = this.toLocalDate(this.form.get("dateTo")?.value);
+        }
+        if (this.form.get("persons")?.value) {
+            criteria.person = this.form.get("persons")?.value;
+        }
+        if (this.form.get("categories")?.value) {
+            criteria.category = this.form.get("categories")?.value;
+        }
+        if (this.form.get("amountFrom")?.value) {
+            criteria.amountFrom = this.form.get("amountFrom")?.value;
+        }
+        if (this.form.get("amountTo")?.value) {
+            criteria.amountTo = this.form.get("amountTo")?.value;
         }
         if (this.form.get("description")?.value) {
-            filter.description = this.form.get("description")?.value;
+            criteria.description = this.form.get("description")?.value;
         }
-        return filter;
+        return criteria;
     }
 
     private createPagingParams(): PageableDTO {
