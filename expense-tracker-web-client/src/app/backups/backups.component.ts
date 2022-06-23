@@ -1,33 +1,33 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ChangeTitleCommand } from '@core/commands';
 import { BackupMetadataDTO } from '@core/dto';
 import { BackupService, Bus, DialogService } from '@core/services';
-import { Observable, tap, map, switchMap, BehaviorSubject } from 'rxjs';
+import { Observable, tap, map } from 'rxjs';
 
 @Component({
     selector: 'backups',
     templateUrl: './backups.component.html',
     styleUrls: ['./backups.component.scss']
 })
-export class BackupsComponent implements OnInit, OnDestroy {
-    public backups$: Observable<BackupMetadataDTO[]> | null = null;
-    private update: BehaviorSubject<void> = new BehaviorSubject<void>(void 0);
+export class BackupsComponent implements OnInit {
+    backups: BackupMetadataDTO[] | null = null;
+    error: any | null = null;
 
     constructor(private bus: Bus,
                 private dialogService: DialogService,
                 private backupService: BackupService) { }
 
     ngOnInit(): void {
-        this.backups$ = this.update.pipe(switchMap(() => this.backupService.findAll()));
         this.bus.publish(new ChangeTitleCommand("Резервное копирование"));
-    }
-
-    ngOnDestroy(): void {
-        this.update.complete();
+        this.refresh();
     }
 
     refresh(): void {
-        this.update.next();
+        let pageable = { sort: 'created,desc' };
+        this.backupService.findAll(pageable).subscribe({
+            next: (page) => { this.backups = page.content; },
+            error: (error) => { this.error = error; }
+        });
     }
 
     backupDatabase(): void {
@@ -45,6 +45,10 @@ export class BackupsComponent implements OnInit, OnDestroy {
             let recovery$ = this.expecuteAndReload(this.backupService.restoreDatabase(element.files[0]!));
             this.dialogService.confirmAndExecute(caption, question, recovery$).subscribe();
         }
+    }
+
+    createDownloadLink(metadata: BackupMetadataDTO): Observable<string> {
+        return this.backupService.createDownloadLink(metadata);
     }
 
     private expecuteAndReload<T>(action: Observable<T>): Observable<void> {

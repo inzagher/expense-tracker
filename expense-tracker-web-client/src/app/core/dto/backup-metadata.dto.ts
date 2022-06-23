@@ -4,4 +4,5 @@ export interface BackupMetadataDTO {
     expenses: number | null;
     categories: number | null;
     persons: number | null;
+    fileName: string | null;
 }

@@ -1,9 +1,28 @@
-<div class="actions">
+<div class="action-toolbar">
     <button mat-raised-button color="primary" (click)="backupDatabase()">Резервная копия</button>
+    <div class="button-delimiter"></div>
     <button mat-raised-button color="primary" (click)='fileUpload.click()'>Восстановление</button>
     <input id="fileUpload" type="file" accept="application/zip" #fileUpload
            [hidden]="true" (change)="restoreDatabase($event)">
 </div>
-<div class="list-item" *ngFor="let metadata of backups$ | async">
-    <p>{{ metadata.created | date:'dd.MM.yyyy HH:mm:ss' }}</p>
+<div class="search-result-container">
+    <h3 class="header">Результаты поиска</h3>
+    <div class="backup-item" *ngFor="let metadata of backups">
+        <div class="icon">
+            <mat-icon>backup</mat-icon>
+        </div>
+        <p class="creation-date">
+            {{ metadata.created | date:'dd.MM.yyyy HH:mm:ss' }}
+        </p>
+        <div class="summary">
+            <span class="counter">П:<span class="value">{{ metadata.persons }}</span></span>
+            <span class="counter">К:<span class="value">{{ metadata.categories }}</span></span>
+            <span class="counter">Р:<span class="value">{{ metadata.expenses }}</span></span>
+        </div>
+        <div class="actions">
+            <a mat-icon-button color="primary" [href]="createDownloadLink(metadata) | async">
+                <mat-icon>download</mat-icon>
+            </a>
+        </div>
+    </div>
 </div>
