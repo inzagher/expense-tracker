@@ -9,8 +9,13 @@ import org.mapstruct.*;
 public interface CategoryMapper {
     CategoryDTO toDTO(CategoryEntity entity);
     CategoryXmlItemDTO toXmlDTO(CategoryEntity entity);
+
+    @Mapping(target = "id", ignore = true)
     CategoryEntity toEntity(CategoryDTO dto);
+
+    @Mapping(target = "id", ignore = true)
     CategoryEntity toEntity(CategoryXmlItemDTO dto);
+
     @Mapping(target = "id", ignore = true)
     void mergeToExistingEntity(@MappingTarget CategoryEntity entity, CategoryDTO dto);
 }

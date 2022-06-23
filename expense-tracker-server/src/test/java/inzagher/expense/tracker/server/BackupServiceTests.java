@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.io.IOException;
@@ -64,8 +65,9 @@ class BackupServiceTests {
     
     @Test
     void backupInfoListTest() {
-        var list = service.findAllMetadataRecords();
-        assertEquals(3, list.size());
+        var pageable = PageRequest.of(0, 50);
+        var list = service.findAllMetadataRecords(pageable);
+        assertEquals(3, list.getTotalElements());
     }
     
     @Test

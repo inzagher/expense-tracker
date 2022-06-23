@@ -3,6 +3,8 @@ package inzagher.expense.tracker.server.service;
 import inzagher.expense.tracker.server.model.dto.BackupMetadataDTO;
 import inzagher.expense.tracker.server.model.dto.backup.BackupXmlDataDTO;
 import inzagher.expense.tracker.server.model.entity.BackupMetadataEntity;
+import inzagher.expense.tracker.server.model.entity.CategoryEntity;
+import inzagher.expense.tracker.server.model.entity.PersonEntity;
 import inzagher.expense.tracker.server.model.event.BackupCreatedEvent;
 import inzagher.expense.tracker.server.model.event.BackupRestoredEvent;
 import inzagher.expense.tracker.server.model.exception.ExpenseTrackerException;
@@ -21,7 +23,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +37,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -61,11 +65,10 @@ public class BackupService {
     private final PersonMapper personMapper;
 
     @Transactional
-    public List<BackupMetadataDTO> findAllMetadataRecords() {
+    public Page<BackupMetadataDTO> findAllMetadataRecords(@NonNull Pageable pageable) {
         log.info("Find all backup metadata records");
-        return backupMetadataRepository.findAll().stream()
-                .map(backupMetadataMapper::toDTO)
-                .toList();
+        return backupMetadataRepository.findAll(pageable)
+                .map(backupMetadataMapper::toDTO);
     }
 
     @Transactional
@@ -163,18 +166,24 @@ public class BackupService {
     }
     
     private void storeBackupDataInDatabase(BackupXmlDataDTO dto) {
-        var persons = dto.getPersons().stream()
-                .map(personMapper::toEntity)
-                .toList();
-        var categories = dto.getCategories().stream()
-                .map(categoryMapper::toEntity)
-                .toList();
-        var expenses = dto.getExpenses().stream()
-                .map(expenseMapper::toEntity)
-                .toList();
-        personRepository.saveAll(persons);
-        categoryRepository.saveAll(categories);
-        expenseRepository.saveAll(expenses);
+        var persons = new HashMap<Long, PersonEntity>();
+        dto.getPersons().forEach(p -> {
+            var entity = personMapper.toEntity(p);
+            entity = personRepository.save(entity);
+            persons.put(p.getId(), entity);
+        });
+        var categories = new HashMap<Long, CategoryEntity>();
+        dto.getCategories().forEach(c -> {
+            var entity = categoryMapper.toEntity(c);
+            entity = categoryRepository.save(entity);
+            categories.put(c.getId(), entity);
+        });
+        dto.getExpenses().forEach(e -> {
+            var entity = expenseMapper.toEntity(e);
+            entity.setPerson(persons.get(e.getPersonId()));
+            entity.setCategory(categories.get(e.getCategoryId()));
+            expenseRepository.save(entity);
+        });
     }
     
     private void truncateAllTables() {

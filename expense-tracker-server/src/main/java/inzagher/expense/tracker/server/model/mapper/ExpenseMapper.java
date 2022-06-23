@@ -12,13 +12,19 @@ import org.mapstruct.*;
 @Mapper
 public interface ExpenseMapper {
     ExpenseDTO toDTO(ExpenseEntity entity);
+
     @Mapping(source = "category.id", target = "categoryId")
     @Mapping(source = "person.id", target = "personId")
     ExpenseXmlItemDTO toXmlDTO(ExpenseEntity entity);
+
+    @Mapping(target = "id", ignore = true)
     @Mapping(source = "categoryId", target = "category.id")
     @Mapping(source = "personId", target = "person.id")
     ExpenseEntity toEntity(ExpenseXmlItemDTO dto);
+
+    @Mapping(target = "id", ignore = true)
     ExpenseEntity toEntity(ExpenseDTO dto);
+
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "person", qualifiedByName = "ToEmptyPersonEntity")
     @Mapping(target = "category", qualifiedByName = "ToEmptyCategoryEntity")
