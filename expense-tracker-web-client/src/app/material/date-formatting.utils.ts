@@ -13,4 +13,16 @@ export class DateFormattingUtils {
             }
         }
     }
+
+    static getYearMonthFormatSettings(): any {
+        return {
+            parse: { dateInput: 'MM.YYYY' },
+            display: {
+                dateInput: 'MMMM YYYY',
+                monthYearLabel: 'MMM YYYY',
+                dateA11yLabel: 'LL',
+                monthYearA11yLabel: 'MMMM YYYY',
+            }
+        }
+    }
 }
