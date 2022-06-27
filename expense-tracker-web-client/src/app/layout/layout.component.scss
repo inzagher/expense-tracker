@@ -3,8 +3,13 @@
 }
 .main-content {
     padding: 15px;
-    min-height: calc(100% - 30px - 56px);
+    height: calc(100% - 30px - 64px);
 }
 .mat-toolbar.mat-toolbar-single-row {
     padding: 0 7px;
+}
+@media (max-width: 599px) {
+    .main-content {
+        height: calc(100% - 30px - 56px);
+    }
 }
