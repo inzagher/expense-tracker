@@ -1,6 +1,7 @@
 import { formatDate } from "@angular/common";
 import { Component, OnInit, Inject, LOCALE_ID } from "@angular/core";
 import { UntypedFormGroup, UntypedFormBuilder } from "@angular/forms";
+import { Router } from "@angular/router";
 import { ChangeTitleCommand } from "@core/commands";
 import { ExpenseDTO, PersonDTO, CategoryDTO, ExpenseFilterDTO, PageableDTO } from "@core/dto";
 import { Bus, PersonService, CategoryService, ExpenseService, DictionaryService } from "@core/services";
@@ -23,6 +24,7 @@ export class FilteredExpensesComponent implements OnInit {
     form: UntypedFormGroup = new UntypedFormGroup({});
 
     constructor(private bus: Bus,
+                private router: Router,
                 private formBuilder: UntypedFormBuilder,
                 private personService: PersonService,
                 private categoryService: CategoryService,
@@ -63,6 +65,10 @@ export class FilteredExpensesComponent implements OnInit {
     reset(): void {
         this.form.reset('');
         this.submit();
+    }
+
+    editExpense(expense: ExpenseDTO): void {
+        this.router.navigate(['expenses/editor/' + expense.id]);
     }
 
     private createSearchRequest(): Observable<ExpenseDTO[]> {

@@ -65,7 +65,7 @@
 <div class="search-result-container">
     <h3 class="header" *ngIf="expenses && !loading">Результаты поиска</h3>
     <h3 class="header" *ngIf="loading">Поиск расходов...</h3>
-    <div class="expense-item" *ngFor="let expense of expenses">
+    <div class="expense-item" *ngFor="let expense of expenses" mat-ripple (click)="editExpense(expense)">
         <div class="category-icon" [style.background-color] = "expense.category?.color | color">
             <p>{{ expense.category?.name?.charAt(0) }}</p>
         </div>
