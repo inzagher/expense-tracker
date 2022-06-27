@@ -3,7 +3,7 @@ import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { FormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { MatDatepicker } from '@angular/material/datepicker';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ChangeTitleCommand } from '@core/commands';
 import { ExpenseDTO } from '@core/dto';
 import { Bus, ExpenseService } from '@core/services';
@@ -20,11 +20,13 @@ import { Moment } from 'moment';
     ]
 })
 export class MonthlyExpensesComponent implements OnInit {
+    loading: boolean = false;
     report: DailyReportItem[] = [];
     period: FormControl<Moment | null> | null = null;
     form: UntypedFormGroup = new UntypedFormGroup({});
 
     constructor(private bus: Bus,
+                private router: Router,
                 private route: ActivatedRoute,
                 private expenseService: ExpenseService,
                 @Inject(LOCALE_ID) private locale: string) { }
@@ -50,12 +52,25 @@ export class MonthlyExpensesComponent implements OnInit {
         this.reloadExpenseList();
     }
 
+    addExpense(): void {
+        this.router.navigate(['expenses/editor']);
+    }
+
+    editExpense(expense: ExpenseDTO): void {
+        this.router.navigate(['expenses/editor' + expense.id]);
+    }
+
+    calculateTotalDaylyExpense(expenses: ExpenseDTO[]): number {
+        return MathUtils.sum(expenses, e => e.amount ?? 0);
+    }
+
     private reloadExpenseList(): void {
         if (this.period?.valid) {
+            this.loading = true;
             this.form.get('period')?.disable();
             let date = DateUtils.toUtcDateFromMoment(this.period.value as Moment);
             let start = this.toLocalDate(DateUtils.createUTCDate(date.getFullYear(), date.getMonth(), 1));
-            let end = this.toLocalDate(DateUtils.createUTCDate(date.getFullYear(), date.getMonth() + 1, 0));
+            let end = this.toLocalDate(DateUtils.createUTCDate  (date.getFullYear(), date.getMonth() + 1, 0));
             this.expenseService.findAll({ dateFrom: start, dateTo: end }, {}).subscribe({
                 next: (page) => { this.applyLoadedExpenses(page.content); },
                 error: (error) => { this.handleLoadingError(error); }
@@ -87,11 +102,14 @@ export class MonthlyExpensesComponent implements OnInit {
             }
             currentDate = DateUtils.createUTCDate(currentDate.getFullYear(), currentDate.getMonth(), ++currentDay);
         }
+
+        this.loading = false;
     }
 
     private handleLoadingError(error: any) {
         this.form.get('period')?.enable();
         console.error(error);
+        this.loading = false;
     }
 
     private getIntParamFromRoute(paramName: string, orElse: number): number {
