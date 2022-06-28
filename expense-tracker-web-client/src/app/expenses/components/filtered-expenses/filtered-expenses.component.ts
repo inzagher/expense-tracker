@@ -43,22 +43,21 @@ export class FilteredExpensesComponent implements OnInit {
         this.bus.publish(new ChangeTitleCommand("Поиск расходов"));
         this.categories$ = this.categoryService.findAll();
         this.persons$ = this.personService.findAll();
-        this.createSearchRequest().subscribe();
+        this.createExpenseSearchRequest().subscribe();
 
         let descriptionControl = this.form.get("description");
         if (descriptionControl) {
             this.descriptions$ = descriptionControl.valueChanges.pipe(
-                debounceTime(100),
+                debounceTime(50),
                 filter(value => typeof(value) === 'string'),
-                filter(value => (value as string).length > 2),
-                switchMap((value) => this.dictionaryService.findDescriptions(value, 2))
+                switchMap((value) => this.createDescriptionSearchRequest(value))
             );
         }
     }
 
     submit(): void {
         if (this.form.valid) {
-            this.createSearchRequest().subscribe();
+            this.createExpenseSearchRequest().subscribe();
         }
     }
 
@@ -71,7 +70,7 @@ export class FilteredExpensesComponent implements OnInit {
         this.router.navigate(['expenses/editor/' + expense.id]);
     }
 
-    private createSearchRequest(): Observable<ExpenseDTO[]> {
+    private createExpenseSearchRequest(): Observable<ExpenseDTO[]> {
         this.loading = true;
         let criteria = this.createExpenseFilter();
         let pageable = this.createPagingParams();
@@ -81,6 +80,12 @@ export class FilteredExpensesComponent implements OnInit {
             catchError((error) => { this.error = error; return of([]); }),
             finalize(() => this.loading = false)
         );
+    }
+
+    private createDescriptionSearchRequest(input: string): Observable<string[]> {
+        return input.length >= 2
+            ? this.dictionaryService.findDescriptions(input, 2)
+            : of([]);
     }
 
     private createExpenseFilter(): ExpenseFilterDTO {

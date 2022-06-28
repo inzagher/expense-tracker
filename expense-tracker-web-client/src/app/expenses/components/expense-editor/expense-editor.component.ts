@@ -48,10 +48,9 @@ export class ExpenseEditorComponent implements OnInit {
         let descriptionControl = this.form.get("description");
         if (descriptionControl) {
             this.descriptions$ = descriptionControl.valueChanges.pipe(
-                debounceTime(100),
+                debounceTime(50),
                 filter(value => typeof(value) === 'string'),
-                filter(value => (value as string).length > 2),
-                switchMap((value) => this.dictionaryService.findDescriptions(value, 2))
+                switchMap((value) => this.createDescriptionSearchRequest(value))
             );
         }
     }
@@ -81,6 +80,12 @@ export class ExpenseEditorComponent implements OnInit {
 
     private onDataLoadingError(error: any): void {
         console.error(error);
+    }
+
+    private createDescriptionSearchRequest(input: string): Observable<string[]> {
+        return input.length >= 2
+            ? this.dictionaryService.findDescriptions(input, 2)
+            : of([]);
     }
 
     private createDefaultExpense(): Observable<ExpenseDTO> {
