@@ -1,13 +1,10 @@
-import { formatDate } from "@angular/common";
-import { Component, OnInit, Inject, LOCALE_ID } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { UntypedFormGroup, UntypedFormBuilder } from "@angular/forms";
 import { Router } from "@angular/router";
 import { ChangeTitleCommand } from "@core/commands";
 import { ExpenseDTO, PersonDTO, CategoryDTO, ExpenseFilterDTO, PageableDTO } from "@core/dto";
 import { Bus, PersonService, CategoryService, ExpenseService, DictionaryService } from "@core/services";
-import { DateUtils } from "@core/utils";
 import { Observable, debounceTime, filter, switchMap, map, tap, catchError, of, finalize } from "rxjs";
-
 
 @Component({
     selector: 'filtered-expenses',
@@ -29,8 +26,7 @@ export class FilteredExpensesComponent implements OnInit {
                 private personService: PersonService,
                 private categoryService: CategoryService,
                 private expenseService: ExpenseService,
-                private dictionaryService: DictionaryService,
-                @Inject(LOCALE_ID) private locale: string) { }
+                private dictionaryService: DictionaryService) { }
 
     ngOnInit(): void {
         this.form.addControl("dateFrom", this.formBuilder.control(null));
@@ -91,10 +87,10 @@ export class FilteredExpensesComponent implements OnInit {
     private createExpenseFilter(): ExpenseFilterDTO {
         let criteria: ExpenseFilterDTO = {};
         if (this.form.get("dateFrom")?.value) {
-            criteria.dateFrom = this.toLocalDate(this.form.get("dateFrom")?.value);
+            criteria.dateFrom = this.form.get("dateFrom")?.value?.format('YYYY-MM-DD');
         }
         if (this.form.get("dateTo")?.value) {
-            criteria.dateTo = this.toLocalDate(this.form.get("dateTo")?.value);
+            criteria.dateTo = this.form.get("dateTo")?.value?.format('YYYY-MM-DD');
         }
         if (this.form.get("persons")?.value) {
             criteria.person = this.form.get("persons")?.value;
@@ -116,10 +112,5 @@ export class FilteredExpensesComponent implements OnInit {
 
     private createPagingParams(): PageableDTO {
         return { page: 0, size: 50, sort: 'date,desc' };
-    }
-
-    private toLocalDate(input: string | null): string | undefined {
-        if (input === null) { return undefined; }
-        return formatDate(DateUtils.parseUTCDate(input), 'YYYY-MM-dd', this.locale);
     }
 }
