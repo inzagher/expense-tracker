@@ -5,6 +5,7 @@ import { ChangeTitleCommand } from '@core/commands';
 import { CategoryDTO, ExpenseDTO, PersonDTO } from '@core/dto';
 import { Bus, CategoryService, DictionaryService, ExpenseService, PersonService } from '@core/services';
 import { concatMap, switchMap, defer, merge, Observable, of, tap, toArray, debounceTime, filter } from 'rxjs';
+import * as moment from 'moment';
 
 @Component({
     selector: 'expense-editor',
@@ -71,7 +72,7 @@ export class ExpenseEditorComponent implements OnInit {
 
     private onExpenseLoaded(expense: ExpenseDTO): void {
         this.id = expense.id;
-        this.form.get("date")?.setValue(expense.date);
+        this.form.get("date")?.setValue(moment(expense.date));
         this.form.get("person")?.setValue(expense.person?.id);
         this.form.get("category")?.setValue(expense.category?.id);
         this.form.get("amount")?.setValue(expense.amount);
@@ -103,7 +104,7 @@ export class ExpenseEditorComponent implements OnInit {
     private convertFormToExpense(): ExpenseDTO {
         return {
             id: this.id,
-            date: this.form.get("date")?.value,
+            date: this.form.get("date")?.value?.format('YYYY-MM-DD'),
             category: this.getItemById(this.categories!, this.form.get("category")?.value),
             person: this.getItemById(this.persons!, this.form.get("person")?.value),
             amount: this.form.get("amount")?.value,
