@@ -1,23 +1,31 @@
 <div class="report-container" *ngIf="!!categoryReport && categoryReport.length > 0">
-    <p class="report-title">ОТЧЕТ ПО КАТЕГОРИЯМ</p>
-    <div class="report-item" *ngFor="let item of categoryReport">
-        <div class="item-icon" matRipple [style.background-color] = "item.category?.color | color"></div>
-        <p class="item-label">{{ item.category?.name }}</p>
-        <p class="total-amount">{{ item.total }}</p>
+    <div class="header">
+        <p class="report-title">Отчет по категориям</p>
     </div>
-    <div class="report-item">
-        <p class="total-label">Итого</p>
-        <p class="total-amount">{{ calculateTotalMonthyExpense() }}</p>
+    <div class="content">
+        <div class="report-item" *ngFor="let item of categoryReport">
+            <div class="item-icon" matRipple [style.background-color] = "item.category?.color | color"></div>
+            <p class="item-label">{{ item.category?.name }}</p>
+            <p class="item-amount">{{ item.total }}</p>
+        </div>
+        <div class="report-item">
+            <p class="total-label">Итого</p>
+            <p class="total-amount">{{ calculateTotalMonthyExpense() }}</p>
+        </div>
     </div>
 </div>
 <div class="report-container" *ngIf="!!yearlyReport&& yearlyReport.length > 0">
-    <p class="report-title">ГОДОВОЙ ОТЧЕТ</p>
-    <div class="report-item" *ngFor="let item of yearlyReport">
-        <p class="item-label">{{ item.month | month }}</p>
-        <p class="total-amount">{{ item.total }}</p>
+    <div class="header">
+        <p class="report-title">Годовой отчет</p>
     </div>
-    <div class="report-item">
-        <p class="total-label">Итого</p>
-        <p class="total-amount">{{ calculateTotalYearlyExpense() }}</p>
+    <div class="content">
+        <div class="report-item" *ngFor="let item of yearlyReport">
+            <p class="item-label">{{ item.month | month }}</p>
+            <p class="item-amount">{{ item.total }}</p>
+        </div>
+        <div class="report-item">
+            <p class="total-label">Итого</p>
+            <p class="total-amount">{{ calculateTotalYearlyExpense() }}</p>
+        </div>
     </div>
 </div>
