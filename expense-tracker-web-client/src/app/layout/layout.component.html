@@ -6,12 +6,30 @@
         <span class="title">{{ title$ | async }}</span>
     </button>
     <mat-menu #menu="matMenu">
-        <button mat-menu-item routerLink="/expenses/dashboard">Главная</button>
-        <button mat-menu-item routerLink="/expenses/list/monthly">Расходы за месяц</button>
-        <button mat-menu-item routerLink="/expenses/list/search">Поиск расходов</button>
-        <button mat-menu-item routerLink="/categories/list">Категории</button>
-        <button mat-menu-item routerLink="/persons/list">Пользователи</button>
-        <button mat-menu-item routerLink="/backups">Резервное копирование</button>
+        <button class="main-menu-item" mat-menu-item routerLink="/expenses/dashboard">
+            <mat-icon>home</mat-icon>
+            <span class="title">Главная</span>
+        </button>
+        <button class="main-menu-item" mat-menu-item routerLink="/expenses/list/monthly">
+            <mat-icon>calendar_today</mat-icon>
+            <span class="title">Расходы за месяц</span>
+        </button>
+        <button class="main-menu-item" mat-menu-item routerLink="/expenses/list/search">
+            <mat-icon>search</mat-icon>
+            <span class="title">Поиск расходов</span>
+        </button>
+        <button class="main-menu-item" mat-menu-item routerLink="/categories/list">
+            <mat-icon>category</mat-icon>
+            <span class="title">Категории</span>
+        </button>
+        <button class="main-menu-item" mat-menu-item routerLink="/persons/list">
+            <mat-icon>person</mat-icon>
+            <span class="title">Пользователи</span>
+        </button>
+        <button class="main-menu-item" mat-menu-item routerLink="/backups">
+            <mat-icon>backup</mat-icon>
+            <span class="title">Резервное копирование</span>
+        </button>
     </mat-menu>
 </mat-toolbar>
 <div class="main-content">
