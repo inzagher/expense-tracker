@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -20,6 +21,7 @@ export class ExpenseEditorComponent implements OnInit {
     descriptions$: Observable<string[]> | null = null;
 
     constructor(private bus: Bus,
+                private location: Location,
                 private route: ActivatedRoute,
                 private formBuilder: UntypedFormBuilder,
                 private dictionaryService: DictionaryService,
@@ -62,12 +64,12 @@ export class ExpenseEditorComponent implements OnInit {
             let request$ = expense.id == null
                 ? this.expenseService.create(expense)
                 : this.expenseService.edit(expense);
-            request$.subscribe(() => window.history.back());
+            request$.subscribe(() => this.location.back());
         }
     }
 
     cancel(): void {
-        window.history.back();
+        this.location.back();
     }
 
     private onExpenseLoaded(expense: ExpenseDTO): void {
