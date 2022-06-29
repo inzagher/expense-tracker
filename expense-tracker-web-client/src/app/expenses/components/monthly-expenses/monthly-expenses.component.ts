@@ -60,6 +60,10 @@ export class MonthlyExpensesComponent implements OnInit {
         this.router.navigate(['expenses/editor' + expense.id]);
     }
 
+    calculateTotalMonthlyExpense(report: DailyReportItem[]): number {
+        return MathUtils.sum(report, i => this.calculateTotalDaylyExpense(i.expenses));
+    }
+
     calculateTotalDaylyExpense(expenses: ExpenseDTO[]): number {
         return MathUtils.sum(expenses, e => e.amount ?? 0);
     }
@@ -71,7 +75,7 @@ export class MonthlyExpensesComponent implements OnInit {
             let date = DateUtils.toUtcDateFromMoment(this.period.value as Moment);
             let start = this.toLocalDate(DateUtils.createUTCDate(date.getFullYear(), date.getMonth(), 1));
             let end = this.toLocalDate(DateUtils.createUTCDate  (date.getFullYear(), date.getMonth() + 1, 0));
-            this.expenseService.findAll({ dateFrom: start, dateTo: end }, {}).subscribe({
+            this.expenseService.findAll({ dateFrom: start, dateTo: end }, { size: 1000 }).subscribe({
                 next: (page) => { this.applyLoadedExpenses(page.content); },
                 error: (error) => { this.handleLoadingError(error); }
             });

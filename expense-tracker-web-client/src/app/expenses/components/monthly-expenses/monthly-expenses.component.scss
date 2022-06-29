@@ -5,33 +5,52 @@
     }
 }
 .expense-report-container {
-    h3.header {
-        width: 100%;
-        text-align: left;
-        margin-bottom: 0;
-    }
-    .report-item:first-of-type {
-        border-top: solid black 1px
-    }
-    .report-item {
+    .header {
         display: flex;
+        flex-direction: row;
         align-items: center;
-        border-bottom: solid black 1px;
-        padding-top: 5px;
-        padding-bottom: 5px;
-        .date {
-            font-size: 14px;
-        }
-        .total-amount {
-            margin-left: auto;
-            font-size: 16px;
+        justify-content: center;
+        margin-bottom: 3px;
+        .name {
+            color:#d65d63;
+            width: 100%;
+            text-align: left;
             font-weight: bold;
-            color: #444;
+            font-size: 15px;
+            margin-bottom: 0;
+        }
+        .add-btn {
+            color: #438c43;
+            margin-right: 4px;
         }
     }
-}
-.bottom-action-container {
-    position: fixed;
-    right: 30px;
-    bottom: 30px;
+    .content {
+        .report-item {
+            display: flex;
+            align-items: center;
+            border-bottom: solid black 1px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            .date {
+                font-size: 14px;
+            }
+            .total-daily-amount, .total-monthly-amount {
+                margin-left: auto;
+                font-size: 16px;
+                font-weight: bold;
+                color: #444;
+            }
+            .total-monthly-title {
+                font-size: 16px;
+                font-weight: bold;
+                color: #444;
+            }
+            .total-monthly-amount {
+                color: #438c43;
+            }
+            &:first-of-type {
+                border-top: solid black 1px
+            }
+        }
+    }
 }

@@ -22,3 +22,18 @@ body.mat-typography p {
 .accent-color {
     color: mat-color($color-accent) !important;
 }
+
+.small-icon-button-20 {
+    width: 26px !important;
+    height: 26px !important;
+    line-height: 26px !important;
+
+    .mat-icon {
+       width: 20px !important;
+       height: 20px !important;
+       line-height: 20px !important;
+    }
+    .material-icons {
+       font-size: 20px !important;
+    }
+}
