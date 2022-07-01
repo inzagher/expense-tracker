@@ -3,7 +3,7 @@ version: "3.8"
 services:
   frontend:
     build: ./expense-tracker-web-client
-    image: "inzagher/expense-tracker-web-client"
+    image: "inzagher/expense-tracker-web-client:master"
     container_name: "expense-tracker-web-client"
     depends_on:
       - "backend"
@@ -11,7 +11,7 @@ services:
       - "80:80"
   backend:
     build: ./expense-tracker-server
-    image: "inzagher/expense-tracker-server"
+    image: "inzagher/expense-tracker-server:master"
     container_name: "expense-tracker-server"
     depends_on:
       - "database"
