@@ -93,7 +93,7 @@ jobs:
           script: |
             cd /home
             rm -r -f expense-tracker
-            docker container stop -t 10 \$(docker ps -q)
+            docker container stop -t 10 $(docker ps -q)
             docker system prune -af
             git clone https://github.com/inzagher/expense-tracker.git
             cd expense-tracker
