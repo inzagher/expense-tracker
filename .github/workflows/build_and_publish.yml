@@ -81,3 +81,23 @@ jobs:
         env:
           COSIGN_EXPERIMENTAL: "true"
         run: cosign sign ${{ steps.meta-frontend.outputs.tags }}@${{ steps.build-and-push-frontend.outputs.digest }}
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy published images via ssh and docker-compose
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEPLOY_SSH_HOST }}
+          username: ${{ secrets.DEPLOY_SSH_USERNAME }}
+          password: ${{ secrets.DEPLOY_SSH_PASSWORD }}
+          port: ${{ secrets.DEPLOY_SSH_PORT }}
+          script: |
+            cd /home
+            rm -r -f expense-tracker
+            docker kill $(docker ps -q)
+            docker system prune -af
+            git clone https://github.com/inzagher/expense-tracker.git
+            cd expense-tracker
+            docker-compose up --no-build --detach
+            cd ..
+            rm -r -f expense-tracker
