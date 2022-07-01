@@ -13,7 +13,8 @@ env:
   FRONTEND_IMAGE_NAME: inzagher/expense-tracker-web-client
 
 jobs:
-  build:
+  build-and-deploy:
+    name: Build and deploy
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -81,9 +82,7 @@ jobs:
         env:
           COSIGN_EXPERIMENTAL: "true"
         run: cosign sign ${{ steps.meta-frontend.outputs.tags }}@${{ steps.build-and-push-frontend.outputs.digest }}
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
+
       - name: Deploy published images via ssh and docker-compose
         uses: appleboy/ssh-action@master
         with:
