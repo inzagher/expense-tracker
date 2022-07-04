@@ -20,6 +20,8 @@
         <lombok.version>1.18.20</lombok.version>
         <mapstruct.version>1.4.2.Final</mapstruct.version>
         <spring-doc.version>1.5.10</spring-doc.version>
+        <sonar.organization>inzagher</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
     <dependencies>
         <dependency>
