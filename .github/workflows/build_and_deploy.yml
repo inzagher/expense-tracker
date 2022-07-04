@@ -1,10 +1,7 @@
-name: Docker
+name: Build and deploy
 
 on:
   push:
-    branches: [ "master" ]
-    tags: [ 'v*.*.*' ]
-  pull_request:
     branches: [ "master" ]
 
 env:
