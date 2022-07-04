@@ -21,7 +21,7 @@ export class ColorPipe implements PipeTransform {
     }
 
     private toHex(n: number) {
-        var hex = n.toString(16);
+        const hex = n.toString(16);
         return hex.length == 1 ? "0" + hex : hex;
     }
 }
