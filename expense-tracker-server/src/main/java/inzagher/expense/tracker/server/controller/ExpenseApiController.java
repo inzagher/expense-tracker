@@ -33,7 +33,6 @@ public class ExpenseApiController {
             @RequestParam(value = "dateFrom", required = false) LocalDate dateFrom,
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             @RequestParam(value = "dateTo", required = false) LocalDate dateTo,
-            @RequestParam(value = "amountExact", required = false) BigDecimal amountExact,
             @RequestParam(value = "amountFrom", required = false) BigDecimal amountFrom,
             @RequestParam(value = "amountTo", required = false) BigDecimal amountTo,
             @RequestParam(value = "description", required = false) String description,
@@ -48,7 +47,6 @@ public class ExpenseApiController {
         criteria.setDateExact(dateExact);
         criteria.setDateFrom(dateFrom);
         criteria.setDateTo(dateTo);
-        criteria.setAmountExact(amountExact);
         criteria.setAmountFrom(amountFrom);
         criteria.setAmountTo(amountTo);
         criteria.setDescriptionLike(description);

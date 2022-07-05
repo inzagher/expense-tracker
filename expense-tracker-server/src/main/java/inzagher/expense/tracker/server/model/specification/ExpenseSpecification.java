@@ -41,9 +41,6 @@ public class ExpenseSpecification implements Specification<ExpenseEntity> {
         if (criteria.getDateTo() != null) {
             predicates.add(builder.lessThanOrEqualTo(expense.get("date"), criteria.getDateTo()));
         }
-        if (criteria.getAmountExact() != null) {
-            predicates.add(builder.equal(expense.get("amount"), criteria.getAmountExact()));
-        }
         if (criteria.getAmountFrom() != null) {
             predicates.add(builder.greaterThanOrEqualTo(expense.get("amount"), criteria.getAmountFrom()));
         }

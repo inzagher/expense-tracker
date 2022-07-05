@@ -14,7 +14,6 @@ import java.util.List;
 public class ExpenseSearchCriteria implements Serializable {
     private final List<Long> categoryIdentifiers = new ArrayList<>();
     private final List<Long> personIdentifiers = new ArrayList<>();
-    private BigDecimal amountExact;
     private BigDecimal amountFrom;
     private BigDecimal amountTo;
     private LocalDate dateExact;
