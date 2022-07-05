@@ -37,7 +37,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_BACKEND }}
         run: |
           cd expense-tracker-server
-          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=inzagher_expense_tracker_server
+          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=inzagher_expense_tracker_server -Pcoverage
   frontend:
     name: Frontend
     runs-on: ubuntu-latest
