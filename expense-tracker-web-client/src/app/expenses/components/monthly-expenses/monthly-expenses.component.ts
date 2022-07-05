@@ -86,7 +86,7 @@ export class MonthlyExpensesComponent implements OnInit {
         let value = this.period?.value;
         this.form.get('period')?.enable();
 
-        let selectedDate = DateUtils.toUtcDateFromMoment(value!);
+        let selectedDate = DateUtils.toUtcDateFromMoment(value as Moment);
         if (this.isAnotherMonthReport(this.report, selectedDate)) {
             this.report = [];
         }
