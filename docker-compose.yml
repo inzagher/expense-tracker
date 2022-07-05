@@ -27,6 +27,7 @@ services:
       - "DATABASE_USERNAME=sa"
       - "DATABASE_PASSWORD=12345"
       - "BACKUP_DIRECTORY_PATH=backups"
+      - "TZ=Europe/Moscow"
   database:
     container_name: "expense-tracker-database"
     image: "postgres:14-alpine"
