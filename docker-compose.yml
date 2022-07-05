@@ -38,7 +38,7 @@ services:
       - "POSTGRES_USER=sa"
       - "POSTGRES_PASSWORD=12345"
       - "POSTGRES_DB=expenses"
-      - "POSTGRESQL_TIMEZONE=UTC+3"
+      - "TZ=Europe/Moscow"
 volumes:
   postgresql-data:
     name: "expense-tracker-database"
