@@ -1,7 +1,7 @@
 create table backups (
     id bigserial primary key,
     file_name varchar(32),
-    created timestamp,
+    created timestamp without time zone,
     categories integer,
     expenses integer,
     persons integer
@@ -24,7 +24,7 @@ create table categories (
 
 create table expenses (
     id bigserial primary key,
-    date timestamp,
+    date timestamp without time zone,
     amount numeric(19,2),
     category_id integer,
     person_id integer,
