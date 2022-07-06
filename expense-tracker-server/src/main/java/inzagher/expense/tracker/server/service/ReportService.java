@@ -62,12 +62,10 @@ public class ReportService {
         for (Object[] row: table) {
             KeyValuePair<Long, BigDecimal> pair = new KeyValuePair<>();
             for (Object field : row) {
-                switch (field) {
-                    case Long id -> pair.setKey(id);
-                    case Integer id -> pair.setKey(Long.valueOf(id));
-                    case BigDecimal sum -> pair.setValue(sum);
-                    default -> throw new ExpenseTrackerException("Invalid report item type");
-                }
+                if (field instanceof Long id) { pair.setKey(id); }
+                else if (field instanceof Integer id) { pair.setKey(Long.valueOf(id)); }
+                else if (field instanceof BigDecimal sum) { pair.setValue(sum); }
+                else throw new ExpenseTrackerException("Invalid report item type");
             }
             result.put(pair.getKey(), pair.getValue());
         }
