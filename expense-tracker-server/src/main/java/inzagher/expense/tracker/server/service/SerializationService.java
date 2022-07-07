@@ -16,6 +16,8 @@ import java.util.zip.ZipOutputStream;
 @Slf4j
 @Service
 public class SerializationService {
+    private static final int MAX_ENTRY_SIZE = 4 * 1024 * 1024;
+
     public byte[] serializeAndZip(Object object, String zipEntryName) {
         log.info("Serialize data to zip archive");
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
@@ -39,6 +41,9 @@ public class SerializationService {
             try (ZipInputStream zis = new ZipInputStream(bis)) {
                 ZipEntry entry;
                 while ((entry = zis.getNextEntry()) != null) {
+                    if (entry.getSize() > MAX_ENTRY_SIZE) {
+                        throw new SerializationException("Too big zip entry");
+                    }
                     if (entry.getName().equals(zipEntryName)) {
                         JAXBContext jaxbContext = JAXBContext.newInstance(target);
                         Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
