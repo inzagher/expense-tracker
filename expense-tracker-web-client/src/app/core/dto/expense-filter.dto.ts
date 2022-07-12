@@ -1,6 +1,6 @@
 export interface ExpenseFilterDTO {
-    category?: number[];
-    person?: number[];
+    categories?: number[];
+    persons?: number[];
     amountFrom?: number;
     amountTo?: number;
     dateFrom?: string;

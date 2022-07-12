@@ -1,6 +1,6 @@
 package inzagher.expense.tracker.server.service;
 
-import inzagher.expense.tracker.server.model.criteria.ExpenseSearchCriteria;
+import inzagher.expense.tracker.server.model.dto.ExpenseFilterDTO;
 import inzagher.expense.tracker.server.model.dto.ExpenseDTO;
 import inzagher.expense.tracker.server.model.exception.NotFoundException;
 import inzagher.expense.tracker.server.model.mapper.ExpenseMapper;
@@ -22,10 +22,10 @@ public class ExpenseService {
     private final ExpenseMapper expenseMapper;
 
     @Transactional
-    public Page<ExpenseDTO> findExpenses(@NonNull ExpenseSearchCriteria criteria,
+    public Page<ExpenseDTO> findExpenses(@NonNull ExpenseFilterDTO filter,
                                          @NonNull Pageable pageable) {
         log.info("Query expenses with filter");
-        var specification = new ExpenseSpecification(criteria);
+        var specification = new ExpenseSpecification(filter);
         return expenseRepository.findAll(specification, pageable)
                 .map(expenseMapper::toDTO);
     }

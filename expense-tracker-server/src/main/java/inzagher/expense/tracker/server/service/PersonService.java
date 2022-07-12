@@ -1,6 +1,6 @@
 package inzagher.expense.tracker.server.service;
 
-import inzagher.expense.tracker.server.model.criteria.ExpenseSearchCriteria;
+import inzagher.expense.tracker.server.model.dto.ExpenseFilterDTO;
 import inzagher.expense.tracker.server.model.dto.PersonDTO;
 import inzagher.expense.tracker.server.model.exception.ExpenseTrackerException;
 import inzagher.expense.tracker.server.model.exception.NotFoundException;
@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -67,9 +68,9 @@ public class PersonService {
 
     private boolean isAnyCorrelatedExpensePresent(Long personId) {
         log.info("Find expenses with person id {}", personId);
-        var criteria = new ExpenseSearchCriteria();
-        var specification = new ExpenseSpecification(criteria);
-        criteria.getPersonIdentifiers().add(personId);
+        var filter = new ExpenseFilterDTO();
+        var specification = new ExpenseSpecification(filter);
+        filter.setPersons(Collections.singletonList(personId));
         return !expenseRepository.findAll(specification).isEmpty();
     }
 }

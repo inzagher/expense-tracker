@@ -93,10 +93,10 @@ export class FilteredExpensesComponent implements OnInit {
             criteria.dateTo = this.form.get("dateTo")?.value?.format('YYYY-MM-DD');
         }
         if (this.form.get("persons")?.value) {
-            criteria.person = this.form.get("persons")?.value;
+            criteria.persons = this.form.get("persons")?.value;
         }
         if (this.form.get("categories")?.value) {
-            criteria.category = this.form.get("categories")?.value;
+            criteria.categories = this.form.get("categories")?.value;
         }
         if (this.form.get("amountFrom")?.value) {
             criteria.amountFrom = this.form.get("amountFrom")?.value;

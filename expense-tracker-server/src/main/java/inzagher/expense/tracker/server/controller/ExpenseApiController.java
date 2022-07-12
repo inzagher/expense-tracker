@@ -1,7 +1,7 @@
 package inzagher.expense.tracker.server.controller;
 
-import inzagher.expense.tracker.server.model.criteria.ExpenseSearchCriteria;
 import inzagher.expense.tracker.server.model.dto.ExpenseDTO;
+import inzagher.expense.tracker.server.model.dto.ExpenseFilterDTO;
 import inzagher.expense.tracker.server.service.ExpenseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -9,12 +9,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,32 +20,9 @@ public class ExpenseApiController {
     @GetMapping(path = "/api/expenses")
     @Operation(summary = "Find expenses")
     public Page<ExpenseDTO> find(
-            @RequestParam(value = "person", required = false) List<Long> persons,
-            @RequestParam(value = "category", required = false) List<Long> categories,
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            @RequestParam(value = "dateExact", required = false) LocalDate dateExact,
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            @RequestParam(value = "dateFrom", required = false) LocalDate dateFrom,
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            @RequestParam(value = "dateTo", required = false) LocalDate dateTo,
-            @RequestParam(value = "amountFrom", required = false) BigDecimal amountFrom,
-            @RequestParam(value = "amountTo", required = false) BigDecimal amountTo,
-            @RequestParam(value = "description", required = false) String description,
+            @NonNull final ExpenseFilterDTO filter,
             @NonNull final Pageable pageable) {
-        var criteria = new ExpenseSearchCriteria();
-        if (persons != null) {
-            persons.forEach(criteria.getPersonIdentifiers()::add);
-        }
-        if (categories != null) {
-            categories.forEach(criteria.getCategoryIdentifiers()::add);
-        }
-        criteria.setDateExact(dateExact);
-        criteria.setDateFrom(dateFrom);
-        criteria.setDateTo(dateTo);
-        criteria.setAmountFrom(amountFrom);
-        criteria.setAmountTo(amountTo);
-        criteria.setDescriptionLike(description);
-        return service.findExpenses(criteria, pageable);
+        return service.findExpenses(filter, pageable);
     }
 
     @GetMapping(path = "/api/expenses/{id}")
