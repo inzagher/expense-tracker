@@ -25,11 +25,12 @@ module.exports = function (config) {
       suppressAll: true // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, './coverage'),
+      dir: require('path').join(__dirname, './coverage/lcov-report'),
       subdir: '.',
       reporters: [
         { type: 'html', subdir: 'html-report' },
-        { type: 'lcov', subdir: 'lcov-report' }
+        { type: 'lcov', subdir: 'lcov-report' },
+        { type: 'text-summary' }
       ]
     },
     reporters: ['progress', 'kjhtml'],
@@ -37,7 +38,7 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Chrome'],
+    browsers: ['ChromeHeadless'],
     singleRun: false,
     restartOnFileChange: true
   });

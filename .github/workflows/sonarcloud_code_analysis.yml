@@ -45,6 +45,9 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: Run angular tests
+        run: npm install && npm run test
+        working-directory: expense-tracker-web-client
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         with:
