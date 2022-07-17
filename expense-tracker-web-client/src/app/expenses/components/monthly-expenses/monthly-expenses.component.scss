@@ -26,30 +26,56 @@
     }
     .content {
         .report-item {
-            display: flex;
-            align-items: center;
             border-bottom: solid black 1px;
-            padding-top: 5px;
-            padding-bottom: 5px;
-            .date {
-                font-size: 14px;
-            }
-            .total-daily-amount, .total-monthly-amount {
-                margin-left: auto;
-                font-size: 16px;
-                font-weight: bold;
-                color: #444;
-            }
-            .total-monthly-title {
-                font-size: 16px;
-                font-weight: bold;
-                color: #444;
-            }
-            .total-monthly-amount {
-                color: #438c43;
-            }
+            overflow: hidden;
             &:first-of-type {
                 border-top: solid black 1px
+            }
+            .summary {
+                display: flex;
+                align-items: center;
+                padding-top: 5px;
+                padding-bottom: 5px;
+                .date {
+                    font-size: 14px;
+                }
+                .total-daily-amount, .total-monthly-amount {
+                    margin-left: auto;
+                    font-size: 16px;
+                    font-weight: bold;
+                    color: #444;
+                }
+                .total-monthly-title {
+                    font-size: 16px;
+                    font-weight: bold;
+                    color: #444;
+                }
+                .total-monthly-amount {
+                    color: #438c43;
+                }
+            }
+            .details {
+                .expense-item {
+                    margin-bottom: 5px;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    .icon {
+                        height: 13px;
+                        width: 13px;
+                        margin-right: 10px;
+                        border: solid black 1px;
+                    }
+                    .person {
+                        width: 60px;
+                    }
+                    .amount {
+                        width: 50px;
+                    }
+                    .edit-action {
+                        margin-left: auto;
+                    }
+                }
             }
         }
     }

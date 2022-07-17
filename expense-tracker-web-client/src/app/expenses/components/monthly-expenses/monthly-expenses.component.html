@@ -19,12 +19,32 @@
     </div>
     <div class="content">
         <div class="report-item" *ngFor="let item of report">
-            <p class="date">{{ item.date | date:'dd.MM.yyyy' }}</p>
-            <p class="total-daily-amount">{{ calculateTotalDaylyExpense(item.expenses) }}</p>
+            <div class="summary" (click)="onReportItemClick(item)">
+                <p class="date">{{ item.date | date:'dd.MM.yyyy' }}</p>
+                <p class="total-daily-amount">{{ calculateTotalDaylyExpense(item.expenses) }}</p>
+            </div>
+            <div class="details" [@detailExpand]="getItemDetailsState(item)"
+                                 *ngIf="item.expenses.length > 0">
+                <p class="title">Расходы за день</p>
+                <div class="expense-item" *ngFor="let expense of item.expenses">
+                    <div class="icon" [style.background-color] = "expense.category?.color | color"></div>
+                    <p class="person">{{ expense.person?.name }}</p>
+                    <p class="amount">{{ expense.amount }}</p>
+                    <p class="description">{{ expense.description }}</p>
+                    <button mat-icon-button class="edit-action small-icon-button-20">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button class="delete action small-icon-button-20">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+            </div>
         </div>
         <div class="report-item">
-            <p class="total-monthly-title">Итого</p>
-            <p class="total-monthly-amount">{{ calculateTotalMonthlyExpense(report) }}</p>
+            <div class="summary">
+                <p class="total-monthly-title">Итого</p>
+                <p class="total-monthly-amount">{{ calculateTotalMonthlyExpense(report) }}</p>
+            </div>
         </div>
     </div>
 </div>

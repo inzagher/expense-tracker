@@ -7,7 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ChangeTitleCommand } from '@core/commands';
 import { ExpenseDTO } from '@core/dto';
 import { Bus, ExpenseService } from '@core/services';
-import { DateUtils, MathUtils } from '@core/utils';
+import { AnimationUtils, DateUtils, MathUtils } from '@core/utils';
 import { DateFormattingUtils } from '@material/date-formatting.utils';
 import { Moment } from 'moment';
 
@@ -15,6 +15,7 @@ import { Moment } from 'moment';
     selector: 'monthly-expenses',
     templateUrl: './monthly-expenses.component.html',
     styleUrls: ['./monthly-expenses.component.scss'],
+    animations: [ AnimationUtils.getRowExpansionTrigger() ],
     providers: [
         { provide: MAT_DATE_FORMATS, useValue: DateFormattingUtils.getYearMonthFormatSettings() }
     ]
@@ -24,6 +25,7 @@ export class MonthlyExpensesComponent implements OnInit {
     report: DailyReportItem[] = [];
     period: FormControl<Moment | null> | null = null;
     form: UntypedFormGroup = new UntypedFormGroup({});
+    selectedReportItem: DailyReportItem | null = null;
 
     constructor(private bus: Bus,
                 private router: Router,
@@ -52,12 +54,20 @@ export class MonthlyExpensesComponent implements OnInit {
         this.reloadExpenseList();
     }
 
+    onReportItemClick(item: DailyReportItem): void {
+        this.selectedReportItem = item === this.selectedReportItem ? null : item;
+    }
+
     addExpense(): void {
         this.router.navigate(['expenses/editor']);
     }
 
     editExpense(expense: ExpenseDTO): void {
         this.router.navigate(['expenses/editor' + expense.id]);
+    }
+
+    getItemDetailsState(item: DailyReportItem): string {
+        return item === this.selectedReportItem ? 'expanded' : 'collapsed';
     }
 
     calculateTotalMonthlyExpense(report: DailyReportItem[]): number {
