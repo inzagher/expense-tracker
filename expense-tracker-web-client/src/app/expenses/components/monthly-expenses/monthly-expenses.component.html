@@ -20,7 +20,12 @@
     <div class="content">
         <div class="report-item" *ngFor="let item of report">
             <div class="summary" (click)="onReportItemClick(item)">
-                <p class="date">{{ item.date | date:'dd.MM.yyyy' }}</p>
+                <p class="dayly-item-title">
+                    <span>{{ item.date | date:'dd.MM.yyyy' }}</span>
+                    <span class="day-of-week" [ngClass]="{'day-off': isDayOff(item.date) }">
+                        {{ item.date | date:'(EEEEEE)' | uppercase }}
+                    </span>
+                </p>
                 <p class="total-daily-amount">{{ calculateTotalDaylyExpense(item.expenses) }}</p>
             </div>
             <div class="details" [@detailExpand]="getItemDetailsState(item)"

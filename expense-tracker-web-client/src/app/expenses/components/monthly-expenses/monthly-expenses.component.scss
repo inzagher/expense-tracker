@@ -36,8 +36,15 @@
                 align-items: center;
                 padding-top: 5px;
                 padding-bottom: 5px;
-                .date {
+                .dayly-item-title {
                     font-size: 14px;
+                    display: flex;
+                    flex-direction: row;
+                    .day-of-week {
+                        font-family: monospace;
+                        margin-left: 5px;
+                        &.day-off { color: #d65d63; }
+                    }
                 }
                 .total-daily-amount, .total-monthly-amount {
                     margin-left: auto;

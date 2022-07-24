@@ -60,6 +60,11 @@ export class MonthlyExpensesComponent implements OnInit {
         this.selectedReportItem = item === this.selectedReportItem ? null : item;
     }
 
+    isDayOff(date: Date | null): boolean {
+        return date?.getDay() === 6
+            || date?.getDay() === 0;
+    }
+
     addExpense(): void {
         this.router.navigate(['expenses/editor']);
     }
