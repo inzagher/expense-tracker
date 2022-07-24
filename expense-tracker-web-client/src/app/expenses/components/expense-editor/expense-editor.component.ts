@@ -33,7 +33,7 @@ export class ExpenseEditorComponent implements OnInit {
         this.form.addControl("date", this.formBuilder.control('', Validators.required));
         this.form.addControl("person", this.formBuilder.control('', Validators.required));
         this.form.addControl("category", this.formBuilder.control('', Validators.required));
-        this.form.addControl("amount", this.formBuilder.control(0, Validators.required));
+        this.form.addControl("amount", this.formBuilder.control(null, Validators.required));
         this.form.addControl("description", this.formBuilder.control('', Validators.required));
 
         let id = this.route.snapshot.paramMap.get('id') ?? null;
@@ -99,7 +99,7 @@ export class ExpenseEditorComponent implements OnInit {
             let category: CategoryDTO | null = this.categories
                 ? (this.categories[0] ?? null) : null;
             return of({ id: null, date: date, category: category,
-                        person: person, amount: 0, description: ''});
+                        person: person, amount: null, description: ''});
         });
     }
 
