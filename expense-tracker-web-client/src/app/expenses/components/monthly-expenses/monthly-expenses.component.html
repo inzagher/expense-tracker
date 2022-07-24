@@ -31,10 +31,12 @@
                     <p class="person">{{ expense.person?.name }}</p>
                     <p class="amount">{{ expense.amount }}</p>
                     <p class="description">{{ expense.description }}</p>
-                    <button mat-icon-button class="edit-action small-icon-button-20">
+                    <button mat-icon-button class="edit-action small-icon-button-20"
+                            (click)="editExpense(expense)">
                         <mat-icon>edit</mat-icon>
                     </button>
-                    <button mat-icon-button class="delete action small-icon-button-20">
+                    <button mat-icon-button class="delete action small-icon-button-20"
+                            (click)="deleteExpense(expense)">
                         <mat-icon>delete</mat-icon>
                     </button>
                 </div>

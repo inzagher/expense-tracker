@@ -6,9 +6,10 @@ import { MatDatepicker } from '@angular/material/datepicker';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ChangeTitleCommand } from '@core/commands';
 import { ExpenseDTO } from '@core/dto';
-import { Bus, ExpenseService } from '@core/services';
+import { Bus, DialogService, ExpenseService } from '@core/services';
 import { AnimationUtils, DateUtils, MathUtils } from '@core/utils';
 import { DateFormattingUtils } from '@material/date-formatting.utils';
+import { map, tap } from 'rxjs';
 import { Moment } from 'moment';
 
 @Component({
@@ -30,6 +31,7 @@ export class MonthlyExpensesComponent implements OnInit {
     constructor(private bus: Bus,
                 private router: Router,
                 private route: ActivatedRoute,
+                private dialogService: DialogService,
                 private expenseService: ExpenseService,
                 @Inject(LOCALE_ID) private locale: string) { }
 
@@ -63,7 +65,17 @@ export class MonthlyExpensesComponent implements OnInit {
     }
 
     editExpense(expense: ExpenseDTO): void {
-        this.router.navigate(['expenses/editor' + expense.id]);
+        this.router.navigate(['expenses/editor/' + expense.id]);
+    }
+
+    deleteExpense(expense: ExpenseDTO): void {
+        let caption = 'Внимание!';
+        let question = 'Расход будет удален безвозвратно. Продолжить?';
+        let deletion$ = this.expenseService.deleteById(expense.id!).pipe(
+            tap(() => this.reloadExpenseList()),
+            map(() => void 0)
+        );
+        this.dialogService.confirmAndExecute(caption, question, deletion$).subscribe();
     }
 
     getItemDetailsState(item: DailyReportItem): string {
