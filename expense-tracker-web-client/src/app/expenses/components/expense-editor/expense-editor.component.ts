@@ -19,6 +19,7 @@ export class ExpenseEditorComponent implements OnInit {
     persons: PersonDTO[] | null = null;
     categories: CategoryDTO[] | null = null;
     descriptions$: Observable<string[]> | null = null;
+    busy: boolean = false;
 
     constructor(private bus: Bus,
                 private location: Location,
@@ -30,6 +31,7 @@ export class ExpenseEditorComponent implements OnInit {
                 private categoryService: CategoryService) { }
 
     ngOnInit(): void {
+        this.busy = true;
         this.form.addControl("date", this.formBuilder.control('', Validators.required));
         this.form.addControl("person", this.formBuilder.control('', Validators.required));
         this.form.addControl("category", this.formBuilder.control('', Validators.required));
@@ -64,7 +66,11 @@ export class ExpenseEditorComponent implements OnInit {
             let request$ = expense.id == null
                 ? this.expenseService.create(expense)
                 : this.expenseService.edit(expense);
-            request$.subscribe(() => this.location.back());
+            this.busy = true;
+            request$.subscribe({
+                next: () => { this.location.back(); this.busy = false; },
+                error: (e) => { console.error(e); this.busy = false; }
+            });
         }
     }
 
@@ -79,10 +85,12 @@ export class ExpenseEditorComponent implements OnInit {
         this.form.get("category")?.setValue(expense.category?.id);
         this.form.get("amount")?.setValue(expense.amount);
         this.form.get("description")?.setValue(expense.description);
+        this.busy = false;
     }
 
     private onDataLoadingError(error: any): void {
         console.error(error);
+        this.busy = false;
     }
 
     private createDescriptionSearchRequest(input: string): Observable<string[]> {
