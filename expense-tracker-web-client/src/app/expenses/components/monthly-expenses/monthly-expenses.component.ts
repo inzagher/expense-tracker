@@ -50,7 +50,7 @@ export class MonthlyExpensesComponent implements OnInit {
         let value = this.period?.value!;
         value.year(selected.year());
         value.month(selected.month());
-        value.day(1);
+        value.date(1);
         picker.close();
         this.period?.setValue(value);
         this.reloadExpenseList();
