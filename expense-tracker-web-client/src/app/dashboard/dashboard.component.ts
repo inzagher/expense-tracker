@@ -51,10 +51,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
         let year = this.today.getFullYear();
         let month = this.today.getMonth() + 1;
         this.reportService.getCategoryReport(year, month).subscribe(
-            (items) => this.categoryReport = items
+            (items) => this.categoryReport = items.filter(this.isCategoryReportItemVisible)
         );
         this.reportService.getYearlyReport(year).subscribe(
             (items) => this.yearlyReport = items
         );
+    }
+
+    private isCategoryReportItemVisible(item: CategoryReportItemDTO): boolean {
+        return item.category?.obsolete === false || item.total as number > 0;
     }
 }

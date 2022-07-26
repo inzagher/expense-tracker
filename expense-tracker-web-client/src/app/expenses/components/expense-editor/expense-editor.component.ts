@@ -79,6 +79,14 @@ export class ExpenseEditorComponent implements OnInit {
     }
 
     private onExpenseLoaded(expense: ExpenseDTO): void {
+        // Фильтруем категории строго после загрузки расхода,
+        // т.к. устаревшие категории могут использоваться
+        // в редактируемых расходах и их надо показывать.
+        if (this.categories) {
+            let isCategoryVisible = (c: CategoryDTO) => !c.obsolete || c.id === expense.category?.id;
+            this.categories = this.categories.filter(c => isCategoryVisible(c));
+        }
+
         this.id = expense.id;
         this.form.get("date")?.setValue(moment(expense.date));
         this.form.get("person")?.setValue(expense.person?.id);
