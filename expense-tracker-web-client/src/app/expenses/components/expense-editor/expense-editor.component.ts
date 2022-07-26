@@ -101,7 +101,8 @@ export class ExpenseEditorComponent implements OnInit {
 
     private createDefaultExpense(): Observable<ExpenseDTO> {
         return defer(() => {
-            let date = new Date().toISOString();
+            let date = this.route.snapshot.queryParamMap.get('date')
+                ?? new Date().toISOString();
             let person: PersonDTO | null = this.persons
                 ? (this.persons[0] ?? null) : null;
             let category: CategoryDTO | null = this.categories

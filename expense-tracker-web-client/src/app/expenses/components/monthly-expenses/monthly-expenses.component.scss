@@ -62,6 +62,21 @@
                 }
             }
             .details {
+                .details-header {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    margin-bottom: 3px;
+                    .add-btn {
+                        margin-left: auto;
+                    }
+                    .mat-raised-button {
+                        border-radius: 0;
+                        font-size: 12px;
+                        line-height: 24px;
+                        padding: 0 8px;
+                    }
+                }
                 .expense-item {
                     margin-bottom: 5px;
                     display: flex;

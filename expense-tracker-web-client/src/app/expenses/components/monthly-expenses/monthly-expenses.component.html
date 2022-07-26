@@ -12,7 +12,7 @@
     <div class="header">
         <p class="name" *ngIf="report && !loading">Отчет за месяц</p>
         <p class="name" *ngIf="loading">Поиск расходов...</p>
-        <button mat-icon-button class="small-icon-button-20 add-btn" (click)="addExpense()">
+        <button mat-icon-button class="small-icon-button-20 add-btn" (click)="addExpense(null)">
             <mat-icon>add_box</mat-icon>
         </button>
     </div>
@@ -27,9 +27,12 @@
                 </p>
                 <p class="total-daily-amount">{{ calculateTotalDaylyExpense(item.expenses) }}</p>
             </div>
-            <div class="details" [@detailExpand]="getItemDetailsState(item)"
-                                 *ngIf="item.expenses.length > 0">
-                <p class="title">Расходы за день</p>
+            <div class="details" [@detailExpand]="getItemDetailsState(item)">
+                <div class="details-header">
+                    <p class="title" *ngIf="item.expenses.length > 0">Расходы за день</p>
+                    <p class="title" *ngIf="item.expenses.length === 0">Данные отсутствуют</p>
+                    <button class="add-btn" mat-raised-button color="primary" (click)="addExpense(item.date)">Создать</button>
+                </div>
                 <div class="expense-item" *ngFor="let expense of item.expenses">
                     <div class="icon" [style.background-color] = "expense.category?.color | color"></div>
                     <p class="person">{{ expense.person?.name }}</p>
@@ -40,7 +43,7 @@
                         <mat-icon>edit</mat-icon>
                     </button>
                     <button mat-icon-button class="delete action small-icon-button-20"
-                            (click)="deleteExpense(expense)">
+                            (click)="deleteExpense(expense)" color="warn">
                         <mat-icon>delete</mat-icon>
                     </button>
                 </div>

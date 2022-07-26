@@ -3,7 +3,7 @@ import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { FormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { MatDatepicker } from '@angular/material/datepicker';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ChangeTitleCommand } from '@core/commands';
 import { ExpenseDTO } from '@core/dto';
 import { Bus, DialogService, ExpenseService } from '@core/services';
@@ -65,11 +65,14 @@ export class MonthlyExpensesComponent implements OnInit {
             || date?.getDay() === 0;
     }
 
-    addExpense(): void {
-        this.router.navigate(['expenses/editor']);
+    addExpense(date: Date | null): void {
+        let extras: NavigationExtras = {};
+        if (date) { extras.queryParams = { date: date.toISOString() } };
+        this.router.navigate(['expenses/editor'], extras);
     }
 
     editExpense(expense: ExpenseDTO): void {
+
         this.router.navigate(['expenses/editor/' + expense.id]);
     }
 
