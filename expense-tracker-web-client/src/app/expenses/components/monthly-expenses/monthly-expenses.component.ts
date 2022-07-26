@@ -67,12 +67,11 @@ export class MonthlyExpensesComponent implements OnInit {
 
     addExpense(date: Date | null): void {
         let extras: NavigationExtras = {};
-        if (date) { extras.queryParams = { date: date.toISOString() } };
+        if (date) { extras.queryParams = { date: this.toLocalDate(date) } }
         this.router.navigate(['expenses/editor'], extras);
     }
 
     editExpense(expense: ExpenseDTO): void {
-
         this.router.navigate(['expenses/editor/' + expense.id]);
     }
 
