@@ -31,4 +31,8 @@ export class DateUtils {
         let d = input.date();
         return DateUtils.createUTCDate(y, m, d);
     }
+
+    static areEqual(left: Date  | null, right: Date | null): boolean {
+        return left?.getTime() === right?.getTime();
+    }
 }

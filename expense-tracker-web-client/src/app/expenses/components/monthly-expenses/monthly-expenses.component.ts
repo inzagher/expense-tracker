@@ -1,4 +1,4 @@
-import { formatDate } from '@angular/common';
+import { formatDate, Location } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { FormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
@@ -27,9 +27,11 @@ export class MonthlyExpensesComponent implements OnInit {
     period: FormControl<Moment | null> | null = null;
     form: UntypedFormGroup = new UntypedFormGroup({});
     selectedReportItem: DailyReportItem | null = null;
+    initialized: boolean = false;
 
     constructor(private bus: Bus,
                 private router: Router,
+                private location: Location,
                 private route: ActivatedRoute,
                 private dialogService: DialogService,
                 private expenseService: ExpenseService,
@@ -57,7 +59,9 @@ export class MonthlyExpensesComponent implements OnInit {
     }
 
     onReportItemClick(item: DailyReportItem): void {
+        let path = window.location.pathname;
         this.selectedReportItem = item === this.selectedReportItem ? null : item;
+        this.location.replaceState(path + '?selectedDate=' + this.toLocalDate(item.date));
     }
 
     isDayOff(date: Date | null): boolean {
@@ -136,7 +140,14 @@ export class MonthlyExpensesComponent implements OnInit {
             currentDate = DateUtils.createUTCDate(currentDate.getFullYear(), currentDate.getMonth(), ++currentDay);
         }
 
+        if (this.initialized === false) {
+            let param = this.route.snapshot.queryParamMap.get('selectedDate');
+            let date = param === null ? null : DateUtils.parseUTCDate(param);
+            this.selectedReportItem = this.report.find(item => DateUtils.areEqual(item.date, date)) ?? null;
+        }
+
         this.loading = false;
+        this.initialized = true;
     }
 
     private handleLoadingError(error: any) {
