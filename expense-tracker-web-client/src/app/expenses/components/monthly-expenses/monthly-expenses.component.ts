@@ -1,4 +1,4 @@
-import { formatDate, Location } from '@angular/common';
+import { formatDate, Location, ViewportScroller } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { FormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
@@ -33,6 +33,7 @@ export class MonthlyExpensesComponent implements OnInit {
                 private router: Router,
                 private location: Location,
                 private route: ActivatedRoute,
+                private scroller: ViewportScroller,
                 private dialogService: DialogService,
                 private expenseService: ExpenseService,
                 @Inject(LOCALE_ID) private locale: string) { }
@@ -61,7 +62,8 @@ export class MonthlyExpensesComponent implements OnInit {
     onReportItemClick(item: DailyReportItem): void {
         let path = window.location.pathname;
         this.selectedReportItem = item === this.selectedReportItem ? null : item;
-        this.location.replaceState(path + '?selectedDate=' + this.toLocalDate(item.date));
+        let search = this.selectedReportItem === null ? '' : '?selectedDate=' + this.toLocalDate(item.date);
+        this.location.replaceState(path + search);
     }
 
     isDayOff(date: Date | null): boolean {
@@ -141,9 +143,7 @@ export class MonthlyExpensesComponent implements OnInit {
         }
 
         if (this.initialized === false) {
-            let param = this.route.snapshot.queryParamMap.get('selectedDate');
-            let date = param === null ? null : DateUtils.parseUTCDate(param);
-            this.selectedReportItem = this.report.find(item => DateUtils.areEqual(item.date, date)) ?? null;
+            this.restoreDateSelection();
         }
 
         this.loading = false;
@@ -154,6 +154,20 @@ export class MonthlyExpensesComponent implements OnInit {
         this.form.get('period')?.enable();
         console.error(error);
         this.loading = false;
+    }
+
+    private restoreDateSelection(): void {
+        let param = this.route.snapshot.queryParamMap.get('selectedDate');
+        let selectedDate = param === null ? null : DateUtils.parseUTCDate(param);
+        this.selectedReportItem = this.report.find(item => DateUtils.areEqual(item.date, selectedDate)) ?? null;
+        if (selectedDate) { this.scrollToReportItem(selectedDate); }
+    }
+
+    private scrollToReportItem(selectedDate: Date): void {
+        setTimeout(() => {
+            let anchor = "report-item-" + selectedDate.getDate();
+                this.scroller.scrollToAnchor(anchor);
+        }, 1);
     }
 
     private getIntParamFromRoute(paramName: string, orElse: number): number {
