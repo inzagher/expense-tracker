@@ -55,6 +55,8 @@ export class MonthlyExpensesComponent implements OnInit {
         value.month(selected.month());
         value.date(1);
         picker.close();
+        let pathParams = `${selected.year()}/${selected.month() + 1 }`;
+        this.location.replaceState('/expenses/list/monthly/' + pathParams);
         this.period?.setValue(value);
         this.reloadExpenseList();
     }
