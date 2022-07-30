@@ -162,12 +162,18 @@ export class MonthlyExpensesComponent implements OnInit {
         let param = this.route.snapshot.queryParamMap.get('selectedDate');
         let selectedDate = param === null ? null : DateUtils.parseUTCDate(param);
         this.selectedReportItem = this.report.find(item => DateUtils.areEqual(item.date, selectedDate)) ?? null;
-        if (selectedDate) { this.scrollToReportItem(selectedDate); }
+        if (selectedDate && selectedDate.getDate() > 2) {
+            let year = selectedDate.getFullYear();
+            let month = selectedDate.getMonth();
+            let date = selectedDate.getDate() - 2;
+            let scrollDate = DateUtils.createUTCDate(year, month, date);
+            this.scrollToReportItem(scrollDate);
+        }
     }
 
-    private scrollToReportItem(selectedDate: Date): void {
+    private scrollToReportItem(scrollDate: Date): void {
         setTimeout(() => {
-            let anchor = "report-item-" + selectedDate.getDate();
+            let anchor = "report-item-" + scrollDate.getDate();
                 this.scroller.scrollToAnchor(anchor);
         }, 1);
     }
