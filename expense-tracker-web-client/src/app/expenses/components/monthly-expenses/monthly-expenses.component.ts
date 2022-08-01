@@ -201,7 +201,7 @@ export class MonthlyExpensesComponent implements OnInit {
     }
 
     private toLocalDate(date: Date): string {
-        return formatDate(date, 'YYYY-MM-dd', this.locale);
+        return formatDate(date, 'yyyy-MM-dd', this.locale);
     }
 }
 
