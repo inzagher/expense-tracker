@@ -123,7 +123,7 @@ export class ExpenseEditorComponent implements OnInit {
     private convertFormToExpense(): ExpenseDTO {
         return {
             id: this.id,
-            date: this.form.get("date")?.value?.format('yyyy-MM-dd'),
+            date: this.form.get("date")?.value?.format('YYYY-MM-DD'),
             category: this.getItemById(this.categories!, this.form.get("category")?.value),
             person: this.getItemById(this.persons!, this.form.get("person")?.value),
             amount: this.form.get("amount")?.value,
