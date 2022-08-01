@@ -4,7 +4,10 @@
     </div>
     <div class="content">
         <div class="report-item" *ngFor="let item of categoryReport">
-            <div class="item-icon" matRipple [style.background-color] = "item.category?.color | color"></div>
+            <div (click)="onCategorySelected(item.category)"
+                 [style.background-color] = "item.category?.color | color"
+                 class="item-icon" matRipple>
+            </div>
             <p class="item-label">{{ item.category?.name }}</p>
             <p class="item-amount">{{ item.total }}</p>
         </div>
@@ -20,7 +23,9 @@
     </div>
     <div class="content">
         <div class="report-item" *ngFor="let item of yearlyReport">
-            <p class="item-label">{{ item.month | month }}</p>
+            <p class="item-label" matRipple (click)="onMonthSelected(item.month)">
+                {{ item.month | month }}
+            </p>
             <p class="item-amount">{{ item.total }}</p>
         </div>
         <div class="report-item">

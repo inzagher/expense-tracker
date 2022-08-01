@@ -1,9 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { formatDate } from '@angular/common';
+import { Component, Inject, LOCALE_ID, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ChangeTitleCommand } from '@core/commands';
-import { CategoryReportItemDTO, YearlyReportItemDTO } from '@core/dto';
+import { CategoryDTO, CategoryReportItemDTO, YearlyReportItemDTO } from '@core/dto';
 import { BackupRestoredEvent } from '@core/events';
 import { BusMessage, Bus, ReportService } from '@core/services';
-import { MathUtils } from '@core/utils';
+import { DateUtils, MathUtils } from '@core/utils';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -19,7 +21,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private subscription: Subscription | null = null;
 
     constructor(private bus: Bus,
-                private reportService: ReportService) { }
+                private router: Router,
+                private reportService: ReportService,
+                @Inject(LOCALE_ID) private locale: string) { }
 
     ngOnInit(): void {
         this.subscription = this.bus.messages$.subscribe(m => this.onBusMessage(m));
@@ -30,6 +34,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         if (this.subscription) {
             this.subscription.unsubscribe();
+        }
+    }
+
+    onCategorySelected(category: CategoryDTO | null): void {
+        if (category) {
+            let categories = [ category.id ];
+            let periodStart = this.toLocalDate(DateUtils.createUTCDate(this.today.getFullYear(), this.today.getMonth(), 1));
+            let periodEnd = this.toLocalDate(DateUtils.createUTCDate(this.today.getFullYear(), this.today.getMonth() + 1, 0));
+            let queryParams = { categories: categories, dateFrom: periodStart, dateTo: periodEnd };
+            this.router.navigate(['expenses/list/search'], { queryParams: queryParams });
+        }
+    }
+
+    onMonthSelected(month: number | null): void {
+        if (typeof(month) === 'number') {
+            let year = this.today.getFullYear();
+            this.router.navigate([`expenses/list/monthly/${year}/${month}`]);
         }
     }
 
@@ -60,5 +81,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     private isCategoryReportItemVisible(item: CategoryReportItemDTO): boolean {
         return item.category?.obsolete === false || item.total as number > 0;
+    }
+
+    private toLocalDate(date: Date): string {
+        return formatDate(date, 'yyyy-MM-dd', this.locale);
     }
 }
