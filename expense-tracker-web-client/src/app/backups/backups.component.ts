@@ -33,7 +33,7 @@ export class BackupsComponent implements OnInit {
     backupDatabase(): void {
         let caption = 'Внимание!';
         let question = 'Вы действительно хотите сделать резервную копию данных?';
-        let backup$ = this.expecuteAndReload(this.backupService.backupDatabase());
+        let backup$ = this.executeAndReload(this.backupService.backupDatabase());
         this.dialogService.confirmAndExecute(caption, question, backup$).subscribe();
     }
 
@@ -42,7 +42,7 @@ export class BackupsComponent implements OnInit {
         if (element.files && element.files.length > 0) {
             let caption = 'Внимание!';
             let question = 'Все данные будут перезаписаны. Продолжить?';
-            let recovery$ = this.expecuteAndReload(this.backupService.restoreDatabase(element.files[0]!));
+            let recovery$ = this.executeAndReload(this.backupService.restoreDatabase(element.files[0]!));
             this.dialogService.confirmAndExecute(caption, question, recovery$).subscribe();
         }
     }
@@ -51,7 +51,7 @@ export class BackupsComponent implements OnInit {
         return this.backupService.createDownloadLink(metadata);
     }
 
-    private expecuteAndReload<T>(action: Observable<T>): Observable<void> {
+    private executeAndReload<T>(action: Observable<T>): Observable<void> {
         return action.pipe(tap(() => this.refresh()), map(() => void 0));
     }
 }
