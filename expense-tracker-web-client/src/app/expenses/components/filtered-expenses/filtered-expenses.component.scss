@@ -26,6 +26,10 @@
         font-weight: bold;
         font-size: 15px;
     }
+    .empty-list-label {
+        border-top: solid black 1px;
+        padding-bottom: 20px;
+    }
     .expense-item:first-of-type {
         border-top: solid black 1px
     }
