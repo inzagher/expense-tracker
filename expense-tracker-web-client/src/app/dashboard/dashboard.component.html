@@ -1,3 +1,11 @@
+<form [formGroup]="form" *ngIf="form && period" class="form-container">
+    <mat-form-field appearance="standard">
+        <mat-label>Выбранный период</mat-label>
+        <input matInput [matDatepicker]="picker" [formControl]="period">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker startView="year" (monthSelected)="onPeriodChanged($event, picker)"></mat-datepicker>
+    </mat-form-field>
+</form>
 <div class="report-container" *ngIf="!!categoryReport && categoryReport.length > 0">
     <div class="header">
         <p class="report-title">Отчет по категориям</p>
