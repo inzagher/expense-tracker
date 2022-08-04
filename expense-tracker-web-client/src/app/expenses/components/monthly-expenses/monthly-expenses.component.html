@@ -3,9 +3,7 @@
         <mat-label>Выбранный период</mat-label>
         <input matInput [matDatepicker]="picker" [formControl]="period">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker startView="year" (monthSelected)="onMonthChanged($event, picker)">
-
-        </mat-datepicker>
+        <mat-datepicker #picker startView="year" (monthSelected)="onMonthChanged($event, picker)"></mat-datepicker>
     </mat-form-field>
 </form>
 <div class="expense-report-container">
