@@ -18,6 +18,7 @@ describe('Calculator', () => {
 
     it('Addition', (done: DoneFn) => {
         assertSucceeded('1 + 2', 3);
+        assertSucceeded('123 + 123', 246);
         assertSucceeded('0.1 + 0.2', 0.3);
         done();
     });
@@ -58,10 +59,23 @@ describe('Calculator', () => {
         done();
     });
 
+    it ('Invalid Expression', (done: DoneFn) => {
+        assertFailed('TEST');
+        assertFailed('1200 + S850');
+        done();
+    })
+
     function assertSucceeded(expression: string, exprectedResult: number): void {
         let actualResult = service.calculate(expression);
         expect(actualResult).toBeDefined();
         expect(actualResult.success).toBeTrue();
         expect(actualResult.value).toBe(exprectedResult);
+    }
+
+    function assertFailed(expression: string): void {
+        let actualResult = service.calculate(expression);
+        expect(actualResult).toBeDefined();
+        expect(actualResult.success).toBeFalse();
+        expect(actualResult.value).toBe(-1);
     }
 });

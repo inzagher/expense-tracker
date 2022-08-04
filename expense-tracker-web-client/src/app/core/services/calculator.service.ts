@@ -42,14 +42,16 @@ export class CalculatorService {
 
         if (this.isExpressionNumber(expression)) {
             let value = Number.parseFloat(expression as string);
-            return CalculationResult.succeeded(value);
+            return Number.isNaN(value)
+                ? CalculationResult.failed()
+                : CalculationResult.succeeded(value);
         }
 
         let processed: NullableString = expression;
         processed = this.processBrackets(processed);
         processed = this.processOperations(processed, MathOperationType.Multiplication, MathOperationType.Division);
         processed = this.processOperations(processed, MathOperationType.Addition, MathOperationType.Subtraction);
-        return this.isExpressionNumber(processed)
+        return this.isExpressionNumber(processed) && !Number.isNaN(Number.parseFloat(processed as string))
             ? CalculationResult.succeeded(Number.parseFloat(processed as string))
             : CalculationResult.failed();
     }
@@ -125,7 +127,7 @@ export class CalculatorService {
             let actionType: MathOperationType = this.operationSymbolMap.get(actionSymbol) as MathOperationType;
             let processor: MathOperationProcessor = this.operationProcessors.get(actionType) as MathOperationProcessor;
             let calculated: number = processor(Number.parseFloat(leftOperandAsString.trim()), Number.parseFloat(rightOperandAsString.trim()));
-            calculated = Number.parseFloat(calculated.toPrecision(this.PRECISION));
+            if (calculated % 1 !== 0) { calculated = Number.parseFloat(calculated.toPrecision(this.PRECISION)); }
 
             let expressionToReplace = leftOperandAsString + actionSymbol + rightOperandAsString;
             processedExpression = processedExpression.replace(expressionToReplace, calculated.toString());
