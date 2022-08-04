@@ -1,11 +1,11 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ChangeTitleCommand } from '@core/commands';
 import { CategoryDTO, ExpenseDTO, PersonDTO } from '@core/dto';
-import { Bus, CategoryService, DictionaryService, ExpenseService, PersonService } from '@core/services';
-import { concatMap, switchMap, defer, merge, Observable, of, tap, toArray, debounceTime, filter } from 'rxjs';
+import { Bus, CalculationResult, CalculatorService, CategoryService, DictionaryService, ExpenseService, PersonService } from '@core/services';
+import { concatMap, switchMap, defer, merge, Observable, of, tap, toArray, debounceTime, filter, map } from 'rxjs';
 import * as moment from 'moment';
 
 @Component({
@@ -19,23 +19,36 @@ export class ExpenseEditorComponent implements OnInit {
     persons: PersonDTO[] | null = null;
     categories: CategoryDTO[] | null = null;
     descriptions$: Observable<string[]> | null = null;
+    calculation$: Observable<CalculationResult | null> | null = null;
     busy: boolean = false;
 
     constructor(private bus: Bus,
                 private location: Location,
                 private route: ActivatedRoute,
                 private formBuilder: UntypedFormBuilder,
+                private calculatorService: CalculatorService,
                 private dictionaryService: DictionaryService,
                 private expenseService: ExpenseService,
                 private personService: PersonService,
                 private categoryService: CategoryService) { }
 
     ngOnInit(): void {
+        let self = this;
+        let calculated = function(control: AbstractControl): ValidationErrors | null {
+            if (control.value === undefined || control.value === null) {
+                return { required: true };
+            }
+            if (typeof(control.value) === 'string' && !self.calculatorService.calculate(control.value).success) {
+                return { invalid: true };
+            }
+            return null;
+        }
+
         this.busy = true;
         this.form.addControl("date", this.formBuilder.control('', Validators.required));
         this.form.addControl("person", this.formBuilder.control('', Validators.required));
         this.form.addControl("category", this.formBuilder.control('', Validators.required));
-        this.form.addControl("amount", this.formBuilder.control(null, Validators.required));
+        this.form.addControl("amount", this.formBuilder.control(null, calculated));
         this.form.addControl("description", this.formBuilder.control('', Validators.required));
 
         let id = this.route.snapshot.paramMap.get('id') ?? null;
@@ -56,6 +69,17 @@ export class ExpenseEditorComponent implements OnInit {
                 debounceTime(50),
                 filter(value => typeof(value) === 'string'),
                 switchMap((value) => this.createDescriptionSearchRequest(value))
+            );
+        }
+
+        let amountControl = this.form.get("amount");
+        if (amountControl) {
+            let current: any = null;
+            this.calculation$ = amountControl.valueChanges.pipe(
+                tap(value => current = value),
+                map(value => this.prepareAmount(value)),
+                map(value => this.calculatorService.calculate(value)),
+                map(calculation => calculation.value != current ? calculation : null)
             );
         }
     }
@@ -126,7 +150,7 @@ export class ExpenseEditorComponent implements OnInit {
             date: this.form.get("date")?.value?.format('YYYY-MM-DD'),
             category: this.getItemById(this.categories!, this.form.get("category")?.value),
             person: this.getItemById(this.persons!, this.form.get("person")?.value),
-            amount: this.form.get("amount")?.value,
+            amount: this.calculatorService.calculate(this.form.get("amount")?.value).value,
             description: this.form.get("description")?.value
         }
     }
@@ -135,5 +159,18 @@ export class ExpenseEditorComponent implements OnInit {
         let item = list.find(p => p.id === id);
         if (item) { return item; }
         else { throw Error("Элемент отсутствует в списке"); }
+    }
+
+    private prepareAmount(value: any): string | null {
+        if (value === null || value === undefined) {
+            return null;
+        }
+        if (typeof value === 'string') {
+            return value.trim();
+        }
+        if (typeof value === 'number') {
+            return value + '';
+        }
+        return null;
     }
 }

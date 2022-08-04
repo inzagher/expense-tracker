@@ -30,7 +30,11 @@
 
     <mat-form-field appearance="standard">
         <mat-label>Величина</mat-label>
-        <input matInput type="number" formControlName="amount" autocomplete="off">
+        <input matInput formControlName="amount" autocomplete="off">
+        <div matSuffix aria-label="clear" *ngIf="calculation$ | async; let calculation">
+            <p *ngIf="calculation.success">{{ calculation.value }}</p>
+            <p *ngIf="!calculation.success && form.get('amount')?.value" class="error">Ошибка</p>
+        </div>
     </mat-form-field>
 
     <mat-form-field appearance="standard">
