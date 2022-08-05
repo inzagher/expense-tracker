@@ -48,7 +48,7 @@
 
     <mat-form-field appearance="standard">
         <mat-label>Описание</mat-label>
-        <input matInput formControlName="description" [matAutocomplete]="auto">
+        <input matInput formControlName="description" [matAutocomplete]="auto" autocomplete="off">
         <mat-autocomplete #auto="matAutocomplete">
             <mat-option *ngFor="let option of descriptions$ | async" [value]="option">
               {{ option }}
