@@ -16,7 +16,9 @@
                  [style.background-color] = "item.category?.color | color"
                  class="item-icon" matRipple>
             </div>
-            <p class="item-label">{{ item.category?.name }}</p>
+            <p class="item-label" (click)="onCategorySelected(item.category)">
+                {{ item.category?.name }}
+            </p>
             <p class="item-amount">{{ item.total }}</p>
         </div>
         <div class="report-item">
