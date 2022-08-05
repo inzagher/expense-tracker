@@ -62,6 +62,7 @@ describe('Calculator', () => {
     it ('Invalid Expression', (done: DoneFn) => {
         assertFailed('TEST');
         assertFailed('1200 + S850');
+        assertFailed('1200 + 850S');
         done();
     })
 

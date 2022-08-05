@@ -22,13 +22,13 @@ export class CalculatorService {
     private readonly PRECISION = 2;
     private readonly OPENING_BRACKET = '(';
     private readonly CLOSING_BRACKET = ')';
-    private readonly operationSymbolMap: Map<string, MathOperationType> = new Map<string, MathOperationType>([
+    private readonly operationSymbolMap = new Map<string, MathOperationType>([
         [ '+', MathOperationType.Addition ],
         [ '-', MathOperationType.Subtraction ],
         [ '*', MathOperationType.Multiplication ],
         [ '/', MathOperationType.Division ],
     ]);
-    private operationProcessors: Map<MathOperationType, MathOperationProcessor> = new Map<MathOperationType, MathOperationProcessor>([
+    private operationProcessors = new Map<MathOperationType, MathOperationProcessor>([
         [  MathOperationType.Addition, (left, right) => left + right ],
         [  MathOperationType.Subtraction, (left, right) => left - right ],
         [  MathOperationType.Multiplication, (left, right) => left * right ],
@@ -37,6 +37,11 @@ export class CalculatorService {
 
     public calculate(expression: NullableString): CalculationResult {
         if (this.isExpressionNullOrWhiteSpace(expression)) {
+            return CalculationResult.failed();
+        }
+
+        let regex = /[^\d\s*+\-/().]+/;
+        if (regex.test(expression as string)) {
             return CalculationResult.failed();
         }
 
