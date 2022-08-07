@@ -115,7 +115,7 @@ export class ExpenseEditorComponent implements OnInit {
         this.form.get("date")?.setValue(moment(expense.date));
         this.form.get("person")?.setValue(expense.person?.id);
         this.form.get("category")?.setValue(expense.category?.id);
-        this.form.get("amount")?.setValue(expense.amount);
+        this.form.get("amount")?.setValue(expense.amount?.toString());
         this.form.get("description")?.setValue(expense.description);
         this.busy = false;
     }
