@@ -25,6 +25,9 @@
             &:first-of-type {
                 border-top: solid black 1px
             }
+            &.current {
+                background-color: #d3f6d3;
+            }
             .item-icon {
                 height: 15px;
                 width: 15px;

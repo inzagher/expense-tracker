@@ -11,12 +11,12 @@
         <p class="report-title">Отчет по категориям</p>
     </div>
     <div class="content">
-        <div class="report-item" *ngFor="let item of categoryReport">
-            <div (click)="onCategorySelected(item.category)"
-                 [style.background-color] = "item.category?.color | color"
-                 class="item-icon" matRipple>
+        <div class="report-item" matRipple *ngFor="let item of categoryReport"
+                                (click)="onCategorySelected(item.category)">
+            <div [style.background-color] = "item.category?.color | color"
+                 class="item-icon">
             </div>
-            <p class="item-label" (click)="onCategorySelected(item.category)">
+            <p class="item-label">
                 {{ item.category?.name }}
             </p>
             <p class="item-amount">{{ item.total }}</p>
@@ -32,8 +32,10 @@
         <p class="report-title">Годовой отчет</p>
     </div>
     <div class="content">
-        <div class="report-item" *ngFor="let item of yearlyReport">
-            <p class="item-label" matRipple (click)="onMonthSelected(item.month)">
+        <div class="report-item" matRipple *ngFor="let item of yearlyReport"
+                                 [ngClass]="{'current': isCurrentMonth(item.month) }"
+                                 (click)="onMonthSelected(item.month)">
+            <p class="item-label">
                 {{ item.month | month }}
             </p>
             <p class="item-amount">{{ item.total }}</p>

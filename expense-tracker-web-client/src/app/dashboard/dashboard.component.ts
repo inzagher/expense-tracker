@@ -22,6 +22,7 @@ import { Moment } from 'moment';
     ]
 })
 export class DashboardComponent implements OnInit, OnDestroy {
+    today: Date | null = null;
     subscription: Subscription | null = null;
     categoryReport: CategoryReportItemDTO[] | null = null;
     yearlyReport: YearlyReportItemDTO[] | null = null;
@@ -36,9 +37,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 @Inject(LOCALE_ID) private locale: string) { }
 
     ngOnInit(): void {
-        let today = new Date();
-        let year = this.getIntParamFromRoute('year', today.getFullYear());
-        let month = this.getIntParamFromRoute('month', today.getMonth() + 1) - 1;
+        let now = new Date();
+        let year = this.getIntParamFromRoute('year', now.getFullYear());
+        let month = this.getIntParamFromRoute('month', now.getMonth() + 1) - 1;
+        this.today = DateUtils.createUTCDate(year, month, now.getDate());
         this.period = new FormControl<Moment>(DateUtils.createUTCMoment(year, month, 1));
         this.period.addValidators(Validators.required);
         this.form.addControl('period', this.period);
@@ -88,6 +90,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     calculateTotalYearlyExpense(): number {
         return this.yearlyReport ? MathUtils.sum(this.yearlyReport, i => i.total as number) : 0;
+    }
+
+    isCurrentMonth(month: number | null): boolean {
+        return !!this.today && !!month
+            && month === this.today.getMonth() + 1
+            && this.period?.value?.year() === this.today.getFullYear();
     }
 
     private onBusMessage(message: BusMessage) {

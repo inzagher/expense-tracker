@@ -22,6 +22,7 @@ import { Moment } from 'moment';
     ]
 })
 export class MonthlyExpensesComponent implements OnInit {
+    today: Date | null = null;
     loading: boolean = false;
     report: DailyReportItem[] = [];
     period: FormControl<Moment | null> | null = null;
@@ -39,9 +40,10 @@ export class MonthlyExpensesComponent implements OnInit {
                 @Inject(LOCALE_ID) private locale: string) { }
 
     ngOnInit(): void {
-        let today = new Date();
-        let year = this.getIntParamFromRoute('year', today.getFullYear());
-        let month = this.getIntParamFromRoute('month', today.getMonth() + 1) - 1;
+        let now = new Date();
+        let year = this.getIntParamFromRoute('year', now.getFullYear());
+        let month = this.getIntParamFromRoute('month', now.getMonth() + 1) - 1;
+        this.today = DateUtils.createUTCDate(year, month, now.getDate());
         this.period = new FormControl<Moment>(DateUtils.createUTCMoment(year, month, 1));
         this.period.addValidators(Validators.required);
         this.form.addControl('period', this.period);
@@ -71,6 +73,10 @@ export class MonthlyExpensesComponent implements OnInit {
     isDayOff(date: Date | null): boolean {
         return date?.getDay() === 6
             || date?.getDay() === 0;
+    }
+
+    isToday(date: Date | null) {
+        return date && this.today && date.getTime() === this.today.getTime();
     }
 
     addExpense(date: Date | null): void {
@@ -174,7 +180,10 @@ export class MonthlyExpensesComponent implements OnInit {
     private scrollToReportItem(scrollDate: Date): void {
         setTimeout(() => {
             let anchor = "report-item-" + scrollDate.getDate();
+            let element = document.getElementById(anchor);
+            if (element && this.isScrollRequired(element)) {
                 this.scroller.scrollToAnchor(anchor);
+            }
         }, 1);
     }
 
@@ -202,6 +211,11 @@ export class MonthlyExpensesComponent implements OnInit {
 
     private toLocalDate(date: Date): string {
         return formatDate(date, 'yyyy-MM-dd', this.locale);
+    }
+
+    private isScrollRequired(element: HTMLElement): boolean {
+        let rectangle = element.getBoundingClientRect();
+        return rectangle.top > window.innerHeight;
     }
 }
 

@@ -36,6 +36,9 @@
                 align-items: center;
                 padding-top: 5px;
                 padding-bottom: 5px;
+                &.today {
+                    background-color: #d3f6d3;
+                }
                 .dayly-item-title {
                     font-size: 14px;
                     display: flex;
@@ -67,8 +70,14 @@
                     flex-direction: row;
                     align-items: center;
                     margin-bottom: 3px;
+                    .title {
+                        font-size: 14px;
+                        font-weight: bold;
+                        color: #333;
+                    }
                     .add-btn {
                         margin-left: auto;
+                        margin-top: 2px;
                     }
                     .mat-raised-button {
                         border-radius: 0;
