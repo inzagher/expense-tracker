@@ -1,4 +1,4 @@
-import { formatDate } from '@angular/common';
+import { formatDate, Location } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
@@ -32,6 +32,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     constructor(private bus: Bus,
                 private router: Router,
+                private location: Location,
                 private route: ActivatedRoute,
                 private reportService: ReportService,
                 @Inject(LOCALE_ID) private locale: string) { }
@@ -62,6 +63,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
         value.month(selected.month());
         value.date(1);
         picker.close();
+        let pathParams = `${selected.year()}/${selected.month() + 1 }`;
+        this.location.replaceState('/dashboard/' + pathParams);
         this.period?.setValue(value);
         this.reloadReportData();
     }
