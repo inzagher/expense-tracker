@@ -151,7 +151,7 @@ export class ExpenseEditorComponent implements OnInit {
             category: this.getItemById(this.categories!, this.form.get("category")?.value),
             person: this.getItemById(this.persons!, this.form.get("person")?.value),
             amount: this.calculatorService.calculate(this.form.get("amount")?.value).value,
-            description: this.form.get("description")?.value
+            description: this.form.get("description")?.value?.trim()
         }
     }
 
