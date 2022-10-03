@@ -41,7 +41,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         let now = new Date();
         let year = this.getIntParamFromRoute('year', now.getFullYear());
         let month = this.getIntParamFromRoute('month', now.getMonth() + 1) - 1;
-        this.today = DateUtils.createUTCDate(year, month, now.getDate());
+        this.today = DateUtils.createUTCDate(now.getFullYear(), now.getMonth(), now.getDate());
         this.period = new FormControl<Moment>(DateUtils.createUTCMoment(year, month, 1));
         this.period.addValidators(Validators.required);
         this.form.addControl('period', this.period);
