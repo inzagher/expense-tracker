@@ -54,16 +54,6 @@ class BackupServiceTests {
     }
     
     @Test
-    void lastBackupInfoTest() {
-        var last = service.findLastMetadataRecord();
-        assertTrue(last.isPresent());
-        assertNotNull(last.get().getFileName());
-        assertEquals(4, last.get().getExpenses());
-        assertEquals(3, last.get().getPersons());
-        assertEquals(2, last.get().getCategories());
-    }
-    
-    @Test
     void backupInfoListTest() {
         var pageable = PageRequest.of(0, 50);
         var list = service.findAllMetadataRecords(pageable);
