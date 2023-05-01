@@ -48,7 +48,7 @@
     </mat-form-field>
 
     <div class="bottom-toolbar">
-        <button mat-raised-button (click)="submit()" [disabled]="busy" color="primary">Сохранить</button>
+        <button mat-raised-button (click)="submit()" [disabled]="busy && !complete" color="primary">Сохранить</button>
         <div class="button-delimiter"></div>
         <button mat-raised-button (click)="cancel()" [disabled]="busy" color="primary">Отмена</button>
     </div>

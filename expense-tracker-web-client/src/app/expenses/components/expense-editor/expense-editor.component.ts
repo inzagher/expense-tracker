@@ -20,6 +20,7 @@ export class ExpenseEditorComponent implements OnInit {
     categories: CategoryDTO[] | null = null;
     descriptions$: Observable<string[]> | null = null;
     calculation$: Observable<CalculationResult | null> | null = null;
+    complete: boolean = false;
     busy: boolean = false;
 
     constructor(private bus: Bus,
@@ -92,7 +93,7 @@ export class ExpenseEditorComponent implements OnInit {
                 : this.expenseService.edit(expense);
             this.busy = true;
             request$.subscribe({
-                next: () => { this.location.back(); this.busy = false; },
+                next: () => { this.location.back(); this.busy = false; this.complete = true; },
                 error: (e) => { console.error(e); this.busy = false; }
             });
         }
