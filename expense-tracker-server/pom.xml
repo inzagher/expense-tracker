@@ -12,7 +12,7 @@
         <relativePath/>
     </parent>
     <properties>
-        <java.version>20</java.version>
+        <java.version>18</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jacoco.version>0.8.8</jacoco.version>
         <mapstruct.version>1.4.2.Final</mapstruct.version>
