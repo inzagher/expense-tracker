@@ -15,8 +15,8 @@
         <java.version>18</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jacoco.version>0.8.8</jacoco.version>
-        <mapstruct.version>1.4.2.Final</mapstruct.version>
-        <spring-doc.version>1.6.11</spring-doc.version>
+        <mapstruct.version>1.5.5.Final</mapstruct.version>
+        <spring-doc.version>1.6.15</spring-doc.version>
         <sonar.organization>inzagher</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
