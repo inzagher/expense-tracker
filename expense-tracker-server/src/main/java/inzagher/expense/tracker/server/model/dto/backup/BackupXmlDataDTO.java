@@ -1,8 +1,8 @@
 package inzagher.expense.tracker.server.model.dto.backup;
 
+import jakarta.xml.bind.annotation.*;
 import lombok.Data;
 
-import javax.xml.bind.annotation.*;
 import java.util.List;
 
 @Data
