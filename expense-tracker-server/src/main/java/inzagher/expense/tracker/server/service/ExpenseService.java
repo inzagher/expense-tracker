@@ -48,7 +48,8 @@ public class ExpenseService {
     @Transactional
     public void editExpense(@NonNull Long id, @NonNull ExpenseDTO dto) {
         log.info("Edit expense. Id: {}. Data: {}", id, dto);
-        var entity = expenseRepository.getById(id);
+        var entity = expenseRepository.findById(id)
+                .orElseThrow(NotFoundException::new);
         expenseMapper.mergeToExistingEntity(entity, dto);
         expenseRepository.save(entity);
     }

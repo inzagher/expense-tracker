@@ -92,7 +92,8 @@ public class BackupService {
     public FileInputStream downloadBackupFile(@NonNull Long id) {
         log.info("Download backup file with id {}", id);
         try {
-            var metadata = backupMetadataRepository.getById(id);
+            var metadata = backupMetadataRepository.findById(id)
+                    .orElseThrow(NotFoundException::new);
             var path = Paths.get(backupDirectory, metadata.getFileName());
             return new FileInputStream(path.toString());
         } catch (FileNotFoundException e) {

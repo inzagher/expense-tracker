@@ -51,7 +51,8 @@ public class CategoryService {
     @Transactional
     public void editCategory(@NonNull Long id, @NonNull CategoryDTO dto) {
         log.info("Edit category. Id: {}. Data: {}", id, dto);
-        var entity = categoryRepository.getById(id);
+        var entity = categoryRepository.findById(id)
+                .orElseThrow(NotFoundException::new);
         categoryMapper.mergeToExistingEntity(entity, dto);
         categoryRepository.save(entity);
     }
