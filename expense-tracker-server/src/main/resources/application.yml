@@ -1,5 +1,7 @@
 backup.directory: ${BACKUP_DIRECTORY_PATH:target/backups}
-springdoc.swagger-ui.path: "/"
+springdoc:
+  swagger-ui.path: "/"
+  webjars.prefix: ""
 spring:
   datasource:
     url: "jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_NAME:expenses}"

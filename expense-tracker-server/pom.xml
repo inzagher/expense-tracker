@@ -16,7 +16,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jacoco.version>0.8.8</jacoco.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
-        <spring-doc.version>1.6.15</spring-doc.version>
+        <spring-doc.version>2.0.4</spring-doc.version>
         <sonar.organization>inzagher</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
@@ -40,7 +40,7 @@
         </dependency>
         <dependency>
             <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-ui</artifactId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>${spring-doc.version}</version>
         </dependency>
         <dependency>
