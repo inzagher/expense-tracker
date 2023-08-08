@@ -1,1 +1,8 @@
-<p>persons works!</p>
+<div class="search-result-container">
+    <div class="person-item" *ngFor="let person of persons$ | async" mat-ripple (click)="edit(person)">
+        <div class="icon">
+            <mat-icon>person</mat-icon>
+        </div>
+        <p class="name">{{ person?.name }}</p>
+    </div>
+</div>
