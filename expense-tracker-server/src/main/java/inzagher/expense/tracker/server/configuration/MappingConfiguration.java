@@ -1,9 +1,6 @@
 package inzagher.expense.tracker.server.configuration;
 
-import inzagher.expense.tracker.server.model.mapper.BackupMetadataMapper;
-import inzagher.expense.tracker.server.model.mapper.CategoryMapper;
-import inzagher.expense.tracker.server.model.mapper.ExpenseMapper;
-import inzagher.expense.tracker.server.model.mapper.PersonMapper;
+import inzagher.expense.tracker.server.model.mapper.*;
 import org.mapstruct.factory.Mappers;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,5 +25,10 @@ public class MappingConfiguration {
     @Bean
     public PersonMapper personMapper() {
         return Mappers.getMapper(PersonMapper.class);
+    }
+
+    @Bean
+    public NoteMapper noteMapper() {
+        return Mappers.getMapper(NoteMapper.class);
     }
 }
