@@ -41,6 +41,12 @@ describe('Calculator', () => {
         done();
     });
 
+    it('Sequential operations', (done: DoneFn) => {
+        assertSucceeded('200 - 100 + 30', 130);
+        assertSucceeded('200 + 100 - 70', 230);
+        done();
+    });
+
     it('Single Brackets', (done: DoneFn) => {
         assertSucceeded('2 * (3 + 5)', 16);
         assertSucceeded('6 * (4 - 2)', 12);
@@ -58,6 +64,11 @@ describe('Calculator', () => {
         assertSucceeded('6 * (4 - 2) / (12 / (6 - 2))', 4);
         done();
     });
+
+    it ('Specific Cases', () => {
+        //assertSucceeded('1-(     -2)', 3);
+        assertSucceeded('-2+ 1', -1);
+    })
 
     it ('Invalid Expression', (done: DoneFn) => {
         assertFailed('TEST');

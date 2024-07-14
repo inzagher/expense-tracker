@@ -22,6 +22,7 @@ export class CalculatorService {
     private readonly PRECISION = 2;
     private readonly OPENING_BRACKET = '(';
     private readonly CLOSING_BRACKET = ')';
+    private readonly DIGIT_EXPRESSION: RegExp = /^\d$/;
     private readonly operationSymbolMap = new Map<string, MathOperationType>([
         [ '+', MathOperationType.Addition ],
         [ '-', MathOperationType.Subtraction ],
@@ -43,6 +44,10 @@ export class CalculatorService {
         let regex = /[^\d\s*+\-/().]+/;
         if (regex.test(expression as string)) {
             return CalculationResult.failed();
+        }
+
+        if (expression) {
+            expression = expression.trim();
         }
 
         if (this.isExpressionNumber(expression)) {
@@ -142,9 +147,19 @@ export class CalculatorService {
     }
 
     private isExpressionNumber(expression: NullableString): boolean {
-        return this.isExpressionNullOrWhiteSpace(expression) === false
-                && this.indexOfAny(expression as string, Array.from(this.operationSymbolMap.keys())) === -1
-                && this.indexOfAny(expression as string, [ this.OPENING_BRACKET, this.CLOSING_BRACKET ]) === -1;
+        if (this.isExpressionNullOrWhiteSpace(expression)) {
+            return false;
+        }
+        let input = expression as string;
+        if (input.startsWith('-')) {
+            input = input.substring(1);
+        }
+        for (let i = 0; i < input.length; ++i) {
+            if (this.isDigit(input.charAt(i)) === false && input.charAt(i) !== '.') {
+                return false;
+            }
+        }
+        return true;
     }
 
     private isExpressionNullOrWhiteSpace(expression: NullableString): boolean {
@@ -158,13 +173,14 @@ export class CalculatorService {
     }
 
     private indexOfAny(input: string, strings: string[]) {
+        let result: number | null = null;
         for(const s of strings) {
             let indexOfStr = input.indexOf(s);
-            if (indexOfStr !== -1) {
-                return indexOfStr;
+            if ((indexOfStr !== -1) && (result == null || result > indexOfStr)) {
+                result = indexOfStr;
             }
         }
-        return -1;
+        return result ?? -1;
     }
 
     private lastIndexOfAny(input: string, strings: string[]) {
@@ -176,5 +192,9 @@ export class CalculatorService {
             }
         }
         return -1;
+    }
+
+    private isDigit(character: string): boolean {
+        return !!character && this.DIGIT_EXPRESSION.test(character);
     }
 }
