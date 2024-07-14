@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/expenses")
 @Tag(name = "Expense operations")
-public class ExpenseApiController {
+public class ExpenseController {
     private final ExpenseService service;
 
-    @GetMapping(path = "/api/expenses")
+    @GetMapping
     @Operation(summary = "Find expenses")
     public Page<ExpenseDTO> find(
             @NonNull final ExpenseFilterDTO filter,
@@ -25,26 +26,26 @@ public class ExpenseApiController {
         return service.findExpenses(filter, pageable);
     }
 
-    @GetMapping(path = "/api/expenses/{id}")
+    @GetMapping("/{id}")
     @Operation(summary = "Get expense by id")
     public ExpenseDTO getById(@PathVariable Long id) {
         return service.getExpenseById(id);
     }
 
-    @PostMapping(path = "/api/expenses")
+    @PostMapping
     @Operation(summary = "Create expense")
     public void create(@RequestBody ExpenseDTO dto) {
         service.createExpense(dto);
     }
 
-    @PutMapping(path = "/api/expenses/{id}")
+    @PutMapping("/{id}")
     @Operation(summary = "Edit expense")
     public void edit(@PathVariable Long id,
                      @RequestBody ExpenseDTO dto) {
         service.editExpense(id, dto);
     }
     
-    @DeleteMapping(path = "/api/expenses/{id}")
+    @DeleteMapping("/{id}")
     @Operation(summary = "Delete expense by id")
     public void deleteById(@PathVariable Long id) {
         service.deleteExpenseById(id);

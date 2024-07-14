@@ -19,17 +19,18 @@ import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/backups")
 @Tag(name = "Backup and restore")
-public class BackupApiController {
+public class BackupController {
     private final BackupService service;
     
-    @GetMapping(path = "/api/backups")
+    @GetMapping
     @Operation(summary = "Find all created backups")
     public Page<BackupMetadataDTO> findAll(@NonNull Pageable pageable) {
         return service.findAllMetadataRecords(pageable);
     }
 
-    @GetMapping(path = "/api/backups/download/{id}")
+    @GetMapping("/download/{id}")
     @Operation(summary = "Download backup file")
     public ResponseEntity<InputStreamResource> download(@PathVariable Long id) {
         try {
@@ -41,13 +42,13 @@ public class BackupApiController {
         }
     }
 
-    @PostMapping(path = "/api/backups/create")
+    @PostMapping("/create")
     @Operation(summary = "Create database backup")
     public BackupMetadataDTO backupDatabase() {
         return service.createDatabaseBackup();
     }
     
-    @PostMapping(path = "/api/backups/restore")
+    @PostMapping("/restore")
     @Operation(summary = "Restore database from backup")
     public void restoreDatabase(@RequestParam MultipartFile file) {
         try { service.restoreDatabaseFromBackup(file.getBytes()); }

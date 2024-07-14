@@ -11,36 +11,37 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/categories")
 @Tag(name = "Category operations")
-public class CategoryApiController {
+public class CategoryController {
     private final CategoryService service;
 
-    @GetMapping(path = "/api/categories")
+    @GetMapping
     @Operation(summary = "Find all categories")
     public List<CategoryDTO> findAll() {
         return service.findAllCategories();
     }
 
-    @GetMapping(path = "/api/categories/{id}")
+    @GetMapping("/{id}")
     @Operation(summary = "Get category by id")
     public CategoryDTO getById(@PathVariable Long id) {
         return service.getCategoryById(id);
     }
 
-    @PostMapping(path = "/api/categories")
+    @PostMapping
     @Operation(summary = "Create category")
     public void create(@RequestBody CategoryDTO dto) {
         service.createCategory(dto);
     }
 
-    @PutMapping(path = "/api/categories/{id}")
+    @PutMapping("/{id}")
     @Operation(summary = "Edit category")
     public void edit(@PathVariable Long id,
                      @RequestBody CategoryDTO dto) {
         service.editCategory(id, dto);
     }
 
-    @DeleteMapping(path = "/api/categories/{id}")
+    @DeleteMapping("/{id}")
     @Operation(summary = "Delete category by id")
     public void deleteById(@PathVariable Long id) {
         service.deleteCategoryById(id);
